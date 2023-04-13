@@ -5,9 +5,6 @@ triage and release tracking.
 
 Can be visited directly at https://bugdash.moz.tools/
 
-Uses an [SVG favicon](https://commons.wikimedia.org/wiki/File:Green_bug_and_broom.svg),
-provided under the GLGPL by Wikimedia User [Poznaniak](https://commons.wikimedia.org/wiki/User:Poznaniak).
-
 ## Development
 
 To run a web server locally use `make run`.
