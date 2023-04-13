@@ -1,0 +1,173 @@
+.buglist-container {
+    margin-top: 8px;
+}
+
+.buglist-container.closed .buglist-header .toggle::after {
+    content: "⏵";
+}
+
+.buglist-container:not(.closed) .buglist-header .toggle::after {
+    content: "⏷";
+}
+
+.buglist-container.no-bugs .toggle,
+.buglist-container.no-bugs .summary {
+    color: #bbb;
+}
+
+.buglist-header {
+    background: #eee;
+    border: 1px solid #28292a;
+    border-radius: 4px;
+    color: #28292a;
+    cursor: pointer;
+    display: flex;
+    font-weight: bold;
+    gap: 8px;
+}
+
+.buglist-container:not(.closed) .buglist-header {
+    border-bottom: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.buglist-header:hover {
+    background: #ddd;
+}
+
+.buglist-container .actions button,
+.buglist-container .actions .info {
+    font-size: 22px;
+    padding: 2px 4px;
+}
+
+.buglist-container .actions .info {
+    display: inline-block;
+}
+
+.buglist-header > div {
+    margin-bottom: auto;
+    margin-top: auto;
+    padding: 8px;
+}
+
+.buglist-header .toggle {
+    padding: 8px 0 8px 16px;
+}
+
+.buglist-container:not(.loading) .buglist-header .loading-spinner {
+    display: none;
+}
+
+.buglist-container.loading .buglist-header .counter {
+    display: none;
+}
+
+.buglist-header .counter {
+    color: #008080;
+}
+
+.buglist-header .actions {
+    flex-grow: 1;
+    text-align: right;
+}
+
+.buglist-container.closed .buglist {
+    display: none;
+}
+
+.buglist-container.closed .buglist-loading,
+.buglist-container:not(.loading) .buglist-loading {
+    display: none;
+}
+
+.buglist-loading {
+    border: 1px solid #28292a;
+    border-top: none;
+    font-style: italic;
+    padding: 8px;
+}
+
+.buglist {
+    border: 1px solid #28292a;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-top: none;
+}
+
+#help-buglist {
+    cursor: default;
+}
+
+#help-buglist.buglist {
+    border: 1px solid #28292a;
+}
+
+.buglist a {
+    color: #000;
+    text-decoration: none;
+}
+
+.buglist a:hover {
+    text-decoration: underline;
+}
+
+.buglist tr.odd {
+    background: #fff;
+}
+
+.buglist tr.even {
+    background: #eee;
+}
+
+.buglist td {
+    padding: 2px 8px;
+}
+
+.bug-row td:first-child {
+    padding-left: 12px;
+}
+
+.bug-row td:last-child {
+    padding-right: 12px;
+}
+
+.bug-row:not(.bug-meta) td {
+    padding-top: 8px;
+}
+
+.bug-row.bug-meta td {
+    color: #777;
+    font-size: 13px;
+    padding-bottom: 8px;
+    white-space: nowrap;
+}
+
+.bug-row .bug-id {
+    vertical-align: top;
+}
+
+.bug-row .bug-summary {
+    color: #000;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.buglist .bug-meta .type {
+    color: #aaa;
+}
+
+.buglist .bug-meta .groups {
+    color: #dc143c;
+}
+
+.bug-row.bug-meta td:last-child {
+    text-align: right;
+    width: 100%;
+}
+
+.bug-row .component {
+    padding-left: 32px;
+    padding-right: 32px;
+}

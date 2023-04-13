@@ -1,0 +1,140 @@
+@font-face {
+    font-family: FiraGO;
+    font-style: normal;
+    font-weight: normal;
+    src: local("FiraGO Book"), url(../assets/FiraGO-Book.woff2) format("woff2");
+}
+
+@font-face {
+    font-family: FiraGO;
+    font-style: italic;
+    font-weight: normal;
+    src: local("FiraGO Book Italic"),
+        url(../assets/FiraGO-BookItalic.woff2) format("woff2");
+}
+
+@font-face {
+    font-family: FiraGO;
+    font-style: normal;
+    font-weight: 500;
+    src: local("FiraGO SemiBold"), url(../assets/FiraGO-Medium.woff2) format("woff2");
+}
+
+@font-face {
+    font-family: FiraGO;
+    font-style: italic;
+    font-weight: 500;
+    src: local("FiraGO SemiBold Italic"),
+        url(../assets/FiraGO-MediumItalic.woff2) format("woff2");
+}
+
+@font-face {
+    font-family: FiraGO;
+    font-style: normal;
+    font-weight: bold;
+    src: local("FiraGO SemiBold"), url(../assets/FiraGO-SemiBold.woff2) format("woff2");
+}
+
+@font-face {
+    font-family: FiraGO;
+    font-style: italic;
+    font-weight: bold;
+    src: local("FiraGO SemiBold Italic"),
+        url(../assets/FiraGO-SemiBoldItalic.woff2) format("woff2");
+}
+
+@font-face {
+    /* family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200 */
+    font-family: "Material Symbols Outlined";
+    font-style: normal;
+    font-weight: 100 700;
+    src: url(../assets/MaterialSymbolsOutlined.woff) format("woff2");
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    background-color: #f8f8f8;
+    color: #444;
+    font-family: FiraGo, sans-serif;
+    font-size: 15px;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-size: 15px;
+}
+
+button {
+    border: 1px solid silver;
+    border-radius: 2px;
+    padding: 4px 8px;
+}
+
+input[type="text"],
+input[type="search"] {
+    border: 1px solid silver;
+    border-radius: 2px;
+    padding: 4px 8px;
+    width: 40em;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.material-icons {
+    cursor: default;
+    direction: ltr;
+    font-family: "Material Symbols Outlined", sans-serif;
+    font-feature-settings: "liga";
+    -moz-osx-font-smoothing: grayscale;
+    font-style: normal;
+    font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 20;
+    font-weight: normal;
+    letter-spacing: normal;
+    line-height: 1;
+    text-transform: none;
+    white-space: nowrap;
+    word-wrap: normal;
+}
+
+body.loading *:not(#loading, #loading-stage, #dialog-wrapper, #dialog-wrapper *),
+body:not(.loading) #loading {
+    display: none;
+}
+
+#loading {
+    margin: 16px;
+}
+
+#loading-stage {
+    font-size: 13px;
+    font-style: italic;
+    margin-top: 4px;
+}
+
+.loading-spinner::after {
+    animation: loading-spinner 1.2s linear infinite;
+    border: 3px solid #444;
+    border-left-color: transparent;
+    border-radius: 50%;
+    border-right-color: transparent;
+    content: " ";
+    display: block;
+    height: 12px;
+    width: 12px;
+}
+
+@keyframes loading-spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

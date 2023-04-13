@@ -1,0 +1,85 @@
+#dialog-wrapper {
+    align-items: center;
+    background-color: rgb(49 49 49 / 50%);
+    color: #313131;
+    display: flex;
+    font-size: 10px;
+    height: 100vh;
+    justify-content: center;
+    left: 0;
+    position: fixed;
+    -webkit-tap-highlight-color: transparent;
+    top: 0;
+    width: 100vw;
+}
+
+#dialog {
+    background-color: #fff;
+    border-radius: 0.4em;
+    box-shadow: 0 0 10px 1px rgb(0 0 0 / 10%);
+    box-sizing: border-box;
+    max-width: 30em;
+    overflow: hidden;
+    position: relative;
+    width: 85vw;
+}
+
+#dialog-message {
+    font-size: 1.6em;
+    padding: 15px;
+    text-align: center;
+}
+
+#dialog.dialog-prompt #dialog-message {
+    font-weight: bold;
+}
+
+#dialog-input {
+    margin: 4px;
+    padding: 4px;
+    resize: none;
+    width: calc(100% - 20px);
+}
+
+#dialog.dialog-alert #dialog-message {
+    padding: 40px 20px;
+}
+
+#dialog.dialog-alert #dialog-cancel,
+#dialog.dialog-alert #dialog-input {
+    display: none !important;
+}
+
+#dialog.dialog-spinner #dialog-message {
+    padding: 40px 20px;
+}
+
+#dialog.dialog-spinner #dialog-buttons,
+#dialog.dialog-spinner #dialog-input {
+    display: none !important;
+}
+
+#dialog-buttons {
+    display: flex;
+    flex-flow: row;
+    font-size: 1.6em;
+}
+
+.dialog-button {
+    border-top: 1px solid #ebebeb;
+    cursor: pointer;
+    flex: 1;
+    font-weight: bold;
+    padding: 15px;
+    text-align: center;
+}
+
+.dialog-button:not(:first-child) {
+    border-left: 1px solid #ebebeb;
+}
+
+.dialog-button:hover,
+.dialog-button:active {
+    background-color: #ebebeb;
+    transition: all 0.1s ease-in;
+}

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>BugDash</title>
+        <link rel="preload" href="assets/FiraGO-Book.woff2" as="font" crossorigin />
+        <link
+            rel="preload"
+            href="assets/FiraGO-BookItalic.woff2"
+            as="font"
+            crossorigin
+        />
+        <link rel="preload" href="assets/FiraGO-Medium.woff2" as="font" crossorigin />
+        <link
+            rel="preload"
+            href="assets/FiraGO-MediumItalic.woff2"
+            as="font"
+            crossorigin
+        />
+        <link rel="preload" href="assets/FiraGO-SemiBold.woff2" as="font" crossorigin />
+        <link
+            rel="preload"
+            href="assets/FiraGO-SemiBoldItalic.woff2"
+            as="font"
+            crossorigin
+        />
+        <link
+            rel="preload"
+            href="assets/MaterialSymbolsOutlined.woff"
+            as="font"
+            crossorigin
+        />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="app/global.css?317571c9deebdafa1cc6eb5f8976bfde"
+        />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="app/tabs.css?17ed235c6bc4afdd58ef677453bfa0cc"
+        />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="app/tabs/components.css?7ee99f5752a9997940c0f9847e7d31ee"
+        />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="app/buglist.css?cfe15cfd8b05a6415f556aa3fd6ff370"
+        />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="app/dialog.css?0b89cde36ac140a69346756901fc0155"
+        />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="app/tooltips.css?2f120cc74703183727f6b80825e33d12"
+        />
+        <link
+            rel="icon shortcut"
+            href="assets/green_bug_and_broom.svg"
+            type="image/svg"
+        />
+        <script type="importmap">
+            {
+                "imports": {
+                    "bugdash": "./app/bugdash.mjs?d4690c7b1073366ee0665402b4149664",
+                    "buglist": "./app/buglist.mjs?4c772e14b8db50ef01c8012acd20321a",
+                    "buglists/assigned-inactive": "./app/buglists/assigned-inactive.mjs?b364defb91931913bdc64e272e065af3",
+                    "buglists/blockers": "./app/buglists/blockers.mjs?ac2714efb9cd25f300b8416859980051",
+                    "buglists/criticals": "./app/buglists/criticals.mjs?f683cf87e51c1e7e6f72b1554b66d183",
+                    "buglists/long-defects": "./app/buglists/long-defects.mjs?31bc0410e07a33847526fc144baf9d0f",
+                    "buglists/long-enhancements": "./app/buglists/long-enhancements.mjs?36e2192cf5f861a9fa6af34b31e1c255",
+                    "buglists/long-tasks": "./app/buglists/long-tasks.mjs?e0440a12e9e24094c66f952b477b3907",
+                    "buglists/needinfo-escalated": "./app/buglists/needinfo-escalated.mjs?c915456be8344589eb4866df47bd0bbf",
+                    "buglists/needinfo-stale": "./app/buglists/needinfo-stale.mjs?dea55a35498f6cf43f12b40cbc8c99af",
+                    "buglists/stalled": "./app/buglists/stalled.mjs?4524c13adabe3b752266eddd0603f4fa",
+                    "buglists/triage-needed": "./app/buglists/triage-needed.mjs?0b9967a9ab3c7be9945aa8a607058381",
+                    "bugzilla": "./app/bugzilla.mjs?33e7f886cdd832888391131a97d3c725",
+                    "dialog": "./app/dialog.mjs?d6097f05996b7577fde36e138a910856",
+                    "global": "./app/global.mjs?6582bc5d0f17ea1b6f4cac1d03153cb3",
+                    "tabs": "./app/tabs.mjs?9e2f1c88f2874104e5a36e24ab726ab4",
+                    "tabs/components": "./app/tabs/components.mjs?d19feb6af061548d0c4953fc71ed0718",
+                    "tabs/help": "./app/tabs/help.mjs?1635daaecacf7f794bc68d8fac3f1031",
+                    "tabs/stalled": "./app/tabs/stalled.mjs?13af184237cfd1ae3abb321bba85eb0f",
+                    "tabs/triage": "./app/tabs/triage.mjs?d80d35c3fc4da3ee4bfb76e9666b64a0",
+                    "tooltips": "./app/tooltips.mjs?f6ce915e9ef0058cae9ecc157ad8a1a9",
+                    "util": "./app/util.mjs?43f729ad3675dca1b1bec48ef070d993"
+                }
+            }
+        </script>
+    </head>
+    <body class="loading">
+        <div id="loading">
+            Starting BugDash…
+            <div id="loading-stage"></div>
+        </div>
+
+        <div id="dialog-wrapper" class="hidden">
+            <div id="dialog">
+                <div id="dialog-message"></div>
+                <input type="text" id="dialog-input" />
+                <div id="dialog-buttons">
+                    <div class="dialog-button" id="dialog-cancel">Cancel</div>
+                    <div class="dialog-button" id="dialog-ok">OK</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="nav">
+            <div class="tab" data-tab="help">Help</div>
+            <div class="tab selected" data-tab="components">
+                <span id="selected-components-title"
+                    >Components
+                    <span id="selected-components-count"></span>
+                </span>
+            </div>
+            <div class="tab" data-tab="triage" data-requires_components="1">Triage</div>
+            <div class="tab" data-tab="stalled" data-requires_components="1">
+                Stalled &amp; Longstanding
+            </div>
+            <div
+                id="refresh-all-button"
+                class="nav-button material-icons"
+                title="Refresh all bug lists.  Shift+Click to also refresh components"
+            >
+                refresh
+            </div>
+            <div class="tab filler"></div>
+            <div id="username"></div>
+            <div
+                id="key-button"
+                class="nav-button material-icons"
+                title="Set Bugzilla API-Key"
+            >
+                key
+            </div>
+        </div>
+
+        <!-- help -->
+
+        <div id="tab-help" class="content">
+            <h1>BugDash</h1>
+            <p>
+                Dashboard of bug lists for Firefox-related components in Bugzilla, with
+                a focus on triage and release tracking.
+            </p>
+            <p>
+                For more information about the purpose and process of triage, see
+                <a
+                    href="https://firefox-source-docs.mozilla.org/bug-mgmt/policies/triage-bugzilla.html"
+                    >the Triage for Bugzilla documentation</a
+                >.
+            </p>
+            <p>
+                This code lives at
+                <a href="https://github.com/mozilla/bugdash"
+                    >GitHub in the bugdash project</a
+                >. Pull requests welcome.
+            </p>
+
+            <h1>How To Use</h1>
+            <ol>
+                <li>
+                    Provide your Bugzilla API-Key by clicking on the
+                    <span class="material-icons">key</span> icon near the top right of
+                    the page.
+                </li>
+                <li>
+                    Use the <b>Components</b> tab to select Bugzilla components you want
+                    to view.
+                </li>
+                <li>Switch to the relevant tab.</li>
+            </ol>
+
+            <h1>Bug List Fields</h1>
+            <p>
+                Use the tooltips on the sample bug below to see the field associated
+                with each value.
+            </p>
+            <table id="help-buglist" class="buglist"></table>
+        </div>
+
+        <!-- components -->
+
+        <div id="tab-components" class="content selected">
+            <h1>Select Component(s)</h1>
+
+            <div>
+                <input id="component-filter" type="search" placeholder="Filter…" />
+                <button id="filter-all">Select Visible</button>
+                <button id="filter-none-visible">Deselect Visible</button>
+                <button id="filter-none">Deselect All</button>
+                <input type="checkbox" id="filter-selected" />
+                <label for="filter-selected">Selected Only</label>
+            </div>
+
+            <table id="components">
+                <thead>
+                    <tr>
+                        <th id="components-th-cb"></th>
+                        <th id="components-th-name">Component</th>
+                        <th id="components-th-desc">Description</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <template id="components-row">
+                <tr class="row">
+                    <td><input type="checkbox" /></td>
+                    <td class="name"><label data-field="title"></label></td>
+                    <td class="desc"><label data-field="desc"></label></td>
+                </tr>
+            </template>
+
+            <div id="no-matching-components">No matching components.</div>
+        </div>
+
+        <!-- tabs -->
+        <div id="tab-triage" class="content">
+            <div id="triage-content"></div>
+        </div>
+        <div id="tab-stalled" class="content">
+            <div id="stalled-content"></div>
+        </div>
+
+        <!-- template: buglist -->
+        <template id="buglist-template">
+            <div class="buglist-container closed loading">
+                <div class="buglist-header">
+                    <div class="toggle"></div>
+                    <div class="summary" data-field="title"></div>
+                    <div class="loading-spinner"></div>
+                    <div class="counter"></div>
+                    <div class="actions">
+                        <div class="info material-icons" data-title-field="description">
+                            question_mark
+                        </div>
+                        <button class="refresh-btn material-icons">refresh</button>
+                        <button class="buglist-btn material-icons">bug_report</button>
+                    </div>
+                </div>
+                <div class="buglist-loading">Loading…</div>
+                <table class="buglist"></table>
+            </div>
+        </template>
+
+        <!-- template: default bug row -->
+        <template id="bug-row-template">
+            <tr class="bug-row">
+                <td class="bug-id">
+                    <a
+                        href="#"
+                        data-href-field="url"
+                        data-field="id"
+                        target="_blank"
+                    ></a>
+                </td>
+                <td colspan="7">
+                    <a
+                        href="#"
+                        class="bug-summary"
+                        data-field="summary"
+                        data-href-field="url"
+                        target="_blank"
+                    ></a>
+                </td>
+            </tr>
+            <tr class="bug-row bug-meta">
+                <td class="material-icons">
+                    <span
+                        class="type"
+                        data-title-field="type"
+                        data-field="type_icon"
+                    ></span>
+                    <span
+                        class="groups"
+                        data-title-field="groups"
+                        data-field="groups_icon"
+                    ></span>
+                </td>
+                <td
+                    class="severity"
+                    data-title-field="severity_title"
+                    data-field="severity"
+                ></td>
+                <td
+                    class="priority"
+                    data-title-field="priority_title"
+                    data-field="priority"
+                ></td>
+                <td class="component" data-title-field="component_title">
+                    <span data-field="product"></span>:
+                    <span data-field="component"></span>
+                </td>
+                <td
+                    class="reporter"
+                    data-field="creator_nick"
+                    data-title-field="creator_name"
+                ></td>
+                <td
+                    class="owner"
+                    data-field="assigned_to_nick"
+                    data-title-field="assigned_to_name"
+                ></td>
+                <td
+                    class="keywords"
+                    data-title-field="keywords_title"
+                    data-field="keywords"
+                ></td>
+                <td class="timestamp"></td>
+            </tr>
+        </template>
+
+        <template id="bug-row-timestamp-creation">
+            <span
+                class="creation"
+                data-field="timestamp_ago"
+                data-title-field="timestamp"
+            ></span>
+        </template>
+
+        <template id="bug-row-timestamp-needinfo">
+            <span data-field="needinfo_nick" data-title-field="needinfo_name"></span>
+            :
+            <span data-field="needinfo_ago" data-title-field="needinfo_date"></span>
+        </template>
+
+        <script src="assets/popperjs-2.min.js"></script>
+        <script src="assets/tippyjs-6.min.js"></script>
+        <script
+            type="module"
+            src="app/bugdash.mjs?d4690c7b1073366ee0665402b4149664"
+        ></script>
+    </body>
+</html>

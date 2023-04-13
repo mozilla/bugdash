@@ -1,0 +1,152 @@
+#!/usr/bin/env python3
+import hashlib
+import json
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+# Cache busting is fun.
+
+# Note: Firefox only supports inline importmaps (bug 1765745)
+
+ROOT = Path(__file__).parent
+INDEX_FILE = ROOT / "index.html"
+APP_PATH = ROOT / "app"
+
+
+def update_importmap():
+    # build relative urls with md5 suffixes
+    imports = {}
+    for filename in sorted(APP_PATH.rglob("*.mjs")):
+        name = str(filename.relative_to(APP_PATH)).replace(".mjs", "")
+        assert name not in imports
+        md5 = hashlib.md5(filename.read_bytes()).hexdigest()
+        imports[name] = f"./{filename.relative_to(ROOT)}?{md5}"
+
+    # update inline importmap in index.html
+    importmap = json.dumps({"imports": imports}, indent=4, sort_keys=True)
+    index = INDEX_FILE.read_text()
+    assert '<script type="importmap">' in index
+    index = re.sub(
+        r'<script type="importmap">[^<]+</script>',
+        f'<script type="importmap">{importmap}</script>',
+        index,
+    )
+    INDEX_FILE.write_text(index)
+    subprocess.run(["make", ".format-html"], check=True)
+
+    print(f"{INDEX_FILE.relative_to(ROOT)} importmap updated")
+
+
+def check_importmap():
+    # parse inline importmap from index.html
+    rel_index_file = INDEX_FILE.relative_to(ROOT)
+    m = re.search(r'<script type="importmap">([^<]+)</script>', INDEX_FILE.read_text())
+    if not m:
+        print(f"{rel_index_file}: failed to read importmap", file=sys.stderr)
+        sys.exit(1)
+    try:
+        imports = json.loads(m[1])["imports"]
+    except (KeyError, ValueError):
+        print(f"{rel_index_file}: importmap is malformed", file=sys.stderr)
+        sys.exit(1)
+
+    errors = False
+
+    # verify md5
+    for ref in sorted(imports.values()):
+        filename, map_md5 = ref.split("?", maxsplit=1)
+        md5 = hashlib.md5(Path(filename).read_bytes()).hexdigest()
+        if md5 != map_md5:
+            print(f"{filename[2:]}: invalid md5 in importmap", file=sys.stderr)
+            errors = True
+
+    # verify each import statement references a key in the importmap
+    for filename in sorted(APP_PATH.rglob("*.mjs")):
+        lines = filename.read_text().splitlines()
+        for i, line in enumerate(lines):
+            m = re.search(r'^import .+ from "([^"]+)";$', line)
+            if not m:
+                continue
+            name = m[1]
+            if name not in imports:
+                rel_name = filename.relative_to(ROOT)
+                print(
+                    f"{rel_name}:{i+1}: '{name}' is not a valid importmap key",
+                    file=sys.stderr,
+                )
+                errors = True
+    if errors:
+        print("run `make format` to correct issues", file=sys.stderr)
+        sys.exit(1)
+    print("imports ok")
+
+
+def split_attribute(value):
+    if "?" in value:
+        name, match_md5 = value.split("?", maxsplit=1)
+    else:
+        name = value
+        match_md5 = ""
+    return name, match_md5
+
+
+def update_attribute(m):
+    match_full = m[0]
+    match_file, match_md5 = split_attribute(m[1])
+    if match_file.endswith((".css", ".mjs")):
+        filename = ROOT / match_file
+        assert filename.exists()
+        md5 = hashlib.md5(filename.read_bytes()).hexdigest()
+        if "?" in match_full:
+            match_full = match_full.split("?", maxsplit=1)[0]
+        match_full = f"{match_full}?{md5}"
+    return match_full
+
+
+def update_attributes():
+    # add md5 suffix to css and js attribute references
+    html = INDEX_FILE.read_text()
+    html = re.sub(r'(?:href|src)="([^"]+)', update_attribute, html, flags=re.A)
+    INDEX_FILE.write_text(html)
+    print("css and js references updated")
+
+
+def check_attributes():
+    # verify md5 exists and is correct when referencing css and js
+    rel_index_file = INDEX_FILE.relative_to(ROOT)
+    lines = INDEX_FILE.read_text().splitlines()
+    errors = False
+    for i, line in enumerate(lines):
+        for m in re.finditer(r'(?:href|src)="([^"]+)', line):
+            name, match_md5 = split_attribute(m[1])
+            if not name.endswith((".css", ".mjs")):
+                continue
+            filename = ROOT / name
+            assert filename.exists(), name
+            md5 = hashlib.md5(filename.read_bytes()).hexdigest()
+            if md5 != match_md5:
+                print(f"{rel_index_file}:{i+1}: invalid md5 for {name}")
+                errors = True
+    if errors:
+        sys.exit(1)
+    print("css and js references ok")
+
+
+def main():
+    if len(sys.argv) != 2 or sys.argv[1] not in ("update", "check"):
+        print("usage: cache-bust {update|check}", file=sys.stderr)
+        print("       update : update cache busting references", file=sys.stderr)
+        print("       check  : verify cache busting references", file=sys.stderr)
+        sys.exit(1)
+    if sys.argv[1] == "update":
+        update_importmap()
+        update_attributes()
+    else:
+        check_importmap()
+        check_attributes()
+
+
+if __name__ == "__main__":
+    main()

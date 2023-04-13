@@ -1,0 +1,58 @@
+#selected-components-count {
+    display: inline-block;
+}
+
+#component-filter.disabled {
+    background: #f8f8f8;
+    color: #bbb;
+}
+
+label[for="filter-selected"].disabled {
+    color: #bbb;
+}
+
+#components {
+    border-collapse: collapse;
+    margin-top: 8px;
+    width: 100%;
+}
+
+#components th,
+#components td {
+    border-bottom: 1px solid #aaa;
+    padding: 8px 5px;
+    text-align: left;
+    vertical-align: top;
+}
+
+#components tr.row:hover {
+    background-color: #e0e0e0;
+}
+
+#components-th-cb {
+    width: 0;
+}
+
+#components-th-name {
+    width: 15em;
+}
+
+#components .row .name {
+    font-weight: bold;
+}
+
+#components .row label {
+    display: block;
+}
+
+#no-matching-components {
+    margin-top: 16px;
+}
+
+#tab-components:not(.no-matching-components) #no-matching-components {
+    display: none;
+}
+
+#tab-components.no-matching-components #components {
+    display: none;
+}

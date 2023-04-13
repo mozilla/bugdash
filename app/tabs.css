@@ -1,0 +1,65 @@
+#nav {
+    background: #28292a;
+    display: flex;
+    padding-top: 2px;
+    user-select: none;
+}
+
+#nav .nav-button {
+    color: #fff;
+    cursor: pointer;
+    font-size: 24px;
+    padding: 4px 16px;
+}
+
+#nav #username {
+    color: #fff;
+    margin-bottom: auto;
+    margin-top: auto;
+}
+
+#nav #key-button:hover {
+    color: #5f9ea0;
+}
+
+#nav #key-button.authenticated {
+    color: #daa520;
+}
+
+.tab {
+    border: 1px solid transparent;
+    border-radius: 2px 2px 0 0;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 0.5em 1em;
+    white-space: nowrap;
+}
+
+.tab.filler {
+    cursor: default;
+    flex-grow: 1;
+}
+
+.tab:hover {
+    color: #5f9ea0;
+}
+
+.tab.selected {
+    background-color: #f8f8f8;
+    border-color: #28292a;
+    border-width: 1px 1px 0;
+    color: #28292a;
+}
+
+.tab:not(.selected) {
+    border-bottom: 1px solid #28292a;
+}
+
+.content:not(.selected) {
+    display: none;
+}
+
+.content {
+    margin: 16px;
+}
