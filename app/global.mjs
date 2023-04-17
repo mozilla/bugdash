@@ -27,6 +27,7 @@ const g = {
         "Remote Protocol",
         "Testing",
         "Toolkit",
+        "Web Compatibility",
         "WebExtensions",
     ],
 };
