@@ -19,23 +19,16 @@ Bugzilla API-Keys in localStorage it has to be hosted with a unique origin;
 this means that `github.io` or CNAMEs pointing to it are not viable hosting
 solutions.
 
-The easiest self-service solution we have for this is Heroku.  BugDash exists
-on Heroku as the `bmo-bugdash` app under the `mozillacorporation` organisation.
-However, as Heroku only hosts applications not static sites, we have to wrap a
-simple PHP application around BugDash in order for Heroku to work.  The
-following files facilitate this:
+The easiest self-service solution we have for this is Heroku.  However, as
+Heroku only hosts applications not static sites, we have to wrap a simple PHP
+application around BugDash in order for Heroku to work.  The following files
+facilitate this:
 
 - `index.php`
 - `composer.json`
 - `.htaccess`
 
-Deploying a new version requires the `heroku` command line tool:
+Deploying a new version requires the `heroku` command line tool and access to
+the `mozillacorporation/bmo-bugdash` Heroku application.
 
-Setup:
-
-1. `heroku login`
-2. `heroku git:remote -a bmo-bugdash`
-
-Deploy:
-
-1. `git push heroku main`
+Run `make deploy` to deploy a new version.

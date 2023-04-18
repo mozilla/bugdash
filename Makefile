@@ -1,4 +1,4 @@
-.PHONY: format test run clean
+.PHONY: format test run clean deploy
 
 css-files:=$(wildcard app/*.css) $(wildcard app/*/*.css)
 html-files:=$(wildcard *.html)
@@ -43,3 +43,7 @@ run:
 
 clean:
 	rm -rf node_modules $(format-files)
+
+deploy:
+	heroku git:remote -a bmo-bugdash
+	git push heroku main
