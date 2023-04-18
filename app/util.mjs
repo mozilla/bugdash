@@ -36,6 +36,7 @@ export function updateTemplate($content, data) {
     //   data-field        -> set textContent
     //   data-href-field   -> set href attribute
     //   data-title-field  -> set title attribute
+    //   data-id-field     -> set id attribute
     // eg.
     // <div data-field="name"></div> + {"name": "bob"}
     // --> <div data-field="name">bob</div>
@@ -44,11 +45,10 @@ export function updateTemplate($content, data) {
         for (const $el of __($content, `*[data-field=${name}]`)) {
             $el.textContent = value;
         }
-        for (const $el of __($content, `*[data-href-field=${name}]`)) {
-            $el.href = value;
-        }
-        for (const $el of __($content, `*[data-title-field=${name}]`)) {
-            $el.title = value;
+        for (const field of ["href", "title", "id"]) {
+            for (const $el of __($content, `*[data-${field}-field=${name}]`)) {
+                $el.setAttribute(field, value);
+            }
         }
     }
 }

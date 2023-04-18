@@ -15,7 +15,7 @@ const onSelectedChanged = debounce(() => {
         selected.length === 0 ? "" : `(${selected.length})`;
 
     // disabled tabs
-    for (const $tab of document.querySelectorAll(".tab[data-requires_components]")) {
+    for (const $tab of __("#components-tab-group .tab")) {
         if (selected.length === 0) {
             $tab.classList.add("disabled");
         } else {
@@ -26,7 +26,7 @@ const onSelectedChanged = debounce(() => {
     // tab tooltip
     const tooltip = [];
     if (selected.length === 0) {
-        tooltip.push("No components selected");
+        tooltip.push("No components selected.");
     } else {
         for (const c of selected) {
             tooltip.push(c.title);

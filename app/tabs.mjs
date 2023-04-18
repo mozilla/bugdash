@@ -1,7 +1,39 @@
 import * as Bugzilla from "bugzilla";
 import * as Dialog from "dialog";
 import * as Global from "global";
-import { _, __ } from "util";
+import { _, __, cloneTemplate, updateTemplate } from "util";
+
+function addTab(tab, $tabGroup) {
+    let $tab = cloneTemplate(_("#tab-template"));
+    updateTemplate($tab, tab);
+    $tab = $tab.firstElementChild;
+    $tab.dataset.tab = tab.name;
+    $tabGroup.append($tab);
+    const $content = cloneTemplate(_("#tab-content-template"));
+    updateTemplate($content, {
+        outer: `tab-${tab.name}`,
+        inner: `${tab.name}-content`,
+    });
+    _("#tabs-content").append($content);
+    return $tab;
+}
+
+function addComponentsTab(tab) {
+    const $tabGroup = _("#components-tab-group");
+    const $tab = addTab(tab, $tabGroup);
+    $tab.classList.add("disabled");
+}
+
+function addTabs() {
+    addComponentsTab({
+        name: "triage",
+        title: "Triage",
+    });
+    addComponentsTab({
+        name: "stalled",
+        title: "Stalled & Longstanding",
+    });
+}
 
 function updateAuth() {
     const account = Global.getAccount();
@@ -15,13 +47,14 @@ function updateAuth() {
 }
 
 export function initUI() {
+    addTabs();
+    updateAuth();
+
     _("#nav").addEventListener("click", async (event) => {
         const $selected = event.target.closest(".tab");
         if (!$selected || !$selected.dataset.tab) return;
         await switchTo($selected);
     });
-
-    updateAuth();
 
     _("#nav #refresh-all-button").addEventListener("click", (event) => {
         if (event.shiftKey) {
@@ -65,7 +98,7 @@ export function initUI() {
 }
 
 export async function switchTo($tab) {
-    if ($tab.dataset.requires_components) {
+    if ($tab.closest("#components-tab-group") && $tab.dataset.tab !== "components") {
         const components = Global.selectedComponents();
         if (components.length === 0) {
             await Dialog.alert("No components selected.");

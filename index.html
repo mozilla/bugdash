@@ -81,13 +81,13 @@
                     "bugzilla": "./app/bugzilla.mjs?33e7f886cdd832888391131a97d3c725",
                     "dialog": "./app/dialog.mjs?d6097f05996b7577fde36e138a910856",
                     "global": "./app/global.mjs?8ef2889a309e94440a36983ea3cbe992",
-                    "tabs": "./app/tabs.mjs?9e2f1c88f2874104e5a36e24ab726ab4",
-                    "tabs/components": "./app/tabs/components.mjs?5214e93bdf6745a3bd6da465a0dde484",
+                    "tabs": "./app/tabs.mjs?f0365ba89db6123008b804101af7f198",
+                    "tabs/components": "./app/tabs/components.mjs?2441ea72e67c2b000bee4a674fc41ee2",
                     "tabs/help": "./app/tabs/help.mjs?1635daaecacf7f794bc68d8fac3f1031",
                     "tabs/stalled": "./app/tabs/stalled.mjs?13af184237cfd1ae3abb321bba85eb0f",
                     "tabs/triage": "./app/tabs/triage.mjs?d80d35c3fc4da3ee4bfb76e9666b64a0",
                     "tooltips": "./app/tooltips.mjs?f6ce915e9ef0058cae9ecc157ad8a1a9",
-                    "util": "./app/util.mjs?43f729ad3675dca1b1bec48ef070d993"
+                    "util": "./app/util.mjs?6cfd0192d12dee40c10bf38fb81ee8ec"
                 }
             }
         </script>
@@ -113,26 +113,12 @@
             <div class="tab-group">
                 <div class="tab" data-tab="help">Help</div>
             </div>
-            <div class="tab-group">
+            <div id="components-tab-group" class="tab-group">
                 <div class="tab selected" data-tab="components">
                     <span id="selected-components-title"
                         >Components
                         <span id="selected-components-count"></span>
                     </span>
-                </div>
-                <div
-                    class="tab disabled"
-                    data-tab="triage"
-                    data-requires_components="1"
-                >
-                    Triage
-                </div>
-                <div
-                    class="tab disabled"
-                    data-tab="stalled"
-                    data-requires_components="1"
-                >
-                    Stalled &amp; Longstanding
                 </div>
             </div>
             <div
@@ -152,6 +138,8 @@
                 key
             </div>
         </div>
+
+        <div id="tabs-content"></div>
 
         <!-- help -->
 
@@ -232,13 +220,17 @@
             <div id="no-matching-components">No matching components.</div>
         </div>
 
-        <!-- tabs -->
-        <div id="tab-triage" class="content">
-            <div id="triage-content"></div>
-        </div>
-        <div id="tab-stalled" class="content">
-            <div id="stalled-content"></div>
-        </div>
+        <!-- template: tab -->
+        <template id="tab-template">
+            <div class="tab" data-tab="" data-field="title"></div>
+        </template>
+
+        <!-- template: tab-content -->
+        <template id="tab-content-template">
+            <div data-id-field="outer" class="content">
+                <div data-id-field="inner"></div>
+            </div>
+        </template>
 
         <!-- template: buglist -->
         <template id="buglist-template">
