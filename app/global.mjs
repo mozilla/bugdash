@@ -25,6 +25,7 @@ const g = {
         "NSPR",
         "NSS",
         "Remote Protocol",
+        "Release Engineering",
         "Testing",
         "Toolkit",
         "Web Compatibility",
