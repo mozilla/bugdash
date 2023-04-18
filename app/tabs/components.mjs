@@ -14,6 +14,15 @@ const onSelectedChanged = debounce(() => {
     _("#selected-components-count").textContent =
         selected.length === 0 ? "" : `(${selected.length})`;
 
+    // disabled tabs
+    for (const $tab of document.querySelectorAll(".tab[data-requires_components]")) {
+        if (selected.length === 0) {
+            $tab.classList.add("disabled");
+        } else {
+            $tab.classList.remove("disabled");
+        }
+    }
+
     // tab tooltip
     const tooltip = [];
     if (selected.length === 0) {

@@ -40,7 +40,7 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="app/tabs.css?17ed235c6bc4afdd58ef677453bfa0cc"
+            href="app/tabs.css?d481679170859fba9f999153e9d833b4"
         />
         <link
             rel="stylesheet"
@@ -82,7 +82,7 @@
                     "dialog": "./app/dialog.mjs?d6097f05996b7577fde36e138a910856",
                     "global": "./app/global.mjs?d62116879d8e4eb0c56354ac4ef65f20",
                     "tabs": "./app/tabs.mjs?9e2f1c88f2874104e5a36e24ab726ab4",
-                    "tabs/components": "./app/tabs/components.mjs?d19feb6af061548d0c4953fc71ed0718",
+                    "tabs/components": "./app/tabs/components.mjs?5214e93bdf6745a3bd6da465a0dde484",
                     "tabs/help": "./app/tabs/help.mjs?1635daaecacf7f794bc68d8fac3f1031",
                     "tabs/stalled": "./app/tabs/stalled.mjs?13af184237cfd1ae3abb321bba85eb0f",
                     "tabs/triage": "./app/tabs/triage.mjs?d80d35c3fc4da3ee4bfb76e9666b64a0",
@@ -111,15 +111,27 @@
 
         <div id="nav">
             <div class="tab" data-tab="help">Help</div>
-            <div class="tab selected" data-tab="components">
-                <span id="selected-components-title"
-                    >Components
-                    <span id="selected-components-count"></span>
-                </span>
-            </div>
-            <div class="tab" data-tab="triage" data-requires_components="1">Triage</div>
-            <div class="tab" data-tab="stalled" data-requires_components="1">
-                Stalled &amp; Longstanding
+            <div class="tab-group">
+                <div class="tab selected" data-tab="components">
+                    <span id="selected-components-title"
+                        >Components
+                        <span id="selected-components-count"></span>
+                    </span>
+                </div>
+                <div
+                    class="tab disabled"
+                    data-tab="triage"
+                    data-requires_components="1"
+                >
+                    Triage
+                </div>
+                <div
+                    class="tab disabled"
+                    data-tab="stalled"
+                    data-requires_components="1"
+                >
+                    Stalled &amp; Longstanding
+                </div>
             </div>
             <div
                 id="refresh-all-button"

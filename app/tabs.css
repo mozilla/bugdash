@@ -26,8 +26,13 @@
     color: #daa520;
 }
 
+.tab-group {
+    display: flex;
+    margin: 0 24px;
+}
+
 .tab {
-    border: 1px solid transparent;
+    border: 1px solid #656565;
     border-radius: 2px 2px 0 0;
     color: #fff;
     cursor: pointer;
@@ -37,6 +42,7 @@
 }
 
 .tab.filler {
+    border: none;
     cursor: default;
     flex-grow: 1;
 }
@@ -54,6 +60,10 @@
 
 .tab:not(.selected) {
     border-bottom: 1px solid #28292a;
+}
+
+.tab.disabled {
+    color: #656565;
 }
 
 .content:not(.selected) {
