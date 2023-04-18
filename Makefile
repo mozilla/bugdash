@@ -5,7 +5,7 @@ html-files:=$(wildcard *.html)
 js-files:=$(wildcard app/*.mjs) $(wildcard app/*/*.mjs)
 format-files=.format-css .format-js .format-html .format-cache
 
-format: $(format-files)
+format: .git/hooks/pre-commit $(format-files)
 
 .format-cache: node_modules/.updated .prettierrc $(css-files) $(js-files) $(html-files)
 	./cache-bust update
@@ -30,6 +30,9 @@ test: node_modules/.updated
 	yarn --silent run prettier --check $(js-files)
 	yarn --silent run eslint $(js-files)
 	./cache-bust check
+
+.git/hooks/pre-commit: node_modules/.updated pre-commit
+	cp pre-commit .git/hooks/pre-commit
 
 node_modules/.updated: package.json
 	yarn install
