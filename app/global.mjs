@@ -140,9 +140,10 @@ function buildHubRequest(version) {
 }
 
 async function loadComponents() {
-    // reload components once per week, or if the list of products changes
-    const currentCacheID =
-        Math.ceil(new Date().getDate() / 7) + ":" + hashCode(g.products.join("#"));
+    // reload components once per month, or if the list of products changes
+    const now = new Date();
+    const productsHash = hashCode(g.products.join("#"));
+    const currentCacheID = `${now.getFullYear()}.${now.getMonth()}:${productsHash}`;
     const cacheID = window.localStorage.getItem("componentsID") || "";
     const cacheData = window.localStorage.getItem("components");
     if (cacheData && cacheID === currentCacheID) {
