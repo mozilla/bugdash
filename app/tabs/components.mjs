@@ -1,3 +1,4 @@
+import * as Dialog from "dialog";
 import * as Global from "global";
 import * as Tooltips from "tooltips";
 import { _, __, debounce } from "util";
@@ -108,8 +109,15 @@ export async function initUI() {
 
     _("#component-filter").addEventListener("keyup", debounce(onFilterKeyUp, 100));
 
-    _("#filter-all").addEventListener("click", () => {
-        for (const $cb of __("#components tr:not(.hidden) input:not(:checked)")) {
+    _("#filter-all").addEventListener("click", async () => {
+        const components = __("#components tr:not(.hidden) input:not(:checked)");
+        if (components.length > 50) {
+            await Dialog.alert(
+                "Too many visible components. Please filter to show fewer than 50."
+            );
+            return;
+        }
+        for (const $cb of components) {
             $cb.click();
         }
     });
