@@ -36,8 +36,14 @@ export function initUI() {
 
     // listen for global refresh event
     document.addEventListener("buglist.refresh", () => {
+        const componentsSelected = Global.selectedComponents() > 0;
         for (const id of Object.keys(g.buglists)) {
-            refresh(id);
+            if (g.buglists[id].usesComponents && !componentsSelected) {
+                continue;
+            }
+            if (g.buglists[id].initialised) {
+                refresh(id);
+            }
         }
     });
 }
@@ -69,6 +75,7 @@ export function append({
         orderFn: order,
         usesComponents: usesComponents,
         url: undefined,
+        initialised: false,
     };
 }
 
@@ -105,6 +112,7 @@ export async function refresh(id) {
     const $list = _(buglist.$root, ".buglist");
     buglist.$root.classList.add("loading");
     buglist.$root.classList.remove("no-bugs");
+    buglist.initialised = true;
     for (const $button of __(buglist.$root, "button")) {
         $button.disabled = true;
     }

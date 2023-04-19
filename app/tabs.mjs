@@ -80,10 +80,7 @@ export function initUI() {
             Global.clearComponentsCache();
             window.location.reload();
         } else {
-            const components = Global.selectedComponents();
-            if (components.length > 0) {
-                document.dispatchEvent(new Event("buglist.refresh"));
-            }
+            document.dispatchEvent(new Event("buglist.refresh"));
         }
     });
 
