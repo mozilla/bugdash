@@ -35,7 +35,16 @@ export function init($container) {
             id: `reo-${ver.name}-new`,
             $container: $container,
             title: `${ver.nightly} (${ver.title}) New Bugs`,
-            description: "TODO",
+            description:
+                `Bugs with all of the following:\n` +
+                `- regression keyword\n` +
+                `- status-firefox${ver.nightly} set to affected\n` +
+                `- status-firefox${ver.beta} set to any of unaffected ? ---\n` +
+                `Bugs with any of the following are ignored:\n` +
+                `- open NEEDINFO request\n` +
+                `- tracking-firefox${ver.nightly} is -\n` +
+                `- stalled or intermittent-failure keywords\n` +
+                `- within the Testing or GeckoView products`,
             query: {
                 classification: [
                     "Client Software",
@@ -85,7 +94,16 @@ export function init($container) {
             $container: $container,
             template: "needinfo",
             title: `${ver.nightly} (${ver.title}) New Bugs With NEEDINFO`,
-            description: "TODO",
+            description:
+                `Bugs with all of the following:\n` +
+                `- regression keyword\n` +
+                `- status-firefox${ver.nightly} set to affected\n` +
+                `- status-firefox${ver.beta} set to any of unaffected ? ---\n` +
+                `- open NEEDINFO request\n` +
+                `Bugs with any of the following are ignored:\n` +
+                `- tracking-firefox${ver.nightly} is -\n` +
+                `- stalled or intermittent-failure keywords\n` +
+                `- within the Testing or GeckoView products`,
             query: {
                 classification: [
                     "Client Software",
@@ -102,28 +120,31 @@ export function init($container) {
                 f1: `cf_status_firefox${ver.nightly}`,
                 j2: "OR",
                 f2: "OP",
+                f3: `cf_status_firefox${ver.beta}`,
                 o3: "equals",
                 v3: "unaffected",
-                f3: `cf_status_firefox${ver.beta}`,
+                f4: `cf_status_firefox${ver.beta}`,
                 o4: "equals",
                 v4: "?",
-                f4: `cf_status_firefox${ver.beta}`,
+                f5: `cf_status_firefox${ver.beta}`,
                 o5: "equals",
                 v5: "---",
-                f5: `cf_status_firefox${ver.beta}`,
                 f6: "CP",
+                f7: "flagtypes.name",
                 o7: "anywordssubstr",
                 v7: "needinfo",
-                f7: "flagtypes.name",
                 f8: `cf_tracking_firefox${ver.nightly}`,
-                v8: "-",
                 o8: "notequals",
+                v8: "-",
+                f9: "product",
                 o9: "notequals",
                 v9: "Testing",
-                f9: "product",
-                v10: "stalled,intermittent-failure",
-                f10: "keywords",
-                o10: "nowordssubstr",
+                f10: "product",
+                o10: "notequals",
+                v10: "GeckoView",
+                f11: "keywords",
+                o11: "nowordssubstr",
+                v11: "stalled,intermittent-failure",
             },
             augment: (bug) => {
                 let nickSuffix = "";
@@ -148,7 +169,16 @@ export function init($container) {
             id: `reo-${ver.name}-carryover`,
             $container: $container,
             title: `${ver.nightly} (${ver.title}) Carry Over Bugs`,
-            description: "TODO",
+            description:
+                `Bugs with all of the following:\n` +
+                `- regression keyword\n` +
+                `- status-firefox${ver.nightly} set to affected\n` +
+                `Bugs with any of the following are ignored:\n` +
+                `- status-firefox${ver.beta} set to any of unaffected ? ---\n` +
+                `- open NEEDINFO request\n` +
+                `- tracking-firefox${ver.nightly} is -\n` +
+                `- stalled or intermittent-failure keywords\n` +
+                `- within the Testing or GeckoView products`,
             query: {
                 classification: [
                     "Client Software",
@@ -169,25 +199,28 @@ export function init($container) {
                 o3: "equals",
                 v3: "unaffected",
                 f3: `cf_status_firefox${ver.beta}`,
-                v4: "?",
                 f4: `cf_status_firefox${ver.beta}`,
                 o4: "equals",
+                v4: "?",
+                f5: `cf_status_firefox${ver.beta}`,
                 o5: "equals",
                 v5: "---",
-                f5: `cf_status_firefox${ver.beta}`,
                 f6: "CP",
                 o7: "notsubstring",
                 v7: "needinfo",
                 f7: "flagtypes.name",
                 f8: `cf_tracking_firefox${ver.nightly}`,
-                v8: "-",
                 o8: "notequals",
-                o9: "notequals",
+                v8: "-",
                 f9: "product",
+                o9: "notequals",
                 v9: "Testing",
-                f10: "keywords",
-                v10: "stalled,intermittent-failure",
-                o10: "nowordssubstr",
+                f10: "product",
+                o10: "notequals",
+                v10: "GeckoView",
+                f11: "keywords",
+                o11: "nowordssubstr",
+                v11: "stalled,intermittent-failure",
             },
         });
 
@@ -196,7 +229,16 @@ export function init($container) {
             $container: $container,
             template: "needinfo",
             title: `${ver.nightly} (${ver.title}) Carry Over Bugs With NEEDINFO`,
-            description: "TODO",
+            description:
+                `Bugs with all of the following:\n` +
+                `- regression keyword\n` +
+                `- status-firefox${ver.nightly} set to affected\n` +
+                `- open NEEDINFO request\n` +
+                `Bugs with any of the following are ignored:\n` +
+                `- status-firefox${ver.beta} set to any of unaffected ? ---\n` +
+                `- tracking-firefox${ver.nightly} is -\n` +
+                `- stalled or intermittent-failure keywords\n` +
+                `- within the Testing or GeckoView products`,
             query: {
                 classification: [
                     "Client Software",
@@ -214,28 +256,31 @@ export function init($container) {
                 n2: "1",
                 j2: "OR",
                 f2: "OP",
+                f3: `cf_status_firefox${ver.beta}`,
                 o3: "equals",
                 v3: "unaffected",
-                f3: `cf_status_firefox${ver.beta}`,
-                v4: "?",
                 f4: `cf_status_firefox${ver.beta}`,
                 o4: "equals",
+                v4: "?",
+                f5: `cf_status_firefox${ver.beta}`,
                 o5: "equals",
                 v5: "---",
-                f5: `cf_status_firefox${ver.beta}`,
                 f6: "CP",
                 o7: "anywordssubstr",
                 v7: "needinfo",
                 f7: "flagtypes.name",
                 f8: `cf_tracking_firefox${ver.nightly}`,
-                v8: "-",
                 o8: "notequals",
-                o9: "notequals",
+                v8: "-",
                 f9: "product",
+                o9: "notequals",
                 v9: "Testing",
-                f10: "keywords",
-                v10: "stalled,intermittent-failure",
-                o10: "nowordssubstr",
+                f10: "product",
+                o10: "notequals",
+                v10: "GeckoView",
+                f11: "keywords",
+                o11: "nowordssubstr",
+                v11: "stalled,intermittent-failure",
             },
             augment: (bug) => {
                 let nickSuffix = "";
@@ -260,7 +305,15 @@ export function init($container) {
             id: `reo-${ver.name}-burndown`,
             $container: $container,
             title: `${ver.nightly} (${ver.title}) Burndown List`,
-            description: "TODO",
+            description:
+                `Bugs with all of the following:\n` +
+                `- status-firefox${ver.nightly} is affected or optional\n` +
+                `- any of:\n` +
+                `\u00A0\u00A0- crash regression leak topcrash assertion dataloss keywords\n` +
+                `\u00A0\u00A0- in a security group\n` +
+                `\u00A0\u00A0- tracking-firefox${ver.nightly} is + ? or blocking\n` +
+                `Bugs with any of the following are ignored:\n` +
+                `- within the Testing or GeckoView products`,
             query: {
                 classification: [
                     "Client Software",
@@ -278,16 +331,19 @@ export function init($container) {
                 o3: "anywords",
                 v3: "crash regression leak topcrash assertion dataloss",
                 f3: "keywords",
-                v4: "sec",
                 f4: "bug_group",
                 o4: "substring",
-                v6: "+ ? blocking",
-                o6: "anywordssubstr",
+                v4: "sec",
                 f6: `cf_tracking_firefox${ver.nightly}`,
+                o6: "anywordssubstr",
+                v6: "+ ? blocking",
                 f7: "CP",
                 f9: "product",
                 o9: "notequals",
                 v9: "Testing",
+                f10: "product",
+                o10: "notequals",
+                v10: "GeckoView",
             },
         });
 
