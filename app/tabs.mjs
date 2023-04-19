@@ -139,5 +139,11 @@ export async function switchTo($tab) {
     const selectedTab = $tab.dataset.tab;
     _(`#tab-${selectedTab}`).classList.add("selected");
 
+    if (selectedTab === "components" || selectedTab === "help") {
+        history.pushState("", "", "/");
+    } else {
+        document.location.hash = `tab.${selectedTab}`;
+    }
+
     document.dispatchEvent(new Event(`tab.${selectedTab}`));
 }

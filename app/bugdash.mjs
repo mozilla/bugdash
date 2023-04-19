@@ -30,9 +30,19 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     document.body.classList.remove("loading");
 
-    const $tab =
-        Global.selectedComponents().length === 0
-            ? _(".tab[data-tab=components]")
-            : _(".tab[data-tab=triage]");
+    // navigation from document hash
+    let $tab;
+    const hash = document.location.hash.slice(1);
+    if (hash.startsWith("tab.")) {
+        $tab = _(`.tab[data-tab=${hash.slice(4)}`);
+    }
+    // else default to triage tab if we have selected components, or the
+    // components tab as a fallback default
+    if (!$tab) {
+        $tab =
+            Global.selectedComponents().length === 0
+                ? _(".tab[data-tab=components]")
+                : _(".tab[data-tab=triage]");
+    }
     await Tabs.switchTo($tab);
 });
