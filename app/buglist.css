@@ -158,6 +158,7 @@
     color: #000;
     font-size: 15px;
     font-weight: 500;
+    overflow-wrap: anywhere;
 }
 
 .buglist .bug-meta .type {
