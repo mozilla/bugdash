@@ -8,6 +8,7 @@ import * as Components from "tabs/components";
 import * as Triage from "tabs/triage";
 import * as Stalled from "tabs/stalled";
 import * as REO from "tabs/reo";
+import * as Tracked from "tabs/tracked";
 import { _ } from "util";
 
 window.addEventListener("DOMContentLoaded", async () => {
@@ -25,6 +26,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     Triage.initUI();
     Stalled.initUI();
     REO.initUI();
+    Tracked.initUI();
 
     Tooltips.initUI();
 

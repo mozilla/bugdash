@@ -47,6 +47,10 @@ function addTabs() {
             name: "reo",
             title: "Regressions",
         },
+        {
+            name: "tracked",
+            title: "Tracked",
+        },
     ]);
 }
 
