@@ -27,5 +27,6 @@ export function init($container) {
             o5: "notsubstring",
             v5: "stalled",
         },
+        usesComponents: true,
     });
 }

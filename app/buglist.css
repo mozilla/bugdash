@@ -141,7 +141,13 @@
     color: #777;
     font-size: 13px;
     padding-bottom: 8px;
+    vertical-align: top;
     white-space: nowrap;
+}
+
+.bug-row.bug-meta td.keywords {
+    white-space: normal;
+    width: 100%;
 }
 
 .bug-row .bug-id {
@@ -164,7 +170,6 @@
 
 .bug-row.bug-meta td:last-child {
     text-align: right;
-    width: 100%;
 }
 
 .bug-row .component {

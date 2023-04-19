@@ -21,6 +21,7 @@ export function init($container) {
             o2: "notsubstring",
             v2: "stalled",
         },
+        usesComponents: true,
         include: (bug) => {
             for (const ni of bug.needinfos) {
                 if (ni.setter !== ni.requestee) {

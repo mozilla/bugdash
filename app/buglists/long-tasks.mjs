@@ -29,5 +29,6 @@ export function init($container) {
             o3: "equals",
             v3: "task",
         },
+        usesComponents: true,
     });
 }

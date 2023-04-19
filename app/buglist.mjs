@@ -52,6 +52,7 @@ export function append({
     template,
     augment,
     order,
+    usesComponents,
 } = {}) {
     const $root = cloneTemplate(_("#buglist-template")).querySelector(
         ".buglist-container"
@@ -66,13 +67,17 @@ export function append({
         $timestampTemplate: _(`#bug-row-timestamp-${template || "creation"}`),
         augmentFn: augment,
         orderFn: order,
+        usesComponents: usesComponents,
         url: undefined,
     };
 }
 
 export function updateQuery(id) {
     const buglist = g.buglists[id];
-    const url = Bugzilla.queryURL(buglist.query, Global.selectedComponents());
+    const url = Bugzilla.queryURL(
+        buglist.query,
+        buglist.usesComponents ? Global.selectedComponents() : undefined
+    );
     if (url !== buglist.url) {
         buglist.url = url;
         refresh(id);
@@ -154,6 +159,10 @@ export async function refresh(id) {
                 }
             }
             bug.needinfos = needinfos.sort((a, b) => b.age - a.age);
+        }
+
+        if (bug.keywords) {
+            bug.keywords = bug.keywords.join(" ");
         }
 
         bugs.push(bug);

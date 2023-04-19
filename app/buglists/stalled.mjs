@@ -18,5 +18,6 @@ export function init($container) {
             o2: "notsubstring",
             v2: "needinfo",
         },
+        usesComponents: true,
     });
 }

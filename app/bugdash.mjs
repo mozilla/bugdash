@@ -7,6 +7,7 @@ import * as Help from "tabs/help";
 import * as Components from "tabs/components";
 import * as Triage from "tabs/triage";
 import * as Stalled from "tabs/stalled";
+import * as REO from "tabs/reo";
 import { _ } from "util";
 
 window.addEventListener("DOMContentLoaded", async () => {
@@ -23,6 +24,8 @@ window.addEventListener("DOMContentLoaded", async () => {
     await Components.initUI();
     Triage.initUI();
     Stalled.initUI();
+    REO.initUI();
+
     Tooltips.initUI();
 
     document.body.classList.remove("loading");

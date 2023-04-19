@@ -17,6 +17,7 @@ export function init($container) {
             o1: "substring",
             v1: "needinfo",
         },
+        usesComponents: true,
         include: (bug) => {
             for (const ni of bug.needinfos) {
                 if (ni.setter === "release-mgmt-account-bot@mozilla.tld") {

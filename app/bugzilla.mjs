@@ -15,8 +15,16 @@ export function queryURL(query, components) {
             if (num > fieldNumber) {
                 fieldNumber = num;
             }
+            search.append(name, value);
+        } else {
+            if (Array.isArray(value)) {
+                for (const v of value) {
+                    search.append(name, v);
+                }
+            } else {
+                search.append(name, value);
+            }
         }
-        search.append(name, value);
     }
 
     // Add components.  We can't use product= and component= query parameters as it
@@ -27,22 +35,24 @@ export function queryURL(query, components) {
     search.append("f" + fieldNumber, "OP");
     search.append("j" + fieldNumber, "OR");
 
-    for (const c of components) {
-        fieldNumber++;
-        search.append("f" + fieldNumber, "OP");
+    if (components) {
+        for (const c of components) {
+            fieldNumber++;
+            search.append("f" + fieldNumber, "OP");
 
-        fieldNumber++;
-        search.append("f" + fieldNumber, "product");
-        search.append("o" + fieldNumber, "equals");
-        search.append("v" + fieldNumber, c.product);
+            fieldNumber++;
+            search.append("f" + fieldNumber, "product");
+            search.append("o" + fieldNumber, "equals");
+            search.append("v" + fieldNumber, c.product);
 
-        fieldNumber++;
-        search.append("f" + fieldNumber, "component");
-        search.append("o" + fieldNumber, "equals");
-        search.append("v" + fieldNumber, c.component);
+            fieldNumber++;
+            search.append("f" + fieldNumber, "component");
+            search.append("o" + fieldNumber, "equals");
+            search.append("v" + fieldNumber, c.component);
 
-        fieldNumber++;
-        search.append("f" + fieldNumber, "CP");
+            fieldNumber++;
+            search.append("f" + fieldNumber, "CP");
+        }
     }
 
     fieldNumber++;

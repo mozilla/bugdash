@@ -18,6 +18,15 @@ function addTab(tab, $tabGroup) {
     return $tab;
 }
 
+function addTabGroup(tabs) {
+    const $tabGroup = document.createElement("div");
+    $tabGroup.classList.add("tab-group");
+    for (const tab of tabs) {
+        addTab(tab, $tabGroup);
+    }
+    _("#refresh-all-button").before($tabGroup);
+}
+
 function addComponentsTab(tab) {
     const $tabGroup = _("#components-tab-group");
     const $tab = addTab(tab, $tabGroup);
@@ -33,6 +42,12 @@ function addTabs() {
         name: "stalled",
         title: "Stalled & Longstanding",
     });
+    addTabGroup([
+        {
+            name: "reo",
+            title: "Regressions",
+        },
+    ]);
 }
 
 function updateAuth() {

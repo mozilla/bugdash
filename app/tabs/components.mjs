@@ -17,10 +17,12 @@ const onSelectedChanged = debounce(() => {
 
     // disabled tabs
     for (const $tab of __("#components-tab-group .tab")) {
-        if (selected.length === 0) {
-            $tab.classList.add("disabled");
-        } else {
-            $tab.classList.remove("disabled");
+        if ($tab.dataset.tab !== "components") {
+            if (selected.length === 0) {
+                $tab.classList.add("disabled");
+            } else {
+                $tab.classList.remove("disabled");
+            }
         }
     }
 

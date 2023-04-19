@@ -27,6 +27,7 @@ export function init($container) {
             o1: "equals",
             v1: "defect",
         },
+        usesComponents: true,
         include: async (bug) => {
             // exclude bugs with open needinfo requests that aren't self-ni
             for (const ni of bug.needinfos) {

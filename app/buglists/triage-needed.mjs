@@ -31,5 +31,6 @@ export function init($container) {
             o4: "notsubstring",
             v4: "meta",
         },
+        usesComponents: true,
     });
 }
