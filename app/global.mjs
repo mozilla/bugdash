@@ -6,10 +6,6 @@ const g = {
     nightly: undefined,
     beta: undefined,
     release: undefined,
-    statusBetaVersion: undefined,
-    statusReleaseVersion: undefined,
-    firstNightlyBeta: undefined,
-    firstNightlyRelease: undefined,
     components: undefined,
     account: undefined,
     products: [

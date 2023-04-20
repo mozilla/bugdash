@@ -9,7 +9,8 @@ export function init($container) {
         title: "Triage Decision Needed",
         description:
             "Bugs that have not been triaged (without a severity). " +
-            "Bugs with the meta keyword are ignored.\n" +
+            "Bugs with the meta keyword are ignored and open NEEDINFO " +
+            "requests are ignored.\n" +
             "Timestamp shows bug creation.",
         query: {
             email1: "wptsync@mozilla.bugs",

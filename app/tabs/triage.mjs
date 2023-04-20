@@ -2,6 +2,7 @@ import * as BugList from "buglist";
 import * as TriageNeeded from "buglists/triage-needed";
 import * as NeedinfoEscalated from "buglists/needinfo-escalated";
 import * as NeedinfoStale from "buglists/needinfo-stale";
+import * as RecentRegressions from "buglists/recent-regressions";
 import * as Blockers from "buglists/blockers";
 import * as Criticals from "buglists/criticals";
 import { _, __ } from "util";
@@ -18,6 +19,7 @@ export function initUI() {
     TriageNeeded.init($content);
     NeedinfoEscalated.init($content);
     NeedinfoStale.init($content);
+    RecentRegressions.init($content);
     Blockers.init($content);
     Criticals.init($content);
 }
