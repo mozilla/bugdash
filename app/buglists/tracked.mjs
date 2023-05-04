@@ -3,7 +3,7 @@ import * as Global from "global";
 
 /* eslint-disable camelcase */
 
-export function init($container) {
+export function init($container, usesComponents) {
     const releases = Global.releaseData();
 
     const versions = [
@@ -26,7 +26,7 @@ export function init($container) {
 
     for (const ver of versions) {
         BugList.append({
-            id: `tracked-${ver.name}`,
+            id: `tracked-${ver.name}-${usesComponents}`,
             $container: $container,
             title: `${ver.version} (${ver.title}) Tracked Bugs`,
             description: `Bugs with tracking-firefox${ver.version} set to +`,
@@ -43,6 +43,7 @@ export function init($container) {
                 o1: "equals",
                 v1: "+",
             },
+            usesComponents: usesComponents,
         });
     }
 }

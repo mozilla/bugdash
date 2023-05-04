@@ -42,6 +42,10 @@ function addTabs() {
         name: "stalled",
         title: "Stalled & Longstanding",
     });
+    addComponentsTab({
+        name: "important",
+        title: "Important",
+    });
     addTabGroup([
         {
             name: "reo",

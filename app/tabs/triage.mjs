@@ -3,8 +3,8 @@ import * as TriageNeeded from "buglists/triage-needed";
 import * as NeedinfoEscalated from "buglists/needinfo-escalated";
 import * as NeedinfoStale from "buglists/needinfo-stale";
 import * as RecentRegressions from "buglists/recent-regressions";
-import * as Blockers from "buglists/blockers";
-import * as Criticals from "buglists/criticals";
+import * as Blockers from "buglists/blockers-unassigned";
+import * as Criticals from "buglists/criticals-unassigned";
 import { _, __ } from "util";
 
 export function initUI() {

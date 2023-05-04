@@ -1,5 +1,5 @@
 import * as BugList from "buglist";
-import * as Tracking from "buglists/tracked";
+import * as Tracked from "buglists/tracked";
 import { _, __ } from "util";
 
 export function initUI() {
@@ -11,5 +11,5 @@ export function initUI() {
         }
     });
 
-    Tracking.init($content);
+    Tracked.init($content, false);
 }
