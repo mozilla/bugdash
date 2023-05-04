@@ -39,12 +39,12 @@ function addTabs() {
         title: "Triage",
     });
     addComponentsTab({
-        name: "stalled",
-        title: "Stalled & Longstanding",
-    });
-    addComponentsTab({
         name: "important",
         title: "Important",
+    });
+    addComponentsTab({
+        name: "stalled",
+        title: "Stalled & Longstanding",
     });
     addTabGroup([
         {
