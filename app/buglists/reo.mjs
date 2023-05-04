@@ -44,7 +44,7 @@ export function init($container) {
                 `- open NEEDINFO request\n` +
                 `- tracking-firefox${ver.nightly} is -\n` +
                 `- stalled or intermittent-failure keywords\n` +
-                `- within the Testing or GeckoView products`,
+                `- within the Testing product`,
             query: {
                 classification: [
                     "Client Software",
@@ -83,9 +83,6 @@ export function init($container) {
                 f10: "keywords",
                 o10: "nowordssubstr",
                 v10: "stalled,intermittent-failure",
-                f11: "product",
-                o11: "notequals",
-                v11: "Geckoview",
             },
         });
 
@@ -103,7 +100,7 @@ export function init($container) {
                 `Bugs with any of the following are ignored:\n` +
                 `- tracking-firefox${ver.nightly} is -\n` +
                 `- stalled or intermittent-failure keywords\n` +
-                `- within the Testing or GeckoView products`,
+                `- within the Testing product`,
             query: {
                 classification: [
                     "Client Software",
@@ -139,12 +136,9 @@ export function init($container) {
                 f9: "product",
                 o9: "notequals",
                 v9: "Testing",
-                f10: "product",
-                o10: "notequals",
-                v10: "GeckoView",
-                f11: "keywords",
-                o11: "nowordssubstr",
-                v11: "stalled,intermittent-failure",
+                f10: "keywords",
+                o10: "nowordssubstr",
+                v10: "stalled,intermittent-failure",
             },
             augment: (bug) => {
                 let nickSuffix = "";
@@ -178,7 +172,7 @@ export function init($container) {
                 `- open NEEDINFO request\n` +
                 `- tracking-firefox${ver.nightly} is -\n` +
                 `- stalled or intermittent-failure keywords\n` +
-                `- within the Testing or GeckoView products`,
+                `- within the Testing product`,
             query: {
                 classification: [
                     "Client Software",
@@ -215,12 +209,9 @@ export function init($container) {
                 f9: "product",
                 o9: "notequals",
                 v9: "Testing",
-                f10: "product",
-                o10: "notequals",
-                v10: "GeckoView",
-                f11: "keywords",
-                o11: "nowordssubstr",
-                v11: "stalled,intermittent-failure",
+                f10: "keywords",
+                o10: "nowordssubstr",
+                v10: "stalled,intermittent-failure",
             },
         });
 
@@ -238,7 +229,7 @@ export function init($container) {
                 `- status-firefox${ver.beta} set to any of unaffected ? ---\n` +
                 `- tracking-firefox${ver.nightly} is -\n` +
                 `- stalled or intermittent-failure keywords\n` +
-                `- within the Testing or GeckoView products`,
+                `- within the Testing products`,
             query: {
                 classification: [
                     "Client Software",
@@ -275,12 +266,9 @@ export function init($container) {
                 f9: "product",
                 o9: "notequals",
                 v9: "Testing",
-                f10: "product",
-                o10: "notequals",
-                v10: "GeckoView",
-                f11: "keywords",
-                o11: "nowordssubstr",
-                v11: "stalled,intermittent-failure",
+                f10: "keywords",
+                o10: "nowordssubstr",
+                v10: "stalled,intermittent-failure",
             },
             augment: (bug) => {
                 let nickSuffix = "";
@@ -313,7 +301,7 @@ export function init($container) {
                 `\u00A0\u00A0- in a security group\n` +
                 `\u00A0\u00A0- tracking-firefox${ver.nightly} is + ? or blocking\n` +
                 `Bugs with any of the following are ignored:\n` +
-                `- within the Testing or GeckoView products`,
+                `- within the Testing product`,
             query: {
                 classification: [
                     "Client Software",
@@ -341,9 +329,6 @@ export function init($container) {
                 f9: "product",
                 o9: "notequals",
                 v9: "Testing",
-                f10: "product",
-                o10: "notequals",
-                v10: "GeckoView",
             },
         });
 
