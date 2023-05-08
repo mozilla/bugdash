@@ -171,6 +171,7 @@ export async function initUI() {
     onSelectedChanged();
 
     document.addEventListener("tab.components", () => {
+        saveToURL();
         _("#component-filter").focus();
     });
 }
