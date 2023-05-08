@@ -50,6 +50,11 @@
         <link
             rel="stylesheet"
             type="text/css"
+            href="app/tabs/help.css?c85e68301e2f59a3727b7f4884e85d71"
+        />
+        <link
+            rel="stylesheet"
+            type="text/css"
             href="app/buglist.css?baeb2ca5c150d4829810cce8ab7866bf"
         />
         <link
@@ -67,7 +72,7 @@
             {
                 "imports": {
                     "bugdash": "./app/bugdash.mjs?a0cda95231806432bcebb9f4547c3296",
-                    "buglist": "./app/buglist.mjs?030310b6c9a786229e216e2ab6ebb8be",
+                    "buglist": "./app/buglist.mjs?c04f650c83fbea467ef381bfb8c0419e",
                     "buglists/assigned-inactive": "./app/buglists/assigned-inactive.mjs?eb293460f7086ff0e0477c3b48c940bf",
                     "buglists/blockers": "./app/buglists/blockers.mjs?754eae0719cca2ba526458bda07b0c7a",
                     "buglists/blockers-unassigned": "./app/buglists/blockers-unassigned.mjs?c57177a234f4d35815de8886a6ab750a",
@@ -84,12 +89,12 @@
                     "buglists/stalled": "./app/buglists/stalled.mjs?3132d2e3c741835f497f50e8b0ab6f66",
                     "buglists/tracked": "./app/buglists/tracked.mjs?ead55634a136b55d47f8a3b999769ba3",
                     "buglists/triage-needed": "./app/buglists/triage-needed.mjs?f4e896bba4c0b93a67cb13b47e9a5c51",
-                    "bugzilla": "./app/bugzilla.mjs?4f5250875365850a915c6b51ec15cf85",
-                    "dialog": "./app/dialog.mjs?d6097f05996b7577fde36e138a910856",
+                    "bugzilla": "./app/bugzilla.mjs?5a8393e7a04520fd026ce0aad6108951",
+                    "dialog": "./app/dialog.mjs?8c2b0b6af0aa3d362f724856cba39482",
                     "global": "./app/global.mjs?b9d59adec739a4d4b00d9a2f0e6fcb4e",
                     "tabs": "./app/tabs.mjs?fbadfaa574abc35545c4562c0c838990",
                     "tabs/components": "./app/tabs/components.mjs?d1711147d1ba4f31e69ba28514fac85d",
-                    "tabs/help": "./app/tabs/help.mjs?737da4435fc39ad0ab7935af0cca280f",
+                    "tabs/help": "./app/tabs/help.mjs?d2ff160591c3d59201a91b8a44f4b46c",
                     "tabs/important": "./app/tabs/important.mjs?b60cb230989e2656b20810c40de0a6d0",
                     "tabs/reo": "./app/tabs/reo.mjs?9c406290d501e19362de514ba3c1e4ca",
                     "tabs/stalled": "./app/tabs/stalled.mjs?13af184237cfd1ae3abb321bba85eb0f",
@@ -191,7 +196,7 @@
                 Use the tooltips on the sample bug below to see the field associated
                 with each value.
             </p>
-            <table id="help-buglist" class="buglist"></table>
+            <div id="help-sample"></div>
         </div>
 
         <!-- components -->

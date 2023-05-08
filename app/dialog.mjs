@@ -1,17 +1,13 @@
 import { _ } from "util";
 
-const g = {
-    resolve: undefined,
-};
-
 export function alert(message) {
-    if (g.resolve) {
+    if (window.dialogResolve) {
         return new Promise((resolve) => resolve(false));
     }
     reset();
 
     return new Promise((resolve) => {
-        g.resolve = resolve;
+        window.dialogResolve = resolve;
         _("#dialog").classList.add("dialog-alert");
         _("#dialog-message").textContent = message;
         _("#dialog-wrapper").classList.remove("hidden");
@@ -19,13 +15,13 @@ export function alert(message) {
 }
 
 export function prompt(message, value, placeholder) {
-    if (g.resolve) {
+    if (window.dialogResolve) {
         return new Promise((resolve) => resolve(false));
     }
     reset();
 
     return new Promise((resolve) => {
-        g.resolve = resolve;
+        window.dialogResolve = resolve;
         _("#dialog").classList.add("dialog-prompt");
         _("#dialog-message").textContent = message;
         if (placeholder) {
@@ -60,6 +56,8 @@ function reset() {
 }
 
 export function initUI() {
+    window.dialogResolve = undefined;
+
     document.addEventListener("keyup", (event) => {
         if (_("#dialog-wrapper").classList.contains("hidden")) return;
 
@@ -75,16 +73,16 @@ export function initUI() {
 
     _("#dialog-cancel").addEventListener("click", () => {
         _("#dialog-wrapper").classList.add("hidden");
-        g.resolve(false);
-        g.resolve = undefined;
+        window.dialogResolve(false);
+        window.dialogResolve = undefined;
     });
     _("#dialog-ok").addEventListener("click", () => {
         _("#dialog-wrapper").classList.add("hidden");
         if (_("#dialog").classList.contains("dialog-prompt")) {
-            g.resolve(_("#dialog-input").value);
+            window.dialogResolve(_("#dialog-input").value);
         } else {
-            g.resolve(true);
+            window.dialogResolve(true);
         }
-        g.resolve = undefined;
+        window.dialogResolve = undefined;
     });
 }

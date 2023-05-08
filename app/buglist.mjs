@@ -1,4 +1,5 @@
 import * as Bugzilla from "bugzilla";
+import * as Dialog from "dialog";
 import * as Global from "global";
 import { _, __, chunked, cloneTemplate, timeAgo, updateTemplate } from "util";
 
@@ -7,7 +8,7 @@ const g = {
 };
 
 export function initUI() {
-    document.addEventListener("click", (event) => {
+    document.addEventListener("click", async (event) => {
         // check for clicks within a buglist header
         if (!event.target.closest(".buglist-header")) return;
         const $buglist = event.target.closest(".buglist-container");
@@ -23,7 +24,17 @@ export function initUI() {
         // open-in-bugzilla button
         const $buglistBtn = event.target.closest(".buglist-btn");
         if ($buglistBtn) {
-            window.open($buglistBtn.dataset.url);
+            if (event.shiftKey) {
+                if ($buglistBtn.bugIDs.length > 50) {
+                    await Dialog.alert("Unable to open more than 50 tabs.");
+                    return;
+                }
+                for (const id of $buglistBtn.bugIDs) {
+                    window.open(Bugzilla.bugUrl(id));
+                }
+            } else {
+                window.open(Bugzilla.buglistUrl($buglistBtn.bugIDs));
+            }
             return;
         }
 
@@ -300,6 +311,9 @@ export async function refresh(id) {
         $button.disabled = false;
     }
     if (bugs.length > 0) {
+        _(buglist.$root, ".buglist-header .buglist-btn").bugIDs = bugs.map(
+            (bug) => bug.id
+        );
         _(buglist.$root, ".buglist-header .buglist-btn").dataset.url =
             Bugzilla.buglistUrl(bugs.map((bug) => bug.id));
 
