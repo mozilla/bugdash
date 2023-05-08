@@ -260,14 +260,24 @@ export async function refresh(id) {
             bug.creator_nick === bug.creator_detail.real_name
                 ? ""
                 : bug.creator_detail.real_name;
+        // eslint-disable-next-line camelcase
+        bug.needinfo_icon = " ";
 
-        for (const ni of bug.needinfos) {
-            ni["requestee_nick"] =
-                ni.requestee_detail.nick || ni.requestee_detail.real_name;
-            ni["requestee_name"] =
-                ni.requestee_nick === ni.requestee_detail.real_name
-                    ? ""
-                    : ni.requestee_detail.real_name;
+        if (bug.needinfos.length > 0) {
+            for (const ni of bug.needinfos) {
+                ni["requestee_nick"] =
+                    ni.requestee_detail.nick || ni.requestee_detail.real_name;
+                ni["requestee_name"] =
+                    ni.requestee_nick === ni.requestee_detail.real_name
+                        ? ""
+                        : ni.requestee_detail.real_name;
+            }
+            // eslint-disable-next-line camelcase
+            bug.needinfo_icon = "live_help";
+            // eslint-disable-next-line camelcase
+            bug.needinfo_target =
+                `NEEDINFO: ${bug.needinfos[0].requestee_nick} ` +
+                `(${bug.needinfos[0].ago})`;
         }
     }
     if (buglist.augmentFn !== undefined) {

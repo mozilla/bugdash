@@ -8,6 +8,10 @@ export function initUI() {
         summary: "Sample Bug Summary",
         type_icon: "brightness_7",
         type: "Bug type (defect, enhancement, task)",
+        needinfo_icon: "live_help",
+        needinfo_target:
+            "Shown on bugs with an open NEEDINFO request. " +
+            "If multiple requests details of the oldest is show",
         groups_icon: "lock",
         groups: "Padlock shown on private bugs",
         severity: "S2",

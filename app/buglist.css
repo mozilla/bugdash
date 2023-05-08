@@ -137,6 +137,14 @@
     padding-top: 8px;
 }
 
+.bug-row .bug-icons span {
+    margin-right: 4px;
+}
+
+.bug-row .bug-icons .needinfo {
+    color: #4169e1;
+}
+
 .bug-row.bug-meta td {
     color: #777;
     font-size: 13px;

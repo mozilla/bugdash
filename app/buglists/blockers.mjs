@@ -8,7 +8,7 @@ export function init($container) {
         $container: $container,
         title: "Blocker (S1) Defects",
         description:
-            "Blocker (S1) defects without a pending NEEDINFOs. " +
+            "Blocker (S1) defects. " +
             "Bugs with the stalled keyword are ignored.\n" +
             "Timestamp shows last modified.",
         query: {
@@ -16,15 +16,12 @@ export function init($container) {
             f1: "bug_severity",
             o1: "anyexact",
             v1: "s1,blocker",
-            f2: "flagtypes.name",
-            o2: "notsubstring",
-            v2: "needinfo",
-            f3: "cf_status_firefox_nightly",
-            o3: "nowords",
-            v3: "fixed,verified,wontfix,disabled,unaffected",
-            f4: "keywords",
-            o4: "notsubstring",
-            v4: "stalled",
+            f2: "cf_status_firefox_nightly",
+            o2: "nowords",
+            v2: "fixed,verified,wontfix,disabled,unaffected",
+            f3: "keywords",
+            o3: "notsubstring",
+            v3: "stalled",
         },
         usesComponents: true,
         augment: (bug) => {
