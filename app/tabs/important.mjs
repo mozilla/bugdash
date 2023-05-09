@@ -2,6 +2,7 @@ import * as BugList from "buglist";
 import * as Tracked from "buglists/tracked";
 import * as Blockers from "buglists/blockers";
 import * as Criticals from "buglists/criticals";
+import * as TopCrashers from "buglists/topcrashers";
 import * as Regressions from "buglists/regressions";
 import { _, __ } from "util";
 
@@ -18,6 +19,7 @@ export function initUI() {
 
     Blockers.init($content, true);
     Criticals.init($content, true);
+    TopCrashers.init($content, true);
     $content.append(document.createElement("br"));
     Tracked.init($content, true);
     $content.append(document.createElement("br"));
