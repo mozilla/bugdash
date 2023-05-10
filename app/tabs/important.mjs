@@ -4,24 +4,19 @@ import * as Blockers from "buglists/blockers";
 import * as Criticals from "buglists/criticals";
 import * as TopCrashers from "buglists/topcrashers";
 import * as Regressions from "buglists/regressions";
-import { _, __ } from "util";
+import { _ } from "util";
 
 export function initUI() {
     const $content = _("#important-content");
 
-    document.addEventListener("tab.important", () => {
-        for (const $buglist of __($content, ".buglist-container")) {
-            BugList.updateQuery($buglist.id);
-        }
-    });
+    let $group = BugList.newGroup($content);
+    Blockers.init($group, true);
+    Criticals.init($group, true);
+    TopCrashers.init($group, true);
 
-    // Regressions
+    $group = BugList.newGroup($content);
+    Tracked.init($group, true);
 
-    Blockers.init($content, true);
-    Criticals.init($content, true);
-    TopCrashers.init($content, true);
-    $content.append(document.createElement("br"));
-    Tracked.init($content, true);
-    $content.append(document.createElement("br"));
-    Regressions.init($content, true);
+    $group = BugList.newGroup($content);
+    Regressions.init($group, true);
 }

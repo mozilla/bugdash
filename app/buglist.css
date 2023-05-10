@@ -1,5 +1,5 @@
 .buglist-container {
-    margin-top: 8px;
+    margin-bottom: 6px;
 }
 
 .buglist-container.closed .buglist-header .toggle::after {
@@ -13,6 +13,25 @@
 .buglist-container.no-bugs .toggle,
 .buglist-container.no-bugs .summary {
     color: #bbb;
+}
+
+.buglist-group {
+    margin-bottom: 16px;
+}
+
+.buglist-group-actions {
+    font-size: 14px;
+    margin-bottom: 1px;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.buglist-group-actions a {
+    color: #444;
+}
+
+.buglist-group-actions a:hover {
+    color: #008080;
 }
 
 .buglist-header {

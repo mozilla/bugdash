@@ -55,7 +55,7 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="app/buglist.css?baeb2ca5c150d4829810cce8ab7866bf"
+            href="app/buglist.css?4229fc6198e6f64702323bbede3e89c9"
         />
         <link
             rel="stylesheet"
@@ -72,7 +72,7 @@
             {
                 "imports": {
                     "bugdash": "./app/bugdash.mjs?a0cda95231806432bcebb9f4547c3296",
-                    "buglist": "./app/buglist.mjs?c04f650c83fbea467ef381bfb8c0419e",
+                    "buglist": "./app/buglist.mjs?09d1e27763773dd0d294b3d3b285d07b",
                     "buglists/assigned-inactive": "./app/buglists/assigned-inactive.mjs?eb293460f7086ff0e0477c3b48c940bf",
                     "buglists/blockers": "./app/buglists/blockers.mjs?754eae0719cca2ba526458bda07b0c7a",
                     "buglists/blockers-unassigned": "./app/buglists/blockers-unassigned.mjs?c57177a234f4d35815de8886a6ab750a",
@@ -85,7 +85,7 @@
                     "buglists/needinfo-stale": "./app/buglists/needinfo-stale.mjs?58af5abb6a5d44feacfd66ebbf59ceec",
                     "buglists/recent-regressions": "./app/buglists/recent-regressions.mjs?496f04b8658d2189cdfa4655c603ba6a",
                     "buglists/regressions": "./app/buglists/regressions.mjs?2f757dcb4a70dcfd3461cfc8b594d26b",
-                    "buglists/reo": "./app/buglists/reo.mjs?39df0257d720d0b36d8b88741e86c464",
+                    "buglists/reo": "./app/buglists/reo.mjs?55c45bd5e92fd0393b7c3a50771d24e0",
                     "buglists/stalled": "./app/buglists/stalled.mjs?3132d2e3c741835f497f50e8b0ab6f66",
                     "buglists/topcrashers": "./app/buglists/topcrashers.mjs?44dc47a319517b2e9e8e8f54cd6eff15",
                     "buglists/tracked": "./app/buglists/tracked.mjs?ead55634a136b55d47f8a3b999769ba3",
@@ -93,14 +93,14 @@
                     "bugzilla": "./app/bugzilla.mjs?5a8393e7a04520fd026ce0aad6108951",
                     "dialog": "./app/dialog.mjs?8c2b0b6af0aa3d362f724856cba39482",
                     "global": "./app/global.mjs?b9d59adec739a4d4b00d9a2f0e6fcb4e",
-                    "tabs": "./app/tabs.mjs?fbadfaa574abc35545c4562c0c838990",
+                    "tabs": "./app/tabs.mjs?b41b908abaea235adfca1707f40b541f",
                     "tabs/components": "./app/tabs/components.mjs?d1711147d1ba4f31e69ba28514fac85d",
                     "tabs/help": "./app/tabs/help.mjs?d2ff160591c3d59201a91b8a44f4b46c",
-                    "tabs/important": "./app/tabs/important.mjs?5054b2c3ff485e78881068c6aafe101d",
-                    "tabs/reo": "./app/tabs/reo.mjs?9c406290d501e19362de514ba3c1e4ca",
-                    "tabs/stalled": "./app/tabs/stalled.mjs?13af184237cfd1ae3abb321bba85eb0f",
-                    "tabs/tracked": "./app/tabs/tracked.mjs?75fa42f1b5cab51bd999e8cc9d02ee88",
-                    "tabs/triage": "./app/tabs/triage.mjs?3ce78903ef5df08936151f20adc91948",
+                    "tabs/important": "./app/tabs/important.mjs?3171e0565ca29ac681d90abdd420fef9",
+                    "tabs/reo": "./app/tabs/reo.mjs?afead088b7f915068f9b3edb71f0df72",
+                    "tabs/stalled": "./app/tabs/stalled.mjs?4b6f20adbb97d1f2aa199460b60e5f37",
+                    "tabs/tracked": "./app/tabs/tracked.mjs?f416cd08cf5dc3101d75d0ccbd41a05f",
+                    "tabs/triage": "./app/tabs/triage.mjs?95c3bd3b27b0fc054e47350eaa3f1578",
                     "tooltips": "./app/tooltips.mjs?f6ce915e9ef0058cae9ecc157ad8a1a9",
                     "util": "./app/util.mjs?6cfd0192d12dee40c10bf38fb81ee8ec"
                 }
@@ -244,6 +244,17 @@
         <template id="tab-content-template">
             <div data-id-field="outer" class="content">
                 <div data-id-field="inner"></div>
+            </div>
+        </template>
+
+        <!-- template: buglist group -->
+        <template id="buglist-group-template">
+            <div class="buglist-group">
+                <div class="buglist-group-actions">
+                    <a href="#" data-action="expand">Expand All</a>
+                    &bull;
+                    <a href="#" data-action="collapse">Collapse All</a>
+                </div>
             </div>
         </template>
 

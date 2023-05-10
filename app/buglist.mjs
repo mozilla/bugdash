@@ -10,44 +10,63 @@ const g = {
 export function initUI() {
     document.addEventListener("click", async (event) => {
         // check for clicks within a buglist header
-        if (!event.target.closest(".buglist-header")) return;
-        const $buglist = event.target.closest(".buglist-container");
-        if (!$buglist) return;
+        if (event.target.closest(".buglist-header")) {
+            const $buglist = event.target.closest(".buglist-container");
+            if (!$buglist) return;
 
-        // refresh button
-        const $refreshBtn = event.target.closest(".refresh-btn");
-        if ($refreshBtn) {
-            refresh($buglist.id);
-            return;
-        }
+            // refresh button
+            const $refreshBtn = event.target.closest(".refresh-btn");
+            if ($refreshBtn) {
+                refresh($buglist.id);
+                return;
+            }
 
-        // open-in-bugzilla button
-        const $buglistBtn = event.target.closest(".buglist-btn");
-        if ($buglistBtn) {
-            if (event.shiftKey) {
-                if ($buglistBtn.bugIDs.length > 50) {
-                    await Dialog.alert("Unable to open more than 50 tabs.");
-                    return;
+            // open-in-bugzilla button
+            const $buglistBtn = event.target.closest(".buglist-btn");
+            if ($buglistBtn) {
+                if (event.shiftKey) {
+                    if ($buglistBtn.bugIDs.length > 50) {
+                        await Dialog.alert("Unable to open more than 50 tabs.");
+                        return;
+                    }
+                    for (const id of $buglistBtn.bugIDs) {
+                        window.open(Bugzilla.bugUrl(id));
+                    }
+                } else {
+                    window.open(Bugzilla.buglistUrl($buglistBtn.bugIDs));
                 }
-                for (const id of $buglistBtn.bugIDs) {
-                    window.open(Bugzilla.bugUrl(id));
-                }
-            } else {
-                window.open(Bugzilla.buglistUrl($buglistBtn.bugIDs));
+                return;
+            }
+
+            // toggle open/closed
+            if (!$buglist.classList.contains("no-bugs")) {
+                $buglist.classList.toggle("closed");
             }
             return;
         }
 
-        // toggle open/closed
-        if (!$buglist.classList.contains("no-bugs")) {
-            $buglist.classList.toggle("closed");
-            return;
+        // buglist group actions
+        if (event.target.closest(".buglist-group-actions")) {
+            const $target = event.target;
+            if ($target.nodeName !== "A") return;
+            const collapse = $target.dataset.action === "collapse";
+            for (const $container of $target
+                .closest(".buglist-group")
+                .querySelectorAll(".buglist-container")) {
+                if ($container.classList.contains("no-bugs")) continue;
+                if (collapse) {
+                    $container.classList.add("closed");
+                } else {
+                    $container.classList.remove("closed");
+                }
+            }
+            event.preventDefault();
         }
     });
 
     // listen for global refresh event
     document.addEventListener("buglist.refresh", () => {
-        const componentsSelected = Global.selectedComponents() > 0;
+        const componentsSelected = Global.selectedComponents().length > 0;
         for (const id of Object.keys(g.buglists)) {
             if (g.buglists[id].usesComponents && !componentsSelected) {
                 continue;
@@ -57,6 +76,14 @@ export function initUI() {
             }
         }
     });
+}
+
+export function newGroup($container) {
+    const $root = cloneTemplate(_("#buglist-group-template")).querySelector(
+        ".buglist-group"
+    );
+    $container.append($root);
+    return $root;
 }
 
 export function append({

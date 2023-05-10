@@ -1,3 +1,4 @@
+import * as BugList from "buglist";
 import * as Bugzilla from "bugzilla";
 import * as Dialog from "dialog";
 import * as Global from "global";
@@ -15,6 +16,14 @@ function addTab(tab, $tabGroup) {
         inner: `${tab.name}-content`,
     });
     _("#tabs-content").append($content);
+
+    document.addEventListener(`tab.${tab.name}`, () => {
+        const $container = _(`#tab-${tab.name}`);
+        for (const $buglist of __($container, ".buglist-container")) {
+            BugList.updateQuery($buglist.id);
+        }
+    });
+
     return $tab;
 }
 
