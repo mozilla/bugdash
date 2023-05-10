@@ -83,10 +83,6 @@ export function queryURL(query, components) {
     return "bug?" + search.toString();
 }
 
-export function bugUrl(id) {
-    return `https://bugzilla.mozilla.org/show_bug.cgi?id=${id}`;
-}
-
 export function buglistUrl(ids) {
     return "https://bugzilla.mozilla.org/buglist.cgi?bug_id=" + ids.join(",");
 }

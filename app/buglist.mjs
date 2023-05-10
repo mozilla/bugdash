@@ -1,5 +1,4 @@
 import * as Bugzilla from "bugzilla";
-import * as Dialog from "dialog";
 import * as Global from "global";
 import { _, __, chunked, cloneTemplate, timeAgo, updateTemplate } from "util";
 
@@ -24,20 +23,7 @@ export function initUI() {
             // open-in-bugzilla button
             const $buglistBtn = event.target.closest(".buglist-btn");
             if ($buglistBtn) {
-                if (event.shiftKey) {
-                    if ($buglistBtn.bugIDs.length > 50) {
-                        await Dialog.alert("Unable to open more than 50 tabs.");
-                        return;
-                    }
-                    for (const id of $buglistBtn.bugIDs.reverse()) {
-                        const url = Bugzilla.bugUrl(id);
-                        // eslint-disable-next-line no-console
-                        console.log("opening", url);
-                        window.open(url, "_blank");
-                    }
-                } else {
-                    window.open(Bugzilla.buglistUrl($buglistBtn.bugIDs), "_blank");
-                }
+                window.open(Bugzilla.buglistUrl($buglistBtn.bugIDs), "_blank");
                 return;
             }
 
