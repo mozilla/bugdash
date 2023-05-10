@@ -29,11 +29,14 @@ export function initUI() {
                         await Dialog.alert("Unable to open more than 50 tabs.");
                         return;
                     }
-                    for (const id of $buglistBtn.bugIDs) {
-                        window.open(Bugzilla.bugUrl(id));
+                    for (const id of $buglistBtn.bugIDs.reverse()) {
+                        const url = Bugzilla.bugUrl(id);
+                        // eslint-disable-next-line no-console
+                        console.log("opening", url);
+                        window.open(url, "_blank");
                     }
                 } else {
-                    window.open(Bugzilla.buglistUrl($buglistBtn.bugIDs));
+                    window.open(Bugzilla.buglistUrl($buglistBtn.bugIDs), "_blank");
                 }
                 return;
             }
