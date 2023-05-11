@@ -35,7 +35,7 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="app/global.css?317571c9deebdafa1cc6eb5f8976bfde"
+            href="app/global.css?ed79c8d99fc6388fbd3c4bae1275a8a8"
         />
         <link
             rel="stylesheet"
@@ -111,6 +111,13 @@
         <div id="loading">
             Starting BugDash…
             <div id="loading-stage"></div>
+            <div id="no-importmap" class="hidden">
+                <p>
+                    BugDash is unable to start as your browser does not support the
+                    "importMap" feature.
+                </p>
+                <p>For Firefox you'll require at least version 108.</p>
+            </div>
         </div>
 
         <div id="dialog-wrapper" class="hidden">
@@ -364,6 +371,12 @@
             :
             <span data-field="needinfo_ago" data-title-field="needinfo_date"></span>
         </template>
+
+        <script>
+            import("bugdash").catch(() => {
+                document.querySelector("#no-importmap").classList.remove("hidden");
+            });
+        </script>
 
         <script src="assets/popperjs-2.min.js"></script>
         <script src="assets/tippyjs-6.min.js"></script>

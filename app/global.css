@@ -102,7 +102,7 @@ input[type="search"] {
     word-wrap: normal;
 }
 
-body.loading *:not(#loading, #loading-stage, #dialog-wrapper, #dialog-wrapper *),
+body.loading *:not(#loading, #loading *, #dialog-wrapper, #dialog-wrapper *),
 body:not(.loading) #loading {
     display: none;
 }
