@@ -153,11 +153,15 @@ export async function switchTo($tab) {
     const selectedTab = $tab.dataset.tab;
     _(`#tab-${selectedTab}`).classList.add("selected");
 
+    // update doc hash and title
     if (selectedTab === "components" || selectedTab === "help") {
         history.pushState("", "", "/");
     } else {
         document.location.hash = `tab.${selectedTab}`;
     }
+    let title = $tab.textContent.trim().replace(/ \(\d+\)/, "");
+    document.title = `BugDash - ${title}`;
 
+    // notify tab
     document.dispatchEvent(new Event(`tab.${selectedTab}`));
 }
