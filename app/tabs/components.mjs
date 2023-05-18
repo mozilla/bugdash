@@ -194,7 +194,7 @@ function saveToURL() {
         searchParams.append("component", `${c.product}:${c.component}`);
     }
     if (url.href.length < 2048) {
-        window.history.pushState(undefined, undefined, url.href);
+        window.history.replaceState(undefined, undefined, url.href);
     }
 }
 

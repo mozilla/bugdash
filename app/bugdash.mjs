@@ -34,12 +34,8 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     document.body.classList.remove("loading");
 
-    // navigation from document hash
-    let $tab;
-    const hash = document.location.hash.slice(1);
-    if (hash.startsWith("tab.")) {
-        $tab = _(`.tab[data-tab=${hash.slice(4)}`);
-    }
+    // navigate to the tab saved in the hash
+    let $tab = hashToTab();
     // else default to triage tab if we have selected components, or the
     // components tab as a fallback default
     if (!$tab) {
@@ -49,4 +45,14 @@ window.addEventListener("DOMContentLoaded", async () => {
                 : _(".tab[data-tab=triage]");
     }
     await Tabs.switchTo($tab);
+
+    window.addEventListener("popstate", async () => {
+        let $tab = hashToTab() || _(".tab[data-tab=components]");
+        await Tabs.switchTo($tab);
+    });
 });
+
+function hashToTab() {
+    const hash = document.location.hash.slice(1);
+    return hash.startsWith("tab.") ? _(`.tab[data-tab=${hash.slice(4)}`) : undefined;
+}
