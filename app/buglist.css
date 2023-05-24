@@ -3,11 +3,13 @@
 }
 
 .buglist-container.closed .buglist-header .toggle::after {
-    content: "⏵";
+    content: "▶";
+    font-size: 75%;
 }
 
 .buglist-container:not(.closed) .buglist-header .toggle::after {
-    content: "⏷";
+    content: "▼";
+    font-size: 75%;
 }
 
 .buglist-container.no-bugs .toggle,
