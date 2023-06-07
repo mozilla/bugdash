@@ -152,7 +152,7 @@ export async function refresh(id) {
     const now = Date.now();
     let bugs = [];
     for (const bug of response.bugs) {
-        bug["url"] = `https://bugzilla.mozilla.org/${bug.id}`;
+        bug["url"] = `https://bugzilla.mozilla.org/show_bug.cgi?id=${bug.id}`;
         bug["severity_title"] = severityTitles[bug.severity] || "";
         bug["creation_epoch"] = Date.parse(bug.creation_time);
         bug["creation_ago"] = timeAgo(bug.creation_epoch);
