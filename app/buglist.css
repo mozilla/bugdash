@@ -134,6 +134,14 @@
     text-decoration: underline;
 }
 
+.buglist .bug-id a {
+    color: #006cbf;
+}
+
+.buglist .bug-id a:visited {
+    color: #9248c8;
+}
+
 .buglist tr.odd {
     background: #fff;
 }
