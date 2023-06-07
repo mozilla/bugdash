@@ -84,7 +84,10 @@ export function queryURL(query, components) {
 }
 
 export function buglistUrl(ids) {
-    return "https://bugzilla.mozilla.org/buglist.cgi?bug_id=" + ids.join(",");
+    return (
+        "https://bugzilla.mozilla.org/buglist.cgi?order=bug_list&bug_id=" +
+        ids.join(",")
+    );
 }
 
 export function setApiKey(key) {
