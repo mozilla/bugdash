@@ -147,7 +147,7 @@ export function init($container, ver) {
             `- tracking-firefox${ver.nightly} is -\n` +
             `- stalled or intermittent-failure keywords\n` +
             `- within the Testing product\n` +
-            "Bugs are order by creation date, oldest first.",
+            "Bugs are order by unassigned, then by last updated (oldest first)",
         query: {
             classification: [
                 "Client Software",
@@ -188,6 +188,12 @@ export function init($container, ver) {
             o10: "nowordssubstr",
             v10: "stalled,intermittent-failure",
         },
+        augment: (bug) => {
+            bug.assigned_sortkey = bug.assigned_to === "nobody@mozilla.org" ? 0 : 1;
+        },
+        order: (a, b) =>
+            a.assigned_sortkey - b.assigned_sortkey ||
+            a.updated_epoch - b.updated_epoch,
     });
 
     BugList.append({
@@ -205,7 +211,7 @@ export function init($container, ver) {
             `- tracking-firefox${ver.nightly} is -\n` +
             `- stalled or intermittent-failure keywords\n` +
             `- within the Testing products\n` +
-            "Bugs are order by needinfo date, oldest first.",
+            "Bugs are order by unassigned, then by needinfo date (oldest first)",
         query: {
             classification: [
                 "Client Software",
@@ -247,6 +253,7 @@ export function init($container, ver) {
             v10: "stalled,intermittent-failure",
         },
         augment: (bug) => {
+            bug.assigned_sortkey = bug.assigned_to === "nobody@mozilla.org" ? 0 : 1;
             let nickSuffix = "";
             let nameSuffix = "";
             if (bug.needinfos[0].requestee === bug.triage_owner) {
@@ -262,7 +269,9 @@ export function init($container, ver) {
             bug.needinfo_ago = bug.needinfos[0].ago;
             bug.needinfo_epoch = bug.needinfos[0].epoch;
         },
-        order: (a, b) => a.needinfo_epoch - b.needinfo_epoch,
+        order: (a, b) =>
+            a.assigned_sortkey - b.assigned_sortkey ||
+            a.needinfo_epoch - b.needinfo_epoch,
     });
 
     BugList.append({
