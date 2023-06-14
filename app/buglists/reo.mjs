@@ -16,7 +16,8 @@ export function init($container, ver) {
             `- open NEEDINFO request\n` +
             `- tracking-firefox${ver.nightly} is -\n` +
             `- stalled or intermittent-failure keywords\n` +
-            `- within the Testing product`,
+            `- within the Testing product\n` +
+            "Bugs are order by creation date, oldest first.",
         query: {
             classification: [
                 "Client Software",
@@ -72,7 +73,8 @@ export function init($container, ver) {
             `Bugs with any of the following are ignored:\n` +
             `- tracking-firefox${ver.nightly} is -\n` +
             `- stalled or intermittent-failure keywords\n` +
-            `- within the Testing product`,
+            `- within the Testing product\n` +
+            "Bugs are order by needinfo date, oldest first.",
         query: {
             classification: [
                 "Client Software",
@@ -144,7 +146,8 @@ export function init($container, ver) {
             `- open NEEDINFO request\n` +
             `- tracking-firefox${ver.nightly} is -\n` +
             `- stalled or intermittent-failure keywords\n` +
-            `- within the Testing product`,
+            `- within the Testing product\n` +
+            "Bugs are order by creation date, oldest first.",
         query: {
             classification: [
                 "Client Software",
@@ -201,7 +204,8 @@ export function init($container, ver) {
             `- status-firefox${ver.beta} set to any of unaffected ? ---\n` +
             `- tracking-firefox${ver.nightly} is -\n` +
             `- stalled or intermittent-failure keywords\n` +
-            `- within the Testing products`,
+            `- within the Testing products\n` +
+            "Bugs are order by needinfo date, oldest first.",
         query: {
             classification: [
                 "Client Software",
@@ -273,7 +277,8 @@ export function init($container, ver) {
             `\u00A0\u00A0- in a security group\n` +
             `\u00A0\u00A0- tracking-firefox${ver.nightly} is + ? or blocking\n` +
             `Bugs with any of the following are ignored:\n` +
-            `- within the Testing product`,
+            `- within the Testing product\n` +
+            "Bugs are order by creation date, oldest first.",
         query: {
             classification: [
                 "Client Software",

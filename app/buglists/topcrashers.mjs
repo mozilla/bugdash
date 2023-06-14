@@ -8,7 +8,9 @@ export function init($container) {
         $container: $container,
         title: "Top Crashers",
         description:
-            "Bugs with the 'topcrash' keyword. " + "Timestamp shows last modified.",
+            "Bugs with the 'topcrash' keyword.\n" +
+            "Bugs are order by last updated, oldest first.\n" +
+            "Timestamp shows last modified.",
         query: {
             resolution: "---",
             f1: "keywords",

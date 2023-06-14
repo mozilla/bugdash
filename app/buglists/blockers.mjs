@@ -10,6 +10,7 @@ export function init($container) {
         description:
             "Blocker (S1) defects. " +
             "Bugs with the stalled keyword are ignored.\n" +
+            "Bugs are order by last updated, oldest first.\n" +
             "Timestamp shows last modified.",
         query: {
             resolution: "---",

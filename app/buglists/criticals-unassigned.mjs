@@ -8,6 +8,7 @@ export function init($container) {
         description:
             "Critical (S2) defects without an assignee and no pending NEEDINFOs. " +
             "Bugs with the stalled keyword are ignored.\n" +
+            "Bugs are order by creation date, oldest first.\n" +
             "Timestamp shows bug creation.",
         query: {
             resolution: "---",

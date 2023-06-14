@@ -15,6 +15,7 @@ export function init($container) {
             "Defects with an assignee that haven't been updated by the " +
             "assignee with the last 4 weeks.  Bugs with the stalled keyword " +
             "or open NEEDINFO requests are ignored.\n" +
+            "Bugs are order by last updated, oldest first.\n" +
             "Timestamp shows last time bug was updated by anyone.",
         query: {
             email1: "nobody@mozilla.org",

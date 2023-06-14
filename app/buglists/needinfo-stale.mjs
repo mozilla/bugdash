@@ -11,6 +11,7 @@ export function init($container) {
         description:
             "NEEDINFO requests older than 14 days, excluding self-NEEDINFOs " +
             "and bugs with the stalled keyword.\n" +
+            "Bugs are order by needinfo date, oldest first.\n" +
             "Timestamp shows the oldest needinfo request.",
         query: {
             resolution: "---",

@@ -16,6 +16,7 @@ export function init($container) {
             `status-firefox${releases.beta.version} and ` +
             `status-firefox${releases.release.version} set.\n` +
             "Bugs with an open NEEDINFO request are ignored.\n" +
+            "Bugs are order by creation date, oldest first.\n" +
             "Timestamp shows bug creation.",
         query: {
             chfield: "[Bug creation]",

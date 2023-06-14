@@ -11,6 +11,7 @@ export function init($container) {
             "Bugs that have not been triaged (without a severity). " +
             "Bugs with the meta keyword are ignored and open NEEDINFO " +
             "requests are ignored.\n" +
+            "Bugs are order by creation date, oldest first.\n" +
             "Timestamp shows bug creation.",
         query: {
             email1: "wptsync@mozilla.bugs",

@@ -44,6 +44,7 @@ export function init($container) {
                 `- open NEEDINFO request\n` +
                 `- tracking-firefox${ver.nightly} is -\n` +
                 `- stalled or intermittent-failure keywords\n` +
+                "Bugs are order by last updated, oldest first.\n" +
                 "Timestamp shows last modified.",
             query: {
                 keywords: "regression",
@@ -95,6 +96,7 @@ export function init($container) {
                 `- open NEEDINFO request\n` +
                 `- tracking-firefox${ver.nightly} is -\n` +
                 `- stalled or intermittent-failure keywords\n` +
+                "Bugs are order by last updated, oldest first.\n" +
                 "Timestamp shows last modified.",
             query: {
                 classification: [

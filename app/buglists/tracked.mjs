@@ -29,7 +29,9 @@ export function init($container, usesComponents) {
             id: `tracked-${ver.name}-${usesComponents}`,
             $container: $container,
             title: `${ver.version} (${ver.title}) Tracked Bugs`,
-            description: `Bugs with tracking-firefox${ver.version} set to +`,
+            description:
+                `Bugs with tracking-firefox${ver.version} set to +\n` +
+                "Bugs are order by creation date, oldest first.",
             query: {
                 classification: [
                     "Client Software",

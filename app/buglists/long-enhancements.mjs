@@ -11,6 +11,7 @@ export function init($container) {
             "Enhancements have been open more than one year. " +
             "Bugs with a NEEDINFO request, filed by WPT-sync, or with the " +
             "intermittent_failure keyword are ignored.\n" +
+            "Bugs are order by creation date, oldest first.\n" +
             "Timestamp shows bug creation.",
         query: {
             email1: "wptsync@mozilla.bugs",
