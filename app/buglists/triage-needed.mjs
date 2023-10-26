@@ -1,4 +1,5 @@
 import * as BugList from "buglist";
+import { _ } from "util";
 
 /* eslint-disable camelcase */
 
@@ -34,5 +35,13 @@ export function init($container) {
             v4: "meta",
         },
         usesComponents: true,
+        augmentRow: ($row) => {
+            const $keywords = _($row, ".keywords");
+            if ($keywords.textContent === "") return;
+            $keywords.innerHTML = $keywords.textContent
+                .split(" ")
+                .map((kw) => `<span class="keyword-${kw}">${kw}</span>`)
+                .join(" ");
+        },
     });
 }

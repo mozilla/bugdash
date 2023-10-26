@@ -86,6 +86,7 @@ export function append({
     augment,
     order,
     usesComponents,
+    augmentRow,
 } = {}) {
     const $root = cloneTemplate(_("#buglist-template")).querySelector(
         ".buglist-container"
@@ -103,6 +104,7 @@ export function append({
         usesComponents: usesComponents,
         url: undefined,
         initialised: false,
+        augmentRow: augmentRow,
     };
 }
 
@@ -347,6 +349,9 @@ export async function refresh(id) {
             // set odd/even class
             for (const $tr of __($row, "tr")) {
                 $tr.classList.add(i % 2 === 0 ? "odd" : "even");
+            }
+            if (buglist.augmentRow) {
+                buglist.augmentRow($row);
             }
             i++;
             $list.append($row);

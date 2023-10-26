@@ -214,3 +214,8 @@
     padding-left: 32px;
     padding-right: 32px;
 }
+
+.bug-row .keyword-sec-critical,
+.bug-row .keyword-sec-high {
+    color: #dc143c;
+}
