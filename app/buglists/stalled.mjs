@@ -6,7 +6,7 @@ export function init($container) {
         $container: $container,
         title: "Stalled Defects",
         description:
-            "Bugs with the stalled keyword excluding those with an open NEEDINFO.\n" +
+            "Defects with the stalled keyword excluding those with an open NEEDINFO.\n" +
             "Bugs are order by creation date, oldest first.\n" +
             "Timestamp shows bug creation.",
         query: {

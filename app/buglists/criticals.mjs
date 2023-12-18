@@ -23,6 +23,9 @@ export function init($container) {
             f3: "keywords",
             o3: "notsubstring",
             v3: "stalled",
+            f4: "bug_type",
+            o4: "equals",
+            v4: "defect",
         },
         usesComponents: true,
         augment: (bug) => {

@@ -9,7 +9,7 @@ export function init($container) {
         $container: $container,
         title: "Triage Decision Needed",
         description:
-            "Bugs that have not been triaged (without a severity). " +
+            "Defects that have not been triaged (without a severity). " +
             "Bugs with the meta keyword are ignored and open NEEDINFO " +
             "requests are ignored.\n" +
             "Bugs are order by creation date, oldest first.\n" +

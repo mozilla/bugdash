@@ -27,6 +27,9 @@ export function init($container) {
             f5: "keywords",
             o5: "notsubstring",
             v5: "stalled",
+            f6: "bug_type",
+            o6: "equals",
+            v6: "defect",
         },
         usesComponents: true,
     });
