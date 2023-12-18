@@ -14,6 +14,7 @@ const g = {
         "Developer Infrastructure",
         "External Software Affecting Firefox",
         "Fenix",
+        "Focus",
         "Firefox Build System",
         "Firefox for iOS",
         "Firefox",
