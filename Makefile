@@ -1,4 +1,4 @@
-.PHONY: format test run clean deploy
+.PHONY: format test run clean deploy node
 
 css-files:=$(wildcard app/*.css) $(wildcard app/*/*.css)
 html-files:=$(wildcard *.html)
@@ -34,6 +34,7 @@ test: node_modules/.updated
 .git/hooks/pre-commit: node_modules/.updated pre-commit
 	cp pre-commit .git/hooks/pre-commit
 
+node: node_modules/.updated
 node_modules/.updated: package.json
 	NPM_CONFIG_UPDATE_NOTIFIER=false npm install --no-fund --no-audit
 	@touch $@
