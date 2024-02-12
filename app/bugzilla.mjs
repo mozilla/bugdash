@@ -115,6 +115,8 @@ export async function rest(endpoint, args, ignoreErrors) {
     const apiKey = getApiKey();
     const account = Global.getAccount();
     const uaSuffix = account ? ` (${account.name})` : "";
+    const controller = new AbortController();
+    const timerId = setTimeout(() => controller.abort(), 60000);
 
     const response = await fetch(url, {
         method: "GET",
@@ -125,8 +127,10 @@ export async function rest(endpoint, args, ignoreErrors) {
             "Sec-Fetch-Site": "cross-site",
             "X-Bugzilla-API-Key": apiKey,
         },
+        signal: controller.signal,
     });
     const responseData = await response.json();
+    clearTimeout(timerId);
     if (!response.ok && !responseData) {
         throw new Error(response.statusText);
     }

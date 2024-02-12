@@ -141,6 +141,7 @@ export async function refresh(id) {
     const $list = _(buglist.$root, ".buglist");
     buglist.$root.classList.add("loading");
     buglist.$root.classList.remove("no-bugs");
+    buglist.$root.classList.remove("error");
     buglist.initialised = true;
     for (const $button of __(buglist.$root, "button")) {
         $button.disabled = true;
@@ -148,7 +149,17 @@ export async function refresh(id) {
     $list.innerHTML = "";
 
     // execute query
-    const response = await Bugzilla.rest(buglist.url);
+    let response;
+    try {
+        response = await Bugzilla.rest(buglist.url);
+    } catch (error) {
+        buglist.$root.classList.remove("loading");
+        buglist.$root.classList.add("no-bugs");
+        buglist.$root.classList.add("error");
+        _(buglist.$root, ".buglist-header .counter").textContent =
+            "Failed to load bugs";
+        return;
+    }
 
     // build results
     const now = Date.now();
@@ -210,6 +221,7 @@ export async function refresh(id) {
         if (buglist.includeFn.constructor.name === "AsyncFunction") {
             // async function (eg. queries Bugzilla)
             // run in parallel, but no more than 10 at a time
+            let failed = false;
             const chunkedBugs = chunked(bugs, 10);
             for (const bugChunk of chunkedBugs) {
                 const includePromises = [];
@@ -217,12 +229,24 @@ export async function refresh(id) {
                     includePromises.push(
                         // eslint-disable-next-line no-async-promise-executor
                         new Promise(async (resolve) => {
-                            bug.include = await buglist.includeFn(bug);
+                            try {
+                                bug.include = await buglist.includeFn(bug);
+                            } catch (error) {
+                                failed = true;
+                            }
                             resolve(true);
                         })
                     );
                 }
                 await Promise.allSettled(includePromises);
+            }
+            if (failed) {
+                buglist.$root.classList.remove("loading");
+                buglist.$root.classList.add("no-bugs");
+                buglist.$root.classList.add("error");
+                _(buglist.$root, ".buglist-header .counter").textContent =
+                    "Failed to load bugs";
+                return;
             }
         } else {
             for (const bug of bugs) {
@@ -231,6 +255,10 @@ export async function refresh(id) {
         }
         bugs = bugs.filter((bug) => bug.include);
     }
+
+    _(buglist.$root, ".buglist-header .counter").textContent = `${bugs.length} bug${
+        bugs.length === 1 ? "" : "s"
+    }`;
 
     // get details of needinfo requestees
     const usernamesSet = new Set();
@@ -356,9 +384,6 @@ export async function refresh(id) {
             i++;
             $list.append($row);
         }
-
-        const summary = `${bugs.length} bug${bugs.length === 1 ? "" : "s"}`;
-        _(buglist.$root, ".buglist-header .counter").textContent = summary;
     } else {
         buglist.$root.classList.add("closed");
         buglist.$root.classList.add("no-bugs");

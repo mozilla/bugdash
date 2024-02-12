@@ -17,6 +17,10 @@
     color: #bbb;
 }
 
+.buglist-container.error .buglist-header .counter {
+    color: #a64a5c;
+}
+
 .buglist-group {
     margin-bottom: 16px;
 }
