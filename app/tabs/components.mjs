@@ -171,6 +171,7 @@ export async function initUI() {
     onSelectedChanged();
 
     document.addEventListener("tab.components", () => {
+        document.body.classList.remove("component-warning");
         saveToURL();
         _("#component-filter").focus();
     });
@@ -180,9 +181,14 @@ function loadFromURL() {
     const searchParams = new URLSearchParams(window.location.search);
     const selectedComponents = new Set(searchParams.getAll("component"));
     for (const c of Global.allComponents()) {
-        if (selectedComponents.has(`${c.product}:${c.component}`)) {
+        const key = `${c.product}:${c.component}`;
+        if (selectedComponents.has(key)) {
             _(`#c${c.id}`).checked = true;
+            selectedComponents.delete(key);
         }
+    }
+    if (selectedComponents.size > 0) {
+        document.body.classList.add("component-warning");
     }
 }
 

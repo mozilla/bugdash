@@ -2,6 +2,15 @@
     display: inline-block;
 }
 
+#selected-components-warning {
+    color: orange;
+    vertical-align: middle;
+}
+
+body:not(.component-warning) #selected-components-warning {
+    display: none;
+}
+
 #component-filter.disabled {
     background: #f8f8f8;
     color: #bbb;
