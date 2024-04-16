@@ -86,6 +86,7 @@ export function append({
     augment,
     order,
     usesComponents,
+    limit,
     augmentRow,
 } = {}) {
     const $root = cloneTemplate(_("#buglist-template")).querySelector(
@@ -102,6 +103,7 @@ export function append({
         augmentFn: augment,
         orderFn: order,
         usesComponents: usesComponents,
+        limit: limit,
         url: undefined,
         initialised: false,
         augmentRow: augmentRow,
@@ -158,6 +160,18 @@ export async function refresh(id) {
         buglist.$root.classList.add("error");
         _(buglist.$root, ".buglist-header .counter").textContent =
             "Failed to load bugs";
+        return;
+    }
+
+    // exit early if there are too many bugs to avoid hitting BMO rate limits
+    // we do this before applying filters as some filters request more data from BMO
+    const limit = buglist.limit || 2000;
+    if (response.bugs.length >= limit) {
+        buglist.$root.classList.remove("loading");
+        buglist.$root.classList.add("no-bugs");
+        buglist.$root.classList.add("error");
+        _(buglist.$root, ".buglist-header .counter").textContent =
+            "Too many bugs (" + response.bugs.length + ")";
         return;
     }
 

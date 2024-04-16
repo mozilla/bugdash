@@ -1,6 +1,6 @@
 import * as Bugzilla from "bugzilla";
 import * as Dialog from "dialog";
-import { __, setLoadingStage, hashCode } from "util";
+import { __, hashCode, setLoadingStage } from "util";
 
 const g = {
     nightly: undefined,

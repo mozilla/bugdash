@@ -118,17 +118,24 @@ export async function rest(endpoint, args, ignoreErrors) {
     const controller = new AbortController();
     const timerId = setTimeout(() => controller.abort(), 60000);
 
-    const response = await fetch(url, {
-        method: "GET",
-        headers: {
-            "User-Agent": `bugdash${uaSuffix}`,
-            "Sec-Fetch-Dest": "empty",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Site": "cross-site",
-            "X-Bugzilla-API-Key": apiKey,
-        },
-        signal: controller.signal,
-    });
+    let response;
+    try {
+        response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "User-Agent": `bugdash${uaSuffix}`,
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "cross-site",
+                "X-Bugzilla-API-Key": apiKey,
+            },
+            signal: controller.signal,
+        });
+    } catch (error) {
+        clearTimeout(timerId);
+        controller.abort();
+        throw new Error(error.message);
+    }
     const responseData = await response.json();
     clearTimeout(timerId);
     if (!response.ok && !responseData) {
