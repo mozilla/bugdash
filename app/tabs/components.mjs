@@ -73,11 +73,18 @@ function onFilterKeyUp(event) {
     }
     g.lastQuery = query;
 
-    // component title that contain all of the filter words
+    applyFilter();
+}
+
+function applyFilter() {
+    const query = _("#component-filter").value.trim().toLowerCase();
+
+    // component title or team that contain all of the filter words
     const queryWords = query.split(/\s+/);
     let matches = 0;
+    const field = _("#filter-scope").value;
     for (const c of Global.allComponents()) {
-        if (queryWords.every((w) => c.title.toLowerCase().includes(w))) {
+        if (queryWords.every((w) => c[field].toLowerCase().includes(w))) {
             _(`#c${c.id}-row`).classList.remove("hidden");
             matches++;
         } else {
@@ -110,6 +117,7 @@ export async function initUI() {
     });
 
     _("#component-filter").addEventListener("keyup", debounce(onFilterKeyUp, 100));
+    _("#filter-scope").addEventListener("change", applyFilter);
 
     _("#filter-all").addEventListener("click", async () => {
         const components = __("#components tr:not(.hidden) input:not(:checked)");

@@ -11,6 +11,10 @@ body:not(.component-warning) #selected-components-warning {
     display: none;
 }
 
+#filter-scope {
+    margin-right: 16px;
+}
+
 #component-filter.disabled {
     background: #f8f8f8;
     color: #bbb;
@@ -48,6 +52,10 @@ label[for="filter-selected"].disabled {
 
 #components .row .name {
     font-weight: bold;
+}
+
+#components .row .team {
+    width: 10em;
 }
 
 #components .row label {

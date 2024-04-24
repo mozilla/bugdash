@@ -35,7 +35,7 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="app/global.css?23a0946ad64e1249bfe0a4d51b1ceef7"
+            href="app/global.css?4b2134b6746b23f63d58a6ce921ffe0a"
         />
         <link
             rel="stylesheet"
@@ -45,7 +45,7 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="app/tabs/components.css?782ff9c7672548df4f2ed2722d037ff4"
+            href="app/tabs/components.css?e1d2431463463bf213e9819e1a008cf1"
         />
         <link
             rel="stylesheet"
@@ -94,9 +94,9 @@
                     "buglists/triage-needed": "./app/buglists/triage-needed.mjs?c072b0eeae9e6bc72c8c4fcd64ecb2d3",
                     "bugzilla": "./app/bugzilla.mjs?f35a9e48438541081365e1ac27884d5f",
                     "dialog": "./app/dialog.mjs?8c2b0b6af0aa3d362f724856cba39482",
-                    "global": "./app/global.mjs?35613a87641834bbe7c5ff2452bf869a",
+                    "global": "./app/global.mjs?5f126ea68e10455e924d2a4182c21b85",
                     "tabs": "./app/tabs.mjs?916a2778b69ffbe96ebaa8e555df0b19",
-                    "tabs/components": "./app/tabs/components.mjs?17237fb7f03c130cd47514d690e0b808",
+                    "tabs/components": "./app/tabs/components.mjs?d07ea2134d023980c974260abd7d5b19",
                     "tabs/help": "./app/tabs/help.mjs?66e69d9c2570a97ccd2a2e8bfd147e72",
                     "tabs/important": "./app/tabs/important.mjs?3171e0565ca29ac681d90abdd420fef9",
                     "tabs/reo": "./app/tabs/reo.mjs?afead088b7f915068f9b3edb71f0df72",
@@ -223,6 +223,10 @@
 
             <div>
                 <input id="component-filter" type="search" placeholder="Filter…" />
+                <select id="filter-scope">
+                    <option value="title">Name</option>
+                    <option value="team">Team</option>
+                </select>
                 <button id="filter-all">Select Visible</button>
                 <button id="filter-none-visible">Deselect Visible</button>
                 <button id="filter-none">Deselect All</button>
@@ -235,6 +239,7 @@
                     <tr>
                         <th id="components-th-cb"></th>
                         <th id="components-th-name">Component</th>
+                        <th id="components-th-team">Team</th>
                         <th id="components-th-desc">Description</th>
                     </tr>
                 </thead>
@@ -244,6 +249,7 @@
                 <tr class="row">
                     <td><input type="checkbox" /></td>
                     <td class="name"><label data-field="title"></label></td>
+                    <td class="team"><label data-field="team"></label></td>
                     <td class="desc"><label data-field="desc"></label></td>
                 </tr>
             </template>

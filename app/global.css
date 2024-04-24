@@ -77,7 +77,8 @@ h1 {
     font-size: 15px;
 }
 
-button {
+button,
+select {
     border: 1px solid silver;
     border-radius: 2px;
     padding: 4px 8px;

@@ -3,6 +3,7 @@ import * as Dialog from "dialog";
 import { __, hashCode, setLoadingStage } from "util";
 
 const g = {
+    appVersion: 1, // bump to force component reloading
     nightly: undefined,
     beta: undefined,
     release: undefined,
@@ -138,9 +139,9 @@ function buildHubRequest(version) {
 }
 
 async function loadComponents() {
-    // reload components once per month, or if the list of products changes
+    // reload components once per month, or if the list of products or appVersion changes
     const now = new Date();
-    const productsHash = hashCode(g.products.join("#"));
+    const productsHash = hashCode(g.products.join("#") + g.appVersion.toString());
     const currentCacheID = `${now.getFullYear()}.${now.getMonth()}:${productsHash}`;
     const cacheID = window.localStorage.getItem("componentsID") || "";
     const cacheData = window.localStorage.getItem("components");
@@ -158,7 +159,7 @@ async function loadComponents() {
                 {
                     // eslint-disable-next-line camelcase
                     include_fields:
-                        "components.id,components.name,components.description",
+                        "components.id,components.name,components.description,components.team_name",
                 }
             );
             if (response.products.length === 0) {
@@ -176,6 +177,7 @@ async function loadComponents() {
                         .replaceAll("&gt;", ">"),
                     product: product,
                     component: component.name,
+                    team: component.team_name,
                 });
             }
         } catch (error) {
