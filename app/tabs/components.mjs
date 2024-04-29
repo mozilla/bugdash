@@ -53,6 +53,8 @@ const onSelectedChanged = debounce(() => {
             _("label[for=filter-selected]").classList.remove("disabled");
         }
     }
+
+    saveToURL();
 }, 10);
 
 function onFilterKeyUp(event) {
@@ -63,20 +65,25 @@ function onFilterKeyUp(event) {
             $tr.classList.remove("hidden");
         }
         _("#tab-components").classList.remove("no-matching-components");
+        g.lastQuery = undefined;
         return;
     }
-
-    // no need to filter if unchanged
-    const query = _("#component-filter").value.trim().toLowerCase();
-    if (query === g.lastQuery) {
-        return;
-    }
-    g.lastQuery = query;
 
     applyFilter();
 }
 
 function applyFilter() {
+    // no need to filter if unchanged
+    const queryOptions = [
+        _("#component-filter").value.trim().toLowerCase(),
+        _("#filter-scope").value,
+        _("#filter-selected").checked.toString(),
+    ].join("\n");
+    if (queryOptions === g.lastQuery) {
+        return;
+    }
+    g.lastQuery = queryOptions;
+
     const query = _("#component-filter").value.trim().toLowerCase();
 
     // component title or team that contain all of the filter words
@@ -97,6 +104,8 @@ function applyFilter() {
     } else {
         _("#tab-components").classList.remove("no-matching-components");
     }
+
+    onSelectedChanged();
 }
 
 export async function initUI() {
@@ -112,7 +121,6 @@ export async function initUI() {
         }
         if (event.target.nodeName === "INPUT") {
             onSelectedChanged();
-            saveToURL();
         }
     });
 
@@ -144,31 +152,21 @@ export async function initUI() {
     _("#filter-selected").addEventListener("click", () => {
         if (_("#filter-selected").checked) {
             _("#component-filter").disabled = true;
-        } else {
+            _("#filter-scope").disabled = true;
+            for (const $cb of __("#components input")) {
+                const $tr = $cb.closest("tr");
+                if ($cb.checked) {
+                    $tr.classList.remove("hidden");
+                } else {
+                    $tr.classList.add("hidden");
+                }
+            }
             g.lastQuery = undefined;
+        } else {
             _("#component-filter").disabled = false;
-            onFilterKeyUp();
+            _("#filter-scope").disabled = false;
+            applyFilter();
         }
-        for (const $cb of __("#components input")) {
-            const $tr = $cb.closest("tr");
-            if ($cb.checked) {
-                $tr.classList.remove("hidden");
-            } else {
-                $tr.classList.add("hidden");
-            }
-        }
-    });
-    _("#filter-selected").addEventListener("click", () => {
-        const filtered = _("#filter-selected").checked;
-        for (const $cb of __("#components input")) {
-            const $tr = $cb.closest("tr");
-            if (!filtered || $cb.checked) {
-                $tr.classList.remove("hidden");
-            } else {
-                $tr.classList.add("hidden");
-            }
-        }
-        onSelectedChanged();
     });
 
     // always start with an empty filter, even if the browser restored the input
@@ -187,16 +185,26 @@ export async function initUI() {
 
 function loadFromURL() {
     const searchParams = new URLSearchParams(window.location.search);
-    const selectedComponents = new Set(searchParams.getAll("component"));
-    for (const c of Global.allComponents()) {
-        const key = `${c.product}:${c.component}`;
-        if (selectedComponents.has(key)) {
-            _(`#c${c.id}`).checked = true;
-            selectedComponents.delete(key);
+
+    if (searchParams.has("team")) {
+        const team = searchParams.get("team");
+        for (const c of Global.allComponents()) {
+            if (c.team === team) {
+                _(`#c${c.id}`).checked = true;
+            }
         }
-    }
-    if (selectedComponents.size > 0) {
-        document.body.classList.add("component-warning");
+    } else {
+        const selectedComponents = new Set(searchParams.getAll("component"));
+        for (const c of Global.allComponents()) {
+            const key = `${c.product}:${c.component}`;
+            if (selectedComponents.has(key)) {
+                _(`#c${c.id}`).checked = true;
+                selectedComponents.delete(key);
+            }
+        }
+        if (selectedComponents.size > 0) {
+            document.body.classList.add("component-warning");
+        }
     }
 }
 
@@ -204,8 +212,28 @@ function saveToURL() {
     const url = new URL(window.location.href);
     const searchParams = url.searchParams;
     searchParams.delete("component");
-    for (const c of Global.selectedComponents()) {
-        searchParams.append("component", `${c.product}:${c.component}`);
+    searchParams.delete("team");
+
+    const selected = Global.selectedComponents();
+
+    // if the filter scope is a team and all components in that team are selected
+    // then use that team as the search params
+    if (selected.length > 0 && _("#filter-scope").value === "team") {
+        const team = selected[0].team;
+        const teamComponents = Global.allComponents().filter((c) => c.team === team);
+        if (
+            selected.every((c) => c.team === team) &&
+            selected.length === teamComponents.length
+        ) {
+            searchParams.append("team", team);
+        }
+    }
+
+    // otherwise use individual components
+    if (!searchParams.has("team")) {
+        for (const c of selected) {
+            searchParams.append("component", `${c.product}:${c.component}`);
+        }
     }
     if (url.href.length < 2048) {
         window.history.replaceState(undefined, undefined, url.href);
