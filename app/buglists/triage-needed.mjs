@@ -10,7 +10,8 @@ export function init($container) {
         title: "Triage Decision Needed",
         description:
             "Defects that have not been triaged (without a severity). " +
-            "Bugs with the meta keyword are ignored and open NEEDINFO " +
+            "Bugs with a NEEDINFO request, filed by WPT-sync, or with the " +
+            "meta keyword are ignored.\n" +
             "requests are ignored.\n" +
             "Bugs are order by creation date, oldest first.\n" +
             "Timestamp shows bug creation.",

@@ -11,7 +11,7 @@ export function init($container) {
         title: `Recent Tasks < ${days} Days`,
         description:
             `Tasks filed within the last ${days} days.\n` +
-            "Bugs with the meta keyword are ignored.\n" +
+            "Bugs with the meta keyword or filed by WPT-sync are ignored.\n" +
             "Bugs are order by creation date, oldest first.\n" +
             "Timestamp shows bug creation.",
         query: {
