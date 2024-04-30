@@ -15,6 +15,11 @@ body:not(.component-warning) #selected-components-warning {
     margin-right: 16px;
 }
 
+#filter-actions {
+    display: inline-block;
+    margin-top: 2px;
+}
+
 #component-filter.disabled {
     background: #f8f8f8;
     color: #bbb;
