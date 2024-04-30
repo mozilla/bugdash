@@ -25,7 +25,7 @@ export function init($container) {
             v3: "stalled",
             f4: "keywords",
             o4: "notsubstring",
-            v4: "stalled",
+            v4: "meta",
             f5: "bug_type",
             o5: "equals",
             v5: "defect",
