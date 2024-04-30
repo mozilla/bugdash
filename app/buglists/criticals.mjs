@@ -9,7 +9,7 @@ export function init($container) {
         title: "Critical (S2) Defects",
         description:
             "Critical (S2) defects. " +
-            "Bugs with the stalled keyword are ignored.\n" +
+            "Bugs with stalled or meta keywords are ignored.\n" +
             "Bugs are order by last updated, oldest first.\n" +
             "Timestamp shows last modified.",
         query: {
@@ -23,9 +23,12 @@ export function init($container) {
             f3: "keywords",
             o3: "notsubstring",
             v3: "stalled",
-            f4: "bug_type",
-            o4: "equals",
-            v4: "defect",
+            f4: "keywords",
+            o4: "notsubstring",
+            v4: "stalled",
+            f5: "bug_type",
+            o5: "equals",
+            v5: "defect",
         },
         usesComponents: true,
         augment: (bug) => {

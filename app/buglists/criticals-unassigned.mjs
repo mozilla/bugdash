@@ -7,7 +7,7 @@ export function init($container) {
         title: "Unassigned Critical (S2) Defects",
         description:
             "Critical (S2) defects without an assignee and no pending NEEDINFOs. " +
-            "Bugs with the stalled keyword are ignored.\n" +
+            "Bugs with stalled or meta keywords are ignored.\n" +
             "Bugs are order by creation date, oldest first.\n" +
             "Timestamp shows bug creation.",
         query: {
@@ -27,9 +27,12 @@ export function init($container) {
             f5: "keywords",
             o5: "notsubstring",
             v5: "stalled",
-            f6: "bug_type",
-            o6: "equals",
-            v6: "defect",
+            f6: "keywords",
+            o6: "notsubstring",
+            v6: "meta",
+            f7: "bug_type",
+            o7: "equals",
+            v7: "defect",
         },
         usesComponents: true,
     });
