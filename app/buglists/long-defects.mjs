@@ -9,14 +9,11 @@ export function init($container) {
         title: "Longstanding Defects > 365 days",
         description:
             "Defects have been open more than one year. " +
-            "Bugs with a NEEDINFO request, filed by WPT-sync, or with the " +
-            "intermittent_failure keyword are ignored.\n" +
+            "Bugs with a NEEDINFO request or with the intermittent_failure " +
+            "keyword are ignored.\n" +
             "Bugs are order by creation date, oldest first.\n" +
             "Timestamp shows bug creation.",
         query: {
-            email1: "wptsync@mozilla.bugs",
-            emailreporter1: "1",
-            emailtype1: "notequals",
             resolution: "---",
             keywords_type: "nowords",
             keywords: "intermittent_failure",
