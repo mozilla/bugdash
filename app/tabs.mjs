@@ -154,7 +154,7 @@ export async function switchTo($tab) {
     _(`#tab-${selectedTab}`).classList.add("selected");
 
     // update doc hash and title
-    if (selectedTab === "components" || selectedTab === "help") {
+    if (selectedTab === "components") {
         history.pushState("", "", "/");
     } else {
         document.location.hash = `tab.${selectedTab}`;
