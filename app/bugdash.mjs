@@ -32,6 +32,8 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     Tooltips.initUI();
 
+    BugList.initUiLast();
+
     document.body.classList.remove("loading");
 
     // navigate to the tab saved in the hash

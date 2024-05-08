@@ -12,7 +12,8 @@ export function initUI() {
     _("#help-sample").append($fragment);
     const $sample = _("#help-sample .buglist-container");
     _($sample, ".refresh-btn").title = "Reloads the bug list";
-    _($sample, ".buglist-btn").title = "Open the list of bugs in Bugzilla.";
+    _($sample, ".order-btn").title = "Change the ordering of bugs";
+    _($sample, ".buglist-btn").title = "Open the list of bugs in Bugzilla";
     $sample.classList.remove("loading", "closed");
 
     const bug_values = {

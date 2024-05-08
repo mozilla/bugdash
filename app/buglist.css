@@ -71,6 +71,42 @@
     display: inline-block;
 }
 
+.buglist-container .actions .order-btn-container {
+    display: inline-block;
+}
+
+.buglist-container .actions .order-btn:not([data-mode="default"]) {
+    color: #008080;
+}
+
+.order-menu {
+    font-weight: normal;
+    text-align: left;
+    user-select: none;
+    white-space: collapse;
+}
+
+.order-menu p {
+    color: #666;
+    font-size: 12px;
+    margin: 0;
+}
+
+.order-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.order-menu li {
+    margin-top: 2px;
+}
+
+.order-menu li:hover,
+.order-menu li.selected {
+    color: #00bfbf;
+}
+
 .buglist-header > div {
     margin-bottom: auto;
     margin-top: auto;

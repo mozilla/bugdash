@@ -1,6 +1,9 @@
 import * as Bugzilla from "bugzilla";
 import * as Global from "global";
-import { _, __, chunked, cloneTemplate, timeAgo, updateTemplate } from "util";
+import * as Tooltips from "tooltips";
+import { _, __, chunked, cloneTemplate, shuffle, timeAgo, updateTemplate } from "util";
+
+/* global tippy */
 
 const g = {
     buglists: {},
@@ -67,6 +70,65 @@ export function initUI() {
     });
 }
 
+export function initUiLast() {
+    // tippy wasn't really designed for this, so this code is a bit awkward
+    for (const $button of __(".order-btn")) {
+        tippy($button, {
+            trigger: "click",
+            interactive: true,
+            arrow: false,
+            placement: "bottom",
+            offset: [0, 2],
+            allowHTML: true,
+            content: () => {
+                const $content = _(".order-menu-template").cloneNode(true);
+                $content.classList.remove("order-menu-template");
+                $content.classList.add("order-menu");
+                $content.classList.remove("hidden");
+                $content.dataset.id = $button.closest(".buglist-container").id;
+                return $content.outerHTML;
+            },
+            onShow(instance) {
+                const buglist =
+                    g.buglists[_(instance.popper, ".order-menu").dataset.id];
+                for (const $li of __(instance.popper, ".order-menu li")) {
+                    $li.classList.remove("selected");
+                }
+                _(
+                    instance.popper,
+                    `.order-menu li[data-id="${buglist.order}"]`
+                ).classList.add("selected");
+            },
+            onShown(instance) {
+                if (!instance.popper.dataset.initialised) {
+                    instance.popper.addEventListener("click", (event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        instance.hide();
+
+                        const mode = event.target.dataset.id;
+                        $button.dataset.mode = mode;
+                        Tooltips.set(
+                            $button.closest(".order-btn-container"),
+                            mode === "default" ? "" : event.target.textContent
+                        );
+
+                        const buglist =
+                            g.buglists[event.target.closest(".buglist-container").id];
+                        buglist.order = mode;
+                        refresh(buglist.id);
+                    });
+                    instance.popper.dataset.initialised = "1";
+                }
+            },
+        });
+        $button.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+        });
+    }
+}
+
 export function newGroup($container) {
     const $root = cloneTemplate(_("#buglist-group-template")).querySelector(
         ".buglist-group"
@@ -96,11 +158,13 @@ export function append({
     updateTemplate($root, { title: title, description: description });
     $container.append($root);
     g.buglists[id] = {
+        id: id,
         $root: $root,
         query: query,
         includeFn: include,
         $timestampTemplate: _(`#bug-row-timestamp-${template || "creation"}`),
         augmentFn: augment,
+        order: "default",
         orderFn: order,
         usesComponents: usesComponents,
         limit: limit,
@@ -362,9 +426,30 @@ export async function refresh(id) {
             bug["timestamp_ago"] = bug.creation_ago;
         }
     }
-    bugs = buglist.orderFn
-        ? bugs.sort(buglist.orderFn)
-        : bugs.sort((a, b) => a.creation_epoch - b.creation_epoch);
+
+    // sort
+    switch (buglist.order) {
+        case "oldest": {
+            bugs.sort((a, b) => a.creation_epoch - b.creation_epoch);
+            break;
+        }
+        case "newest": {
+            bugs.sort((a, b) => b.creation_epoch - a.creation_epoch);
+            break;
+        }
+        case "random": {
+            bugs = shuffle(bugs);
+            break;
+        }
+        default: {
+            if (buglist.orderFn) {
+                bugs.sort(buglist.orderFn);
+            } else {
+                bugs.sort((a, b) => a.creation_epoch - b.creation_epoch);
+            }
+            break;
+        }
+    }
 
     // update dom
     for (const $button of __(buglist.$root, "button")) {
@@ -402,6 +487,7 @@ export async function refresh(id) {
         buglist.$root.classList.add("closed");
         buglist.$root.classList.add("no-bugs");
         _(buglist.$root, ".buglist-header .counter").textContent = "No bugs";
+        _(buglist.$root, ".buglist-header .order-btn").disabled = true;
         _(buglist.$root, ".buglist-header .buglist-btn").disabled = true;
     }
 

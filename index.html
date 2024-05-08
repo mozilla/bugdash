@@ -55,7 +55,7 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="app/buglist.css?64643c5c8b637bb17073526cdd949f6a"
+            href="app/buglist.css?974ba44db47361347a4709fdd3c80580"
         />
         <link
             rel="stylesheet"
@@ -71,8 +71,8 @@
         <script type="importmap">
             {
                 "imports": {
-                    "bugdash": "./app/bugdash.mjs?7f3316ec3f3366cc9bc465c838e796f9",
-                    "buglist": "./app/buglist.mjs?77586fd1afe0b54dbcbe31c7a87ff846",
+                    "bugdash": "./app/bugdash.mjs?6eac2e5d6e62148ff4ec970dedbffe37",
+                    "buglist": "./app/buglist.mjs?e65f6ef285b366a9750a36dbfa3554a6",
                     "buglists/assigned-inactive": "./app/buglists/assigned-inactive.mjs?8cf2600edfbc4a9cc2e6eab00a3a4b48",
                     "buglists/blockers": "./app/buglists/blockers.mjs?f6e798f0359994ed20a373149cb49798",
                     "buglists/blockers-unassigned": "./app/buglists/blockers-unassigned.mjs?a0cee09f85518dd9e32f9edc7e6e41ad",
@@ -97,14 +97,14 @@
                     "global": "./app/global.mjs?5f126ea68e10455e924d2a4182c21b85",
                     "tabs": "./app/tabs.mjs?916a2778b69ffbe96ebaa8e555df0b19",
                     "tabs/components": "./app/tabs/components.mjs?10655509fdcadbf1ea5e580e2a185d47",
-                    "tabs/help": "./app/tabs/help.mjs?66e69d9c2570a97ccd2a2e8bfd147e72",
+                    "tabs/help": "./app/tabs/help.mjs?beaaacb30a657ab9eb1e0383e9be2d62",
                     "tabs/important": "./app/tabs/important.mjs?3171e0565ca29ac681d90abdd420fef9",
                     "tabs/reo": "./app/tabs/reo.mjs?afead088b7f915068f9b3edb71f0df72",
                     "tabs/stalled": "./app/tabs/stalled.mjs?4b6f20adbb97d1f2aa199460b60e5f37",
                     "tabs/tracked": "./app/tabs/tracked.mjs?f416cd08cf5dc3101d75d0ccbd41a05f",
                     "tabs/triage": "./app/tabs/triage.mjs?0b7f51379b708c63d2356578b44921b2",
                     "tooltips": "./app/tooltips.mjs?f6ce915e9ef0058cae9ecc157ad8a1a9",
-                    "util": "./app/util.mjs?6cfd0192d12dee40c10bf38fb81ee8ec"
+                    "util": "./app/util.mjs?b8d6de9469cd10c3a51ffae51ff1d94b"
                 }
             }
         </script>
@@ -131,6 +131,16 @@
                     <div class="dialog-button" id="dialog-ok">OK</div>
                 </div>
             </div>
+        </div>
+
+        <div class="order-menu-template hidden">
+            <p>Order by</p>
+            <ul>
+                <li data-id="default">Default</li>
+                <li data-id="oldest">Oldest</li>
+                <li data-id="newest">Newest</li>
+                <li data-id="random">Random</li>
+            </ul>
         </div>
 
         <div id="nav">
@@ -295,6 +305,14 @@
                             question_mark
                         </div>
                         <button class="refresh-btn material-icons">refresh</button>
+                        <div class="order-btn-container">
+                            <button
+                                class="order-btn material-icons"
+                                data-mode="default"
+                            >
+                                sort
+                            </button>
+                        </div>
                         <button class="buglist-btn material-icons">bug_report</button>
                     </div>
                 </div>
@@ -395,11 +413,11 @@
             });
         </script>
 
-        <script src="assets/popperjs-2.min.js"></script>
-        <script src="assets/tippyjs-6.min.js"></script>
+        <script src="assets/popperjs-2.11.7.min.js"></script>
+        <script src="assets/tippyjs-6.3.7.min.js"></script>
         <script
             type="module"
-            src="app/bugdash.mjs?7f3316ec3f3366cc9bc465c838e796f9"
+            src="app/bugdash.mjs?6eac2e5d6e62148ff4ec970dedbffe37"
         ></script>
     </body>
 </html>
