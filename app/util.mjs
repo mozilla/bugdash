@@ -97,3 +97,15 @@ export function shuffle(array) {
     }
     return array;
 }
+
+export function localiseNumbers(vars) {
+    for (const field of Object.keys(vars)) {
+        const value = vars[field];
+        if (typeof value === "number" && Number.isFinite(value)) {
+            vars[field] = value.toLocaleString(undefined, {
+                maximumFractionDigits: 2,
+                trailingZeroDisplay: "stripIfInteger",
+            });
+        }
+    }
+}

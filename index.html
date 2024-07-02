@@ -35,7 +35,7 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="app/global.css?4b2134b6746b23f63d58a6ce921ffe0a"
+            href="app/global.css?fd5efb5a9581dfc0506fcb0be4f605b9"
         />
         <link
             rel="stylesheet"
@@ -50,12 +50,22 @@
         <link
             rel="stylesheet"
             type="text/css"
+            href="app/tabs/overview.css?d742362be66351bbb921e354af8d304c"
+        />
+        <link
+            rel="stylesheet"
+            type="text/css"
             href="app/tabs/help.css?c85e68301e2f59a3727b7f4884e85d71"
         />
         <link
             rel="stylesheet"
             type="text/css"
             href="app/buglist.css?974ba44db47361347a4709fdd3c80580"
+        />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="app/bugtable.css?858502ef516bc0d8f89bf6a491d4d4ff"
         />
         <link
             rel="stylesheet"
@@ -71,8 +81,8 @@
         <script type="importmap">
             {
                 "imports": {
-                    "bugdash": "./app/bugdash.mjs?6eac2e5d6e62148ff4ec970dedbffe37",
-                    "buglist": "./app/buglist.mjs?e65f6ef285b366a9750a36dbfa3554a6",
+                    "bugdash": "./app/bugdash.mjs?6648a6ad6b3a9956913ef6553e19ddfa",
+                    "buglist": "./app/buglist.mjs?a56f2ea6efd98fbababd0250d60aa817",
                     "buglists/assigned-inactive": "./app/buglists/assigned-inactive.mjs?8cf2600edfbc4a9cc2e6eab00a3a4b48",
                     "buglists/blockers": "./app/buglists/blockers.mjs?f6e798f0359994ed20a373149cb49798",
                     "buglists/blockers-unassigned": "./app/buglists/blockers-unassigned.mjs?a0cee09f85518dd9e32f9edc7e6e41ad",
@@ -92,19 +102,21 @@
                     "buglists/topcrashers": "./app/buglists/topcrashers.mjs?b747f1889a13ac5127212473cf75fc78",
                     "buglists/tracked": "./app/buglists/tracked.mjs?86a3ed2a9562c6caab234fb04369f115",
                     "buglists/triage-needed": "./app/buglists/triage-needed.mjs?8e466c0f07b94bf9220da43c38e4e5a1",
-                    "bugzilla": "./app/bugzilla.mjs?f35a9e48438541081365e1ac27884d5f",
+                    "bugtable": "./app/bugtable.mjs?ecf2a2be503bd1b118cd66c6129b4e51",
+                    "bugzilla": "./app/bugzilla.mjs?68d1429305a8b0debaeb0b68e21182e0",
                     "dialog": "./app/dialog.mjs?8c2b0b6af0aa3d362f724856cba39482",
                     "global": "./app/global.mjs?5f126ea68e10455e924d2a4182c21b85",
-                    "tabs": "./app/tabs.mjs?b9a2f93f17aed23409e4cca69183425b",
-                    "tabs/components": "./app/tabs/components.mjs?10655509fdcadbf1ea5e580e2a185d47",
+                    "tabs": "./app/tabs.mjs?3352e7186b99a4bb1b21913694b4768d",
+                    "tabs/components": "./app/tabs/components.mjs?f264a24389054ff461a4076b09504df7",
                     "tabs/help": "./app/tabs/help.mjs?beaaacb30a657ab9eb1e0383e9be2d62",
                     "tabs/important": "./app/tabs/important.mjs?3171e0565ca29ac681d90abdd420fef9",
+                    "tabs/overview": "./app/tabs/overview.mjs?4e9b4e9a16b2973ce2491859c14a0014",
                     "tabs/reo": "./app/tabs/reo.mjs?afead088b7f915068f9b3edb71f0df72",
                     "tabs/stalled": "./app/tabs/stalled.mjs?4b6f20adbb97d1f2aa199460b60e5f37",
                     "tabs/tracked": "./app/tabs/tracked.mjs?f416cd08cf5dc3101d75d0ccbd41a05f",
                     "tabs/triage": "./app/tabs/triage.mjs?0b7f51379b708c63d2356578b44921b2",
                     "tooltips": "./app/tooltips.mjs?f6ce915e9ef0058cae9ecc157ad8a1a9",
-                    "util": "./app/util.mjs?b8d6de9469cd10c3a51ffae51ff1d94b"
+                    "util": "./app/util.mjs?79814d4d57148480112c0a0bb03970ee"
                 }
             }
         </script>
@@ -407,6 +419,363 @@
             <span data-field="needinfo_ago" data-title-field="needinfo_date"></span>
         </template>
 
+        <!-- template: overview -->
+        <template id="overview-template">
+            <div class="open-defects bugtable-container">
+                <div class="bugtable-header">
+                    <div class="summary">Open Defects by Severity</div>
+                    <div class="loading-spinner"></div>
+                    <div class="error">Failed to load bugs</div>
+                    <div class="actions">
+                        <button class="refresh-btn material-icons">refresh</button>
+                    </div>
+                </div>
+                <table class="bugtable">
+                    <tr>
+                        <th>All</th>
+                        <th>S1</th>
+                        <th>S2</th>
+                        <th>S3</th>
+                        <th>S4</th>
+                        <th title="Untriaged">Un</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="#" data-href-field="saurl" data-field="sa"></a>
+                        </td>
+                        <td>
+                            <a href="#" data-href-field="s1url" data-field="s1"></a>
+                        </td>
+                        <td>
+                            <a href="#" data-href-field="s2url" data-field="s2"></a>
+                        </td>
+                        <td>
+                            <a href="#" data-href-field="s3url" data-field="s3"></a>
+                        </td>
+                        <td>
+                            <a href="#" data-href-field="s4url" data-field="s4"></a>
+                        </td>
+                        <td>
+                            <a href="#" data-href-field="suurl" data-field="su"></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="trends-defects bugtable-container">
+                <div class="bugtable-header">
+                    <div class="summary">Maintenance Trend</div>
+                    <div class="loading-spinner"></div>
+                    <div class="error">Failed to load bugs</div>
+                    <div class="info">
+                        <a
+                            href="https://docs.google.com/document/d/1y2dUDZI5U3xvY0jMY1LfIDARc5b_QB9mS2DV7MWrfa0"
+                            >About Maintenance Effectiveness</a
+                        >
+                    </div>
+                    <div class="actions">
+                        <button class="refresh-btn material-icons">refresh</button>
+                    </div>
+                </div>
+                <table class="bugtable">
+                    <tr>
+                        <th rowspan="2" title="Values for bugs within the last N weeks">
+                            Period
+                        </th>
+                        <th rowspan="2" title="Maintenance Effectiveness">
+                            Maint<br />Effect
+                        </th>
+
+                        <th rowspan="2" title="Estimated Burndown Time (years)">
+                            Burn<br />Down
+                        </th>
+                        <th class="spanned" colspan="6">Opened</th>
+                        <th class="spanned" colspan="6">Closed</th>
+                    </tr>
+                    <tr class="no-border">
+                        <th class="sub-border">All</th>
+                        <th>S1</th>
+                        <th>S2</th>
+                        <th>S3</th>
+                        <th>S4</th>
+                        <th title="Untriaged" class="force-border">Un</th>
+                        <th class="sub-border">All</th>
+                        <th>S1</th>
+                        <th>S2</th>
+                        <th>S3</th>
+                        <th>S4</th>
+                        <th title="Untriaged">Un</th>
+                    </tr>
+                    <tr>
+                        <td>1 week</td>
+                        <td data-field="w1_me"></td>
+                        <td data-field="w1_bd"></td>
+                        <td class="sub-border">
+                            <a
+                                href="#"
+                                data-href-field="w1_opened_saurl"
+                                data-field="w1_opened_sa"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w1_opened_s1url"
+                                data-field="w1_opened_s1"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w1_opened_s2url"
+                                data-field="w1_opened_s2"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w1_opened_s3url"
+                                data-field="w1_opened_s3"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w1_opened_s4url"
+                                data-field="w1_opened_s4"
+                            ></a>
+                        </td>
+                        <td class="force-border">
+                            <a
+                                href="#"
+                                data-href-field="w1_opened_suurl"
+                                data-field="w1_opened_su"
+                            ></a>
+                        </td>
+                        <td class="sub-border">
+                            <a
+                                href="#"
+                                data-href-field="w1_closed_saurl"
+                                data-field="w1_closed_sa"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w1_closed_s1url"
+                                data-field="w1_closed_s1"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w1_closed_s2url"
+                                data-field="w1_closed_s2"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w1_closed_s3url"
+                                data-field="w1_closed_s3"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w1_closed_s4url"
+                                data-field="w1_closed_s4"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w1_closed_suurl"
+                                data-field="w1_closed_su"
+                            ></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>4 weeks</td>
+                        <td data-field="w4_me"></td>
+                        <td data-field="w4_bd"></td>
+                        <td class="sub-border">
+                            <a
+                                href="#"
+                                data-href-field="w4_opened_saurl"
+                                data-field="w4_opened_sa"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w4_opened_s1url"
+                                data-field="w4_opened_s1"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w4_opened_s2url"
+                                data-field="w4_opened_s2"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w4_opened_s3url"
+                                data-field="w4_opened_s3"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w4_opened_s4url"
+                                data-field="w4_opened_s4"
+                            ></a>
+                        </td>
+                        <td class="force-border">
+                            <a
+                                href="#"
+                                data-href-field="w4_opened_suurl"
+                                data-field="w4_opened_su"
+                            ></a>
+                        </td>
+                        <td class="sub-border">
+                            <a
+                                href="#"
+                                data-href-field="w4_closed_saurl"
+                                data-field="w4_closed_sa"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w4_closed_s1url"
+                                data-field="w4_closed_s1"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w4_closed_s2url"
+                                data-field="w4_closed_s2"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w4_closed_s3url"
+                                data-field="w4_closed_s3"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w4_closed_s4url"
+                                data-field="w4_closed_s4"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w4_closed_suurl"
+                                data-field="w4_closed_su"
+                            ></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>12 weeks</td>
+                        <td data-field="w12_me"></td>
+                        <td data-field="w12_bd"></td>
+                        <td class="sub-border">
+                            <a
+                                href="#"
+                                data-href-field="w12_opened_saurl"
+                                data-field="w12_opened_sa"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w12_opened_s1url"
+                                data-field="w12_opened_s1"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w12_opened_s2url"
+                                data-field="w12_opened_s2"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w12_opened_s3url"
+                                data-field="w12_opened_s3"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w12_opened_s4url"
+                                data-field="w12_opened_s4"
+                            ></a>
+                        </td>
+                        <td class="force-border">
+                            <a
+                                href="#"
+                                data-href-field="w12_opened_suurl"
+                                data-field="w12_opened_su"
+                            ></a>
+                        </td>
+                        <td class="sub-border">
+                            <a
+                                href="#"
+                                data-href-field="w12_closed_saurl"
+                                data-field="w12_closed_sa"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w12_closed_s1url"
+                                data-field="w12_closed_s1"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w12_closed_s2url"
+                                data-field="w12_closed_s2"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w12_closed_s3url"
+                                data-field="w12_closed_s3"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w12_closed_s4url"
+                                data-field="w12_closed_s4"
+                            ></a>
+                        </td>
+                        <td class="no-border">
+                            <a
+                                href="#"
+                                data-href-field="w12_closed_suurl"
+                                data-field="w12_closed_su"
+                            ></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </template>
+
         <script>
             import("util").catch(() => {
                 document.querySelector("#no-importmap").classList.remove("hidden");
@@ -417,7 +786,7 @@
         <script src="assets/tippyjs-6.3.7.min.js"></script>
         <script
             type="module"
-            src="app/bugdash.mjs?6eac2e5d6e62148ff4ec970dedbffe37"
+            src="app/bugdash.mjs?6648a6ad6b3a9956913ef6553e19ddfa"
         ></script>
     </body>
 </html>

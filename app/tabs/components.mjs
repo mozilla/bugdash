@@ -55,6 +55,8 @@ const onSelectedChanged = debounce(() => {
     }
 
     saveToURL();
+
+    document.dispatchEvent(new Event("components.changed"));
 }, 10);
 
 function onFilterKeyUp(event) {

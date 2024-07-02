@@ -77,6 +77,10 @@ h1 {
     font-size: 15px;
 }
 
+button {
+    cursor: pointer;
+}
+
 button,
 select {
     border: 1px solid silver;
@@ -97,7 +101,6 @@ input[type="search"] {
 }
 
 .material-icons {
-    cursor: default;
     direction: ltr;
     font-family: "Material Symbols Outlined", sans-serif;
     font-feature-settings: "liga";

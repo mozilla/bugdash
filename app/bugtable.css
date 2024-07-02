@@ -1,0 +1,69 @@
+.bugtable-container {
+    background: #fff;
+    border: 1px solid #28292a;
+    border-radius: 4px;
+    color: #000;
+}
+
+.bugtable-header {
+    background: #eee;
+    border-radius: 4px;
+    color: #28292a;
+    display: flex;
+    font-weight: bold;
+    gap: 8px;
+}
+
+.bugtable-header > div {
+    margin-bottom: auto;
+    margin-top: auto;
+    padding: 8px;
+}
+
+.bugtable-container:not(.loading) .bugtable-header .loading-spinner {
+    display: none;
+}
+
+.bugtable-container:not(.error) .bugtable-header .error {
+    display: none;
+}
+
+.bugtable-header .error {
+    color: #a64a5c;
+}
+
+.bugtable-header .actions {
+    flex-grow: 1;
+    text-align: right;
+}
+
+.bugtable-header .actions button,
+.bugtable-header .actions .info {
+    font-size: 22px;
+    padding: 2px 4px;
+}
+
+.bugtable {
+    border-spacing: 0;
+    padding: 8px;
+}
+
+.bugtable a {
+    color: #000;
+    text-decoration: none;
+}
+
+.bugtable a:hover {
+    text-decoration: underline;
+}
+
+.bugtable-container th {
+    min-width: 3em;
+    vertical-align: top;
+}
+
+.bugtable-container th,
+.bugtable-container td {
+    padding: 4px 8px;
+    text-align: right;
+}

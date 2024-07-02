@@ -1,4 +1,5 @@
 import * as BugList from "buglist";
+import * as BugTable from "bugtable";
 import * as Bugzilla from "bugzilla";
 import * as Dialog from "dialog";
 import * as Global from "global";
@@ -21,6 +22,9 @@ function addTab(tab, $tabGroup) {
         const $container = _(`#tab-${tab.name}`);
         for (const $buglist of __($container, ".buglist-container")) {
             BugList.updateQuery($buglist.id);
+        }
+        for (const $bugtable of __($container, ".bugtable-container")) {
+            BugTable.refresh($bugtable.id);
         }
     });
 
@@ -54,6 +58,10 @@ function addTabs() {
     addComponentsTab({
         name: "stalled",
         title: "Stalled & Longstanding",
+    });
+    addComponentsTab({
+        name: "overview",
+        title: "Overview",
     });
     addTabGroup([
         {
@@ -93,7 +101,7 @@ export function initUI() {
             Global.clearComponentsCache();
             window.location.reload();
         } else {
-            document.dispatchEvent(new Event("buglist.refresh"));
+            document.dispatchEvent(new Event("refresh"));
         }
     });
 
@@ -122,7 +130,7 @@ export function initUI() {
         }
         Global.setAccount(account);
         updateAuth();
-        document.dispatchEvent(new Event("buglist.refresh"));
+        document.dispatchEvent(new Event("refresh"));
     });
 }
 

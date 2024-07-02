@@ -57,7 +57,7 @@ export function initUI() {
     });
 
     // listen for global refresh event
-    document.addEventListener("buglist.refresh", () => {
+    document.addEventListener("refresh", () => {
         const componentsSelected = Global.selectedComponents().length > 0;
         for (const id of Object.keys(g.buglists)) {
             if (g.buglists[id].usesComponents && !componentsSelected) {

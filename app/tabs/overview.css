@@ -1,0 +1,38 @@
+.bugtable-container {
+    display: inline-block;
+    margin-bottom: 16px;
+}
+
+.bugtable th {
+    vertical-align: bottom;
+}
+
+.bugtable tr:not(.no-border) th:not(:last-child),
+th.force-border,
+.bugtable tr td:not(:last-child, .no-border, .sub-border),
+td.force-border {
+    border-right: 1px solid #aaa;
+}
+
+th.sub-border,
+td.sub-border {
+    border-right: 1px solid #eee;
+}
+
+.bugtable th.spanned {
+    text-align: center;
+}
+
+.trends-defects .bugtable-header .info {
+    flex-grow: 1;
+    text-align: right;
+}
+
+.trends-defects .bugtable-header .info a {
+    color: unset;
+    font-size: 13px;
+}
+
+.trends-defects .bugtable-header .actions {
+    flex-grow: unset;
+}

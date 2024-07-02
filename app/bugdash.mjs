@@ -2,6 +2,7 @@ import * as Dialog from "dialog";
 import * as Global from "global";
 import * as Tooltips from "tooltips";
 import * as BugList from "buglist";
+import * as BugTable from "bugtable";
 import * as Tabs from "tabs";
 import * as Help from "tabs/help";
 import * as Components from "tabs/components";
@@ -10,6 +11,7 @@ import * as Stalled from "tabs/stalled";
 import * as Important from "tabs/important";
 import * as REO from "tabs/reo";
 import * as Tracked from "tabs/tracked";
+import * as Overview from "tabs/overview";
 import { _ } from "util";
 
 window.addEventListener("DOMContentLoaded", async () => {
@@ -22,6 +24,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     // init ui
     Help.initUI();
     BugList.initUI();
+    BugTable.initUI();
     Tabs.initUI();
     await Components.initUI();
     Triage.initUI();
@@ -29,7 +32,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     Important.initUI();
     REO.initUI();
     Tracked.initUI();
-
+    Overview.initUI();
     Tooltips.initUI();
 
     BugList.initUiLast();
