@@ -82,8 +82,6 @@ async function updateOpenDefects() {
             g.me.open = calcMaintEffect(vars.s1, vars.s2, vars.s3, vars.s4, vars.su);
 
             return vars;
-            // localiseNumbers(vars);
-            // updateTemplate(g.tables.openDefects.$root, vars);
         }
     );
     g.openReady = true;
