@@ -74,6 +74,7 @@ export async function updateWrapper(id, loadHandler, updateHandler) {
         bugtable.$root.classList.add("error");
         // eslint-disable-next-line no-console
         console.error(error);
+        document.body.classList.add("global-error");
         return;
     }
 

@@ -58,6 +58,25 @@
     border: none;
     cursor: default;
     flex-grow: 1;
+    margin-bottom: auto;
+    margin-top: auto;
+}
+
+body:not(.global-error) #global-error {
+    display: none;
+}
+
+body:not(.egg) #global-error .egg {
+    display: none;
+}
+
+#global-error {
+    color: #fa8072;
+    font-size: 12px;
+}
+
+#global-error .egg {
+    padding-left: 3px;
 }
 
 .tab:hover {

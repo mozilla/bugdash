@@ -1,6 +1,6 @@
 import * as Bugzilla from "bugzilla";
 import * as Dialog from "dialog";
-import { __, hashCode, setLoadingStage } from "util";
+import { _, __, hashCode, setLoadingStage } from "util";
 
 const g = {
     appVersion: 1, // bump to force component reloading
@@ -75,67 +75,47 @@ async function loadVersions() {
     g.release.version = data["LATEST_FIREFOX_VERSION"].split(".")[0];
     g.release.statusFlag = `cf_status_firefox${g.release.version}`;
 
-    setLoadingStage("Firefox builds");
-    response = await fetch("https://buildhub.moz.tools/api/search", {
-        method: "post",
-        body: JSON.stringify(buildHubRequest(g.beta.version)),
-    });
+    setLoadingStage("Firefox releases");
+    response = await fetch(
+        "https://product-details.mozilla.org/1.0/firefox.json?" + Date.now()
+    );
     data = await response.json();
-    if (data.hits.hits.length !== 1) {
-        await Dialog.alert("Failed to determine build date for v" + g.beta.version);
-        return;
-    }
-    g.beta.date = data.hits.hits[0]._source.download.date.slice(0, 10);
 
-    response = await fetch("https://buildhub.moz.tools/api/search", {
-        method: "post",
-        body: JSON.stringify(buildHubRequest(g.release.version)),
-    });
-    data = await response.json();
-    if (data.hits.hits.length !== 1) {
-        await Dialog.alert("Failed to determine build date for v" + g.release.version);
-        return;
+    // load the versions, skipping beta, esr, and rc
+    const versions = {};
+    for (let entry of Object.entries(data.releases)) {
+        let versionStr = entry[0].replace(/^firefox-/, "");
+        if (Number(versionStr.split(".")[0]) <= 120) continue; // we can ignore old releases
+        if (/(?:\.\d+b\d+|esr|rc\d+)$/.test(versionStr)) continue;
+        if (versionStr.split(".").length === 2) {
+            versionStr = `${versionStr}.0`; // 129.0 --> 129.0.0
+        }
+        versions[versionStr] = entry[1].date;
     }
-    g.release.date = data.hits.hits[0]._source.download.date.slice(0, 10);
+
+    // find the .0 release date, or the next following if that doesn't exist
+    for (const channel of ["beta", "release"]) {
+        let mergeVer = Number(g[channel].version) - 2;
+        let dot = 0;
+        while (dot <= 5) {
+            if (`${mergeVer}.0.${dot}` in versions) {
+                g[channel].date = versions[`${mergeVer}.0.${dot}`];
+                break;
+            }
+            dot++;
+        }
+        if (!g[channel].date) {
+            // eslint-disable-next-line no-console
+            console.error(`Failed to find merge date for ${channel}`);
+            document.body.classList.add("global-error");
+        }
+    }
 
     /* eslint-disable no-console */
     console.log("Nightly", g.nightly);
     console.log("Beta", g.beta);
     console.log("Release", g.release);
     /* eslint-enable no-console */
-}
-
-function buildHubRequest(version) {
-    return {
-        // eslint-disable-next-line camelcase
-        post_filter: {
-            bool: {
-                must: [
-                    {
-                        term: {
-                            "target.version": version + ".0a1",
-                        },
-                    },
-                    {
-                        term: {
-                            "target.channel": "nightly",
-                        },
-                    },
-                    {
-                        term: {
-                            "source.product": "firefox",
-                        },
-                    },
-                ],
-            },
-        },
-        size: 1,
-        sort: [
-            {
-                "download.date": "asc",
-            },
-        ],
-    };
 }
 
 async function loadComponents() {
@@ -165,6 +145,7 @@ async function loadComponents() {
             if (response.products.length === 0) {
                 // eslint-disable-next-line no-console
                 console.error("Invalid product:", product);
+                document.body.classList.add("global-error");
                 continue;
             }
             for (const component of response.products[0].components) {
@@ -209,6 +190,10 @@ export async function loadUser() {
 }
 
 export async function initData() {
+    _("#global-error").addEventListener("click", () =>
+        document.body.classList.add("egg")
+    );
+
     await loadUser();
     await loadVersions();
     await loadComponents();

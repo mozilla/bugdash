@@ -40,7 +40,7 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="app/tabs.css?821e9760c3d4d8d8f5fd6f746c2bd430"
+            href="app/tabs.css?7e6a6abd55a4ef6a934e84f1e48e51d2"
         />
         <link
             rel="stylesheet"
@@ -102,10 +102,10 @@
                     "buglists/topcrashers": "./app/buglists/topcrashers.mjs?b747f1889a13ac5127212473cf75fc78",
                     "buglists/tracked": "./app/buglists/tracked.mjs?86a3ed2a9562c6caab234fb04369f115",
                     "buglists/triage-needed": "./app/buglists/triage-needed.mjs?8e466c0f07b94bf9220da43c38e4e5a1",
-                    "bugtable": "./app/bugtable.mjs?ecf2a2be503bd1b118cd66c6129b4e51",
+                    "bugtable": "./app/bugtable.mjs?9436ca2b2f674d94f6d52af9da9856b8",
                     "bugzilla": "./app/bugzilla.mjs?68d1429305a8b0debaeb0b68e21182e0",
                     "dialog": "./app/dialog.mjs?8c2b0b6af0aa3d362f724856cba39482",
-                    "global": "./app/global.mjs?5f126ea68e10455e924d2a4182c21b85",
+                    "global": "./app/global.mjs?c0a6a2cefc8c3f8ac7908adf5e8fcaeb",
                     "tabs": "./app/tabs.mjs?3352e7186b99a4bb1b21913694b4768d",
                     "tabs/components": "./app/tabs/components.mjs?f264a24389054ff461a4076b09504df7",
                     "tabs/help": "./app/tabs/help.mjs?beaaacb30a657ab9eb1e0383e9be2d62",
@@ -181,7 +181,15 @@
             >
                 refresh
             </div>
-            <div class="tab filler"></div>
+            <div class="tab filler">
+                <span
+                    id="global-error"
+                    title="Failed to load all required information; check web console for details.  Some list may produce incorrect or invalid results."
+                >
+                    General failure reading data.
+                    <span class="egg">Abort, Retry, Fail?</span>
+                </span>
+            </div>
             <div id="username"></div>
             <div
                 id="key-button"
