@@ -15,9 +15,7 @@ submitting a pull request.
 ## Deployment
 
 While BugDash is a purely client-side static site, due to the storage of
-Bugzilla API-Keys in localStorage it has to be hosted with a unique origin;
-this means that `github.io` or CNAMEs pointing to it are not viable hosting
-solutions.
+Bugzilla API-Keys in localStorage it has to be hosted with a unique origin.
 
 The easiest self-service solution we have for this is Heroku.  However, as
 Heroku only hosts applications not static sites, we have to wrap a simple PHP
