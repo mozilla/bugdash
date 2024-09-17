@@ -12,7 +12,7 @@
     font-size: 75%;
 }
 
-.buglist-container.no-bugs .toggle,
+.buglist-container.no-bugs:not(.lazy) .toggle,
 .buglist-container.no-bugs .summary {
     color: #bbb;
 }
@@ -121,7 +121,7 @@
     display: none;
 }
 
-.buglist-container.loading .buglist-header .counter {
+.buglist-container.loading:not(.lazy) .buglist-header .counter {
     display: none;
 }
 
@@ -139,7 +139,11 @@
 }
 
 .buglist-container.closed .buglist-loading,
-.buglist-container:not(.loading) .buglist-loading {
+.buglist-container:not(.loading, .lazy-unloaded) .buglist-loading {
+    display: none;
+}
+
+.buglist-container.lazy.lazy-unloaded .buglist-header .loading-spinner {
     display: none;
 }
 

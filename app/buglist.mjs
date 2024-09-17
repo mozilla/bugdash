@@ -1,6 +1,7 @@
 import * as Bugzilla from "bugzilla";
 import * as Global from "global";
 import * as Tooltips from "tooltips";
+import * as Dialog from "dialog";
 import { _, __, chunked, cloneTemplate, shuffle, timeAgo, updateTemplate } from "util";
 
 /* global tippy */
@@ -19,7 +20,16 @@ export function initUI() {
             // refresh button
             const $refreshBtn = event.target.closest(".refresh-btn");
             if ($refreshBtn) {
-                refresh($buglist.id);
+                if (
+                    $buglist.classList.contains("lazy") &&
+                    $buglist.classList.contains("closed")
+                ) {
+                    await Dialog.alert(
+                        "This list is expensive, and must be expanded before bugs can be loaded."
+                    );
+                } else {
+                    refresh($buglist.id);
+                }
                 return;
             }
 
@@ -31,8 +41,19 @@ export function initUI() {
             }
 
             // toggle open/closed
-            if (!$buglist.classList.contains("no-bugs")) {
+            if (
+                !$buglist.classList.contains("no-bugs") ||
+                $buglist.classList.contains("lazy")
+            ) {
                 $buglist.classList.toggle("closed");
+                if (
+                    !$buglist.classList.contains("closed") &&
+                    $buglist.classList.contains("lazy") &&
+                    $buglist.classList.contains("loading")
+                ) {
+                    _($buglist, ".buglist-header .counter").textContent = "-";
+                    refresh($buglist.id);
+                }
             }
             return;
         }
@@ -148,6 +169,7 @@ export function append({
     augment,
     order,
     usesComponents,
+    lazyLoad,
     limit,
     augmentRow,
 } = {}) {
@@ -155,7 +177,12 @@ export function append({
         ".buglist-container"
     );
     $root.id = id;
+
+    if (lazyLoad) {
+        description = `${description.trim()}\n\nThis list is expensive to generate and will only load when expanded.`;
+    }
     updateTemplate($root, { title: title, description: description });
+
     $container.append($root);
     g.buglists[id] = {
         id: id,
@@ -167,11 +194,16 @@ export function append({
         order: "default",
         orderFn: order,
         usesComponents: usesComponents,
+        lazyLoad: lazyLoad,
         limit: limit,
         url: undefined,
         initialised: false,
         augmentRow: augmentRow,
     };
+    if (lazyLoad) {
+        $root.classList.add("lazy");
+        $root.classList.add("lazy-unloaded");
+    }
 }
 
 export function updateQuery(id) {
@@ -202,16 +234,40 @@ const severityTitles = {
     normal: "Retriage",
 };
 
+function setErrorState(buglist) {
+    buglist.$root.classList.remove("loading");
+    buglist.$root.classList.add("closed");
+    buglist.$root.classList.add("no-bugs");
+    buglist.$root.classList.add("error");
+    if (buglist.$root.classList.contains("lazy")) {
+        buglist.$root.classList.add("lazy-unloaded");
+        buglist.$root.classList.add("loading");
+    }
+    _(buglist.$root, ".buglist-header .counter").textContent = "Failed to load bugs";
+}
+
 export async function refresh(id) {
     const buglist = g.buglists[id];
+
+    for (const $button of __(buglist.$root, "button")) {
+        if (!$button.classList.contains("refresh-btn")) {
+            $button.disabled = true;
+        }
+    }
+
+    if (buglist.lazyLoad) {
+        if (buglist.$root.classList.contains("closed")) {
+            // don't load bugs in lazy-and-collapsed lists
+            return;
+        }
+        buglist.$root.classList.remove("lazy-unloaded");
+    }
+
     const $list = _(buglist.$root, ".buglist");
     buglist.$root.classList.add("loading");
     buglist.$root.classList.remove("no-bugs");
     buglist.$root.classList.remove("error");
     buglist.initialised = true;
-    for (const $button of __(buglist.$root, "button")) {
-        $button.disabled = true;
-    }
     $list.innerHTML = "";
 
     // execute query
@@ -219,11 +275,7 @@ export async function refresh(id) {
     try {
         response = await Bugzilla.rest(buglist.url);
     } catch (error) {
-        buglist.$root.classList.remove("loading");
-        buglist.$root.classList.add("no-bugs");
-        buglist.$root.classList.add("error");
-        _(buglist.$root, ".buglist-header .counter").textContent =
-            "Failed to load bugs";
+        setErrorState(buglist);
         return;
     }
 
@@ -319,11 +371,7 @@ export async function refresh(id) {
                 await Promise.allSettled(includePromises);
             }
             if (failed) {
-                buglist.$root.classList.remove("loading");
-                buglist.$root.classList.add("no-bugs");
-                buglist.$root.classList.add("error");
-                _(buglist.$root, ".buglist-header .counter").textContent =
-                    "Failed to load bugs";
+                setErrorState(buglist);
                 return;
             }
         } else {
