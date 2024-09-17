@@ -1,8 +1,6 @@
 import * as BugList from "buglist";
 import * as Global from "global";
 
-/* eslint-disable camelcase */
-
 export function init($container, usesComponents) {
     const releases = Global.releaseData();
 

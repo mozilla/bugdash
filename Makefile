@@ -28,7 +28,7 @@ format: .git/hooks/pre-commit $(format-files)
 test: node_modules/.updated
 	npx stylelint $(css-files)
 	npx prettier --check $(js-files)
-	npx eslint $(js-files)
+	npx eslint --config .eslint.config.mjs --exit-on-fatal-error $(js-files)
 	./cache-bust check
 
 .git/hooks/pre-commit: node_modules/.updated pre-commit
