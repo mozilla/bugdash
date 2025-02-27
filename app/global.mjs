@@ -1,6 +1,6 @@
+import { _, __, hashCode, setLoadingStage } from "util";
 import * as Bugzilla from "bugzilla";
 import * as Dialog from "dialog";
-import { _, __, hashCode, setLoadingStage } from "util";
 
 const g = {
     appVersion: 1, // bump to force component reloading
@@ -36,7 +36,7 @@ export function allComponents() {
 }
 
 export function selectedComponents() {
-    let result = [];
+    const result = [];
     for (const $cb of __("#components input:checked")) {
         result.push(g.components.find((c) => c.id.toString() === $cb.id.slice(1)));
     }
@@ -62,28 +62,28 @@ export function releaseData() {
 async function loadVersions() {
     setLoadingStage("Firefox versions");
     let response = await fetch(
-        "https://product-details.mozilla.org/1.0/firefox_versions.json?" + Date.now()
+        "https://product-details.mozilla.org/1.0/firefox_versions.json?" + Date.now(),
     );
     let data = await response.json();
     g.nightly = {};
-    g.nightly.version = data["FIREFOX_NIGHTLY"].split(".")[0];
+    g.nightly.version = data.FIREFOX_NIGHTLY.split(".")[0];
     g.nightly.statusFlag = `cf_status_firefox${g.nightly.version}`;
     g.beta = {};
-    g.beta.version = data["FIREFOX_DEVEDITION"].split(".")[0];
+    g.beta.version = data.FIREFOX_DEVEDITION.split(".")[0];
     g.beta.statusFlag = `cf_status_firefox${g.beta.version}`;
     g.release = {};
-    g.release.version = data["LATEST_FIREFOX_VERSION"].split(".")[0];
+    g.release.version = data.LATEST_FIREFOX_VERSION.split(".")[0];
     g.release.statusFlag = `cf_status_firefox${g.release.version}`;
 
     setLoadingStage("Firefox releases");
     response = await fetch(
-        "https://product-details.mozilla.org/1.0/firefox.json?" + Date.now()
+        "https://product-details.mozilla.org/1.0/firefox.json?" + Date.now(),
     );
     data = await response.json();
 
     // load the versions, skipping beta, esr, and rc
     const versions = {};
-    for (let entry of Object.entries(data.releases)) {
+    for (const entry of Object.entries(data.releases)) {
         let versionStr = entry[0].replace(/^firefox-/, "");
         if (Number(versionStr.split(".")[0]) <= 120) continue; // we can ignore old releases
         if (/(?:\.\d+b\d+|esr|rc\d+)$/.test(versionStr)) continue;
@@ -95,7 +95,7 @@ async function loadVersions() {
 
     // find the .0 release date, or the next following if that doesn't exist
     for (const channel of ["beta", "release"]) {
-        let mergeVer = Number(g[channel].version) - 2;
+        const mergeVer = Number(g[channel].version) - 2;
         let dot = 0;
         while (dot <= 5) {
             if (`${mergeVer}.0.${dot}` in versions) {
@@ -140,7 +140,7 @@ async function loadComponents() {
                     // eslint-disable-next-line camelcase
                     include_fields:
                         "components.id,components.name,components.description,components.team_name",
-                }
+                },
             );
             if (response.products.length === 0) {
                 // eslint-disable-next-line no-console
@@ -191,7 +191,7 @@ export async function loadUser() {
 
 export async function initData() {
     _("#global-error").addEventListener("click", () =>
-        document.body.classList.add("egg")
+        document.body.classList.add("egg"),
     );
 
     await loadUser();

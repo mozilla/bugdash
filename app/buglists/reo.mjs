@@ -8,15 +8,15 @@ export function init($container, ver) {
         $container: $container,
         title: `${ver.nightly} (${ver.title}) New Bugs`,
         description:
-            `Bugs with all of the following:\n` +
-            `- regression keyword\n` +
+            "Bugs with all of the following:\n" +
+            "- regression keyword\n" +
             `- status-firefox${ver.nightly} set to affected\n` +
             `- status-firefox${ver.beta} set to any of unaffected ? ---\n` +
-            `Bugs with any of the following are ignored:\n` +
-            `- open NEEDINFO request\n` +
+            "Bugs with any of the following are ignored:\n" +
+            "- open NEEDINFO request\n" +
             `- tracking-firefox${ver.nightly} is -\n` +
-            `- stalled or intermittent-failure keywords\n` +
-            `- within the Testing product\n` +
+            "- stalled or intermittent-failure keywords\n" +
+            "- within the Testing product\n" +
             "Bugs are order by creation date, oldest first.",
         query: {
             classification: [
@@ -65,15 +65,15 @@ export function init($container, ver) {
         template: "needinfo",
         title: `${ver.nightly} (${ver.title}) New Bugs With NEEDINFO`,
         description:
-            `Bugs with all of the following:\n` +
-            `- regression keyword\n` +
+            "Bugs with all of the following:\n" +
+            "- regression keyword\n" +
             `- status-firefox${ver.nightly} set to affected\n` +
             `- status-firefox${ver.beta} set to any of unaffected ? ---\n` +
-            `- open NEEDINFO request\n` +
-            `Bugs with any of the following are ignored:\n` +
+            "- open NEEDINFO request\n" +
+            "Bugs with any of the following are ignored:\n" +
             `- tracking-firefox${ver.nightly} is -\n` +
-            `- stalled or intermittent-failure keywords\n` +
-            `- within the Testing product\n` +
+            "- stalled or intermittent-failure keywords\n" +
+            "- within the Testing product\n" +
             "Bugs are order by needinfo date, oldest first.",
         query: {
             classification: [
@@ -138,15 +138,15 @@ export function init($container, ver) {
         $container: $container,
         title: `${ver.nightly} (${ver.title}) Carry Over Bugs`,
         description:
-            `Bugs with all of the following:\n` +
-            `- regression keyword\n` +
+            "Bugs with all of the following:\n" +
+            "- regression keyword\n" +
             `- status-firefox${ver.nightly} set to affected\n` +
-            `Bugs with any of the following are ignored:\n` +
+            "Bugs with any of the following are ignored:\n" +
             `- status-firefox${ver.beta} set to any of unaffected ? ---\n` +
-            `- open NEEDINFO request\n` +
+            "- open NEEDINFO request\n" +
             `- tracking-firefox${ver.nightly} is -\n` +
-            `- stalled or intermittent-failure keywords\n` +
-            `- within the Testing product\n` +
+            "- stalled or intermittent-failure keywords\n" +
+            "- within the Testing product\n" +
             "Bugs are order by unassigned, then by last updated (oldest first)",
         query: {
             classification: [
@@ -202,15 +202,15 @@ export function init($container, ver) {
         template: "needinfo",
         title: `${ver.nightly} (${ver.title}) Carry Over Bugs With NEEDINFO`,
         description:
-            `Bugs with all of the following:\n` +
-            `- regression keyword\n` +
+            "Bugs with all of the following:\n" +
+            "- regression keyword\n" +
             `- status-firefox${ver.nightly} set to affected\n` +
-            `- open NEEDINFO request\n` +
-            `Bugs with any of the following are ignored:\n` +
+            "- open NEEDINFO request\n" +
+            "Bugs with any of the following are ignored:\n" +
             `- status-firefox${ver.beta} set to any of unaffected ? ---\n` +
             `- tracking-firefox${ver.nightly} is -\n` +
-            `- stalled or intermittent-failure keywords\n` +
-            `- within the Testing products\n` +
+            "- stalled or intermittent-failure keywords\n" +
+            "- within the Testing products\n" +
             "Bugs are order by unassigned, then by needinfo date (oldest first)",
         query: {
             classification: [
@@ -279,14 +279,14 @@ export function init($container, ver) {
         $container: $container,
         title: `${ver.nightly} (${ver.title}) Burndown List`,
         description:
-            `Bugs with all of the following:\n` +
+            "Bugs with all of the following:\n" +
             `- status-firefox${ver.nightly} is affected or optional\n` +
-            `- any of:\n` +
-            `\u00A0\u00A0- crash regression leak topcrash assertion dataloss keywords\n` +
-            `\u00A0\u00A0- in a security group\n` +
+            "- any of:\n" +
+            "\u00A0\u00A0- crash regression leak topcrash assertion dataloss keywords\n" +
+            "\u00A0\u00A0- in a security group\n" +
             `\u00A0\u00A0- tracking-firefox${ver.nightly} is + ? or blocking\n` +
-            `Bugs with any of the following are ignored:\n` +
-            `- within the Testing product\n` +
+            "Bugs with any of the following are ignored:\n" +
+            "- within the Testing product\n" +
             "Bugs are order by creation date, oldest first.",
         query: {
             classification: [

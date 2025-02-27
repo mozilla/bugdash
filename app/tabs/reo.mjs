@@ -1,7 +1,7 @@
-import * as BugList from "buglist";
-import * as Global from "global";
-import * as REO from "buglists/reo";
 import { _ } from "util";
+import * as BugList from "buglist";
+import * as REO from "buglists/reo";
+import * as Global from "global";
 
 export function initUI() {
     const $content = _("#reo-content");
@@ -32,7 +32,7 @@ export function initUI() {
     ];
 
     for (const ver of versions) {
-        let $group = BugList.newGroup($content);
+        const $group = BugList.newGroup($content);
         REO.init($group, ver);
     }
 }

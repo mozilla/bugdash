@@ -11,14 +11,16 @@ export function __(parentOrSelector, selector) {
 }
 
 export function setLoadingStage(stage) {
-    setTimeout(() => (_("#loading-stage").textContent = `Loading ${stage}`), 0);
+    setTimeout(() => {
+        _("#loading-stage").textContent = `Loading ${stage}`;
+    }, 0);
 }
 
 export function debounce(targetFunction, wait) {
     let timeout;
-    return function () {
-        let originalArguments = arguments;
-        let later = function () {
+    return () => {
+        const originalArguments = arguments;
+        const later = () => {
             timeout = undefined;
             targetFunction.apply(undefined, originalArguments);
         };
@@ -55,11 +57,11 @@ export function updateTemplate($content, data) {
 
 export function timeAgo(timestamp) {
     const ss = Math.round(Date.now() - timestamp) / 1000;
-    const mm = Math.round(ss / 60),
-        hh = Math.round(mm / 60),
-        dd = Math.round(hh / 24),
-        mo = Math.round(dd / 30),
-        yy = Math.round(mo / 12);
+    const mm = Math.round(ss / 60);
+    const hh = Math.round(mm / 60);
+    const dd = Math.round(hh / 24);
+    const mo = Math.round(dd / 30);
+    const yy = Math.round(mo / 12);
     if (ss < 10) return "Just now";
     if (ss < 45) return ss + " seconds ago";
     if (ss < 90) return "1 minute ago";
@@ -77,7 +79,7 @@ export function timeAgo(timestamp) {
 export function hashCode(s) {
     // https://stackoverflow.com/a/15710692/953
     // eslint-disable-next-line unicorn/no-array-reduce
-    return s.split("").reduce(function (a, b) {
+    return s.split("").reduce((a, b) => {
         a = (a << 5) - a + b.codePointAt(0);
         return a & a;
     }, 0);
@@ -86,7 +88,7 @@ export function hashCode(s) {
 export function chunked(list, size) {
     // eslint-disable-next-line unicorn/new-for-builtins
     return [...Array(Math.ceil(list.length / size))].map((_, i) =>
-        list.slice(i * size, i * size + size)
+        list.slice(i * size, i * size + size),
     );
 }
 

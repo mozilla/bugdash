@@ -36,14 +36,14 @@ export function init($container) {
             $container: $container,
             title: `${ver.nightly} (${ver.title}) New Regressions`,
             description:
-                `Bugs with all of the following:\n` +
-                `- regression keyword\n` +
+                "Bugs with all of the following:\n" +
+                "- regression keyword\n" +
                 `- status-firefox${ver.nightly} set to affected\n` +
                 `- status-firefox${ver.beta} set to any of unaffected ? ---\n` +
-                `Bugs with any of the following are ignored:\n` +
-                `- open NEEDINFO request\n` +
+                "Bugs with any of the following are ignored:\n" +
+                "- open NEEDINFO request\n" +
                 `- tracking-firefox${ver.nightly} is -\n` +
-                `- stalled or intermittent-failure keywords\n` +
+                "- stalled or intermittent-failure keywords\n" +
                 "Bugs are order by last updated, oldest first.\n" +
                 "Timestamp shows last modified.",
             query: {
@@ -88,14 +88,14 @@ export function init($container) {
             $container: $container,
             title: `${ver.nightly} (${ver.title}) Carry Over Regressions`,
             description:
-                `Bugs with all of the following:\n` +
-                `- regression keyword\n` +
+                "Bugs with all of the following:\n" +
+                "- regression keyword\n" +
                 `- status-firefox${ver.nightly} set to affected\n` +
-                `Bugs with any of the following are ignored:\n` +
+                "Bugs with any of the following are ignored:\n" +
                 `- status-firefox${ver.beta} set to any of unaffected ? ---\n` +
-                `- open NEEDINFO request\n` +
+                "- open NEEDINFO request\n" +
                 `- tracking-firefox${ver.nightly} is -\n` +
-                `- stalled or intermittent-failure keywords\n` +
+                "- stalled or intermittent-failure keywords\n" +
                 "Bugs are order by last updated, oldest first.\n" +
                 "Timestamp shows last modified.",
             query: {

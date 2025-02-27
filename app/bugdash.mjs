@@ -1,18 +1,18 @@
-import * as Dialog from "dialog";
-import * as Global from "global";
-import * as Tooltips from "tooltips";
+import { _ } from "util";
 import * as BugList from "buglist";
 import * as BugTable from "bugtable";
+import * as Dialog from "dialog";
+import * as Global from "global";
 import * as Tabs from "tabs";
-import * as Help from "tabs/help";
 import * as Components from "tabs/components";
-import * as Triage from "tabs/triage";
-import * as Stalled from "tabs/stalled";
+import * as Help from "tabs/help";
 import * as Important from "tabs/important";
-import * as REO from "tabs/reo";
-import * as Tracked from "tabs/tracked";
 import * as Overview from "tabs/overview";
-import { _ } from "util";
+import * as REO from "tabs/reo";
+import * as Stalled from "tabs/stalled";
+import * as Tracked from "tabs/tracked";
+import * as Triage from "tabs/triage";
+import * as Tooltips from "tooltips";
 
 window.addEventListener("DOMContentLoaded", async () => {
     // init helpers
@@ -52,7 +52,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     await Tabs.switchTo($tab);
 
     window.addEventListener("popstate", async () => {
-        let $tab = hashToTab() || _(".tab[data-tab=components]");
+        const $tab = hashToTab() || _(".tab[data-tab=components]");
         await Tabs.switchTo($tab);
     });
 });

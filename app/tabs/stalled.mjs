@@ -1,10 +1,10 @@
+import { _ } from "util";
 import * as BugList from "buglist";
-import * as Stalled from "buglists/stalled";
+import * as AssignedInactive from "buglists/assigned-inactive";
 import * as LongDefects from "buglists/long-defects";
 import * as LongEnhancements from "buglists/long-enhancements";
 import * as LongTasks from "buglists/long-tasks";
-import * as AssignedInactive from "buglists/assigned-inactive";
-import { _ } from "util";
+import * as Stalled from "buglists/stalled";
 
 export function initUI() {
     const $content = _("#stalled-content");

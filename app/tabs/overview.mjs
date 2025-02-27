@@ -1,7 +1,7 @@
-import * as Global from "global";
-import * as Bugzilla from "bugzilla";
-import * as BugTable from "bugtable";
 import { _, localiseNumbers, updateTemplate } from "util";
+import * as BugTable from "bugtable";
+import * as Bugzilla from "bugzilla";
+import * as Global from "global";
 
 /* eslint-disable camelcase */
 
@@ -49,7 +49,7 @@ async function updateOpenDefects() {
                 count_only: "1",
             },
             Global.selectedComponents(),
-            "id,severity,status"
+            "id,severity,status",
         );
     }
 
@@ -57,7 +57,7 @@ async function updateOpenDefects() {
         "openDefects",
         async () =>
             await Promise.all(
-                Object.values(queries).map((url) => Bugzilla.rest(url, false, true))
+                Object.values(queries).map((url) => Bugzilla.rest(url, false, true)),
             ),
         (response) => {
             // coalesce response into template vars
@@ -74,15 +74,15 @@ async function updateOpenDefects() {
                         resolution: "---",
                         type: "defect",
                     },
-                    Global.selectedComponents()
-                )
+                    Global.selectedComponents(),
+                ),
             );
 
             // store totals to be used later for burndown calculation
             g.me.open = calcMaintEffect(vars.s1, vars.s2, vars.s3, vars.s4, vars.su);
 
             return vars;
-        }
+        },
     );
     g.openReady = true;
     updateBurnDown();
@@ -101,7 +101,7 @@ async function updateTrendsDefects() {
                 chfieldfrom: `-${weeks}w`,
             },
             Global.selectedComponents(),
-            "id,severity"
+            "id,severity",
         );
         queries[`w${weeks}_closed`] = Bugzilla.queryURL(
             {
@@ -110,7 +110,7 @@ async function updateTrendsDefects() {
                 chfieldfrom: `-${weeks}w`,
             },
             Global.selectedComponents(),
-            "id,severity"
+            "id,severity",
         );
     }
 
@@ -141,7 +141,7 @@ async function updateTrendsDefects() {
                     }
                     vars[`${name}_${severity}url`] = Bugzilla.queryUrlToBuglistUrl(
                         queries[name],
-                        { bug_severity: bugSeverity }
+                        { bug_severity: bugSeverity },
                     );
                 }
 
@@ -164,7 +164,7 @@ async function updateTrendsDefects() {
                     vars[`${name}_s2`],
                     vars[`${name}_s3`],
                     vars[`${name}_s4`],
-                    vars[`${name}_su`]
+                    vars[`${name}_su`],
                 );
             }
 
@@ -180,7 +180,7 @@ async function updateTrendsDefects() {
             }
 
             return vars;
-        }
+        },
     );
     g.trendsReady = true;
     updateBurnDown();

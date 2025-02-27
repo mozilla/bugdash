@@ -1,6 +1,6 @@
+import { _ } from "util";
 import * as BugList from "buglist";
 import * as Tracked from "buglists/tracked";
-import { _ } from "util";
 
 export function initUI() {
     const $content = _("#tracked-content");

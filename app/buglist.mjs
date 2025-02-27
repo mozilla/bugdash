@@ -1,8 +1,8 @@
+import { _, __, chunked, cloneTemplate, shuffle, timeAgo, updateTemplate } from "util";
 import * as Bugzilla from "bugzilla";
+import * as Dialog from "dialog";
 import * as Global from "global";
 import * as Tooltips from "tooltips";
-import * as Dialog from "dialog";
-import { _, __, chunked, cloneTemplate, shuffle, timeAgo, updateTemplate } from "util";
 
 /* global tippy */
 
@@ -25,7 +25,7 @@ export function initUI() {
                     $buglist.classList.contains("closed")
                 ) {
                     await Dialog.alert(
-                        "This list is expensive, and must be expanded before bugs can be loaded."
+                        "This list is expensive, and must be expanded before bugs can be loaded.",
                     );
                 } else {
                     refresh($buglist.id);
@@ -117,7 +117,7 @@ export function initUiLast() {
                 }
                 _(
                     instance.popper,
-                    `.order-menu li[data-id="${buglist.order}"]`
+                    `.order-menu li[data-id="${buglist.order}"]`,
                 ).classList.add("selected");
             },
             onShown(instance) {
@@ -131,7 +131,7 @@ export function initUiLast() {
                         $button.dataset.mode = mode;
                         Tooltips.set(
                             $button.closest(".order-btn-container"),
-                            mode === "default" ? "" : event.target.textContent
+                            mode === "default" ? "" : event.target.textContent,
                         );
 
                         const buglist =
@@ -152,7 +152,7 @@ export function initUiLast() {
 
 export function newGroup($container) {
     const $root = cloneTemplate(_("#buglist-group-template")).querySelector(
-        ".buglist-group"
+        ".buglist-group",
     );
     $container.append($root);
     return $root;
@@ -174,7 +174,7 @@ export function append({
     augmentRow,
 } = {}) {
     const $root = cloneTemplate(_("#buglist-template")).querySelector(
-        ".buglist-container"
+        ".buglist-container",
     );
     $root.id = id;
 
@@ -210,7 +210,7 @@ export function updateQuery(id) {
     const buglist = g.buglists[id];
     const url = Bugzilla.queryURL(
         buglist.query,
-        buglist.usesComponents ? Global.selectedComponents() : undefined
+        buglist.usesComponents ? Global.selectedComponents() : undefined,
     );
     if (url !== buglist.url) {
         buglist.url = url;
@@ -295,18 +295,18 @@ export async function refresh(id) {
     const now = Date.now();
     let bugs = [];
     for (const bug of response.bugs) {
-        bug["url"] = `https://bugzilla.mozilla.org/show_bug.cgi?id=${bug.id}`;
-        bug["severity_title"] = severityTitles[bug.severity] || "";
-        bug["creation_epoch"] = Date.parse(bug.creation_time);
-        bug["creation_ago"] = timeAgo(bug.creation_epoch);
-        bug["creation"] = new Date(bug.creation_epoch).toLocaleString();
-        bug["updated_epoch"] = Date.parse(bug.last_change_time);
-        bug["updated_ago"] = timeAgo(bug.updated_epoch);
-        bug["updated"] = new Date(bug.updated_epoch).toLocaleString();
-        bug["type_icon"] = typeMaterialIconNames[bug.type];
+        bug.url = `https://bugzilla.mozilla.org/show_bug.cgi?id=${bug.id}`;
+        bug.severity_title = severityTitles[bug.severity] || "";
+        bug.creation_epoch = Date.parse(bug.creation_time);
+        bug.creation_ago = timeAgo(bug.creation_epoch);
+        bug.creation = new Date(bug.creation_epoch).toLocaleString();
+        bug.updated_epoch = Date.parse(bug.last_change_time);
+        bug.updated_ago = timeAgo(bug.updated_epoch);
+        bug.updated = new Date(bug.updated_epoch).toLocaleString();
+        bug.type_icon = typeMaterialIconNames[bug.type];
         if (bug.groups.length > 0) {
             bug.groups = bug.groups.join(",");
-            bug["groups_icon"] = typeMaterialIconNames.private;
+            bug.groups_icon = typeMaterialIconNames.private;
         }
         bug.owner =
             bug.assigned_to === "nobody@mozilla.org"
@@ -316,11 +316,11 @@ export async function refresh(id) {
             bug.assigned_to !== "nobody@mozilla.org" &&
             bug.owner !== bug.assigned_to_detail.real_name
         ) {
-            bug["owner_name"] = bug.assigned_to_detail.real_name;
+            bug.owner_name = bug.assigned_to_detail.real_name;
         }
         bug.reporter = bug.creator_detail.nick || bug.creator_detail.real_name;
         if (bug.reporter !== bug.creator_detail.real_name) {
-            bug["reporter_name"] = bug.creator_detail.real_name;
+            bug.reporter_name = bug.creator_detail.real_name;
         }
         bug.severity = bug.severity === "--" ? "-" : bug.severity;
         bug.priority = bug.priority === "--" ? "-" : bug.priority;
@@ -357,7 +357,7 @@ export async function refresh(id) {
                 const includePromises = [];
                 for (const bug of bugChunk) {
                     includePromises.push(
-                        // eslint-disable-next-line no-async-promise-executor
+                        // biome-ignore lint/suspicious/noAsyncPromiseExecutor:
                         new Promise(async (resolve) => {
                             try {
                                 bug.include = await buglist.includeFn(bug);
@@ -365,7 +365,7 @@ export async function refresh(id) {
                                 failed = true;
                             }
                             resolve(true);
-                        })
+                        }),
                     );
                 }
                 await Promise.allSettled(includePromises);
@@ -421,25 +421,25 @@ export async function refresh(id) {
         }
         for (const bug of bugs) {
             for (const ni of bug.needinfos) {
-                ni["requestee_detail"] = users[ni.requestee];
+                ni.requestee_detail = users[ni.requestee];
             }
         }
     }
 
     // augment and sort bug lists
     for (const bug of bugs) {
-        bug["assigned_to_nick"] =
-            bug["assigned_to"] === "nobody@mozilla.org"
+        bug.assigned_to_nick =
+            bug.assigned_to === "nobody@mozilla.org"
                 ? "-"
                 : bug.assigned_to_detail.nick || bug.assigned_to_detail.real_name;
-        bug["assigned_to_name"] =
+        bug.assigned_to_name =
             bug.assigned_to === "nobody@mozilla.org" ||
             bug.assigned_to_nick === bug.assigned_to_detail.real_name
                 ? ""
                 : bug.assigned_to_detail.real_name;
 
-        bug["creator_nick"] = bug.creator_detail.nick || bug.creator_detail.real_name;
-        bug["creator_name"] =
+        bug.creator_nick = bug.creator_detail.nick || bug.creator_detail.real_name;
+        bug.creator_name =
             bug.creator_nick === bug.creator_detail.real_name
                 ? ""
                 : bug.creator_detail.real_name;
@@ -448,9 +448,9 @@ export async function refresh(id) {
 
         if (bug.needinfos.length > 0) {
             for (const ni of bug.needinfos) {
-                ni["requestee_nick"] =
+                ni.requestee_nick =
                     ni.requestee_detail.nick || ni.requestee_detail.real_name;
-                ni["requestee_name"] =
+                ni.requestee_name =
                     ni.requestee_nick === ni.requestee_detail.real_name
                         ? ""
                         : ni.requestee_detail.real_name;
@@ -471,7 +471,7 @@ export async function refresh(id) {
     for (const bug of bugs) {
         if (!bug.timestamp) {
             bug.timestamp = bug.creation;
-            bug["timestamp_ago"] = bug.creation_ago;
+            bug.timestamp_ago = bug.creation_ago;
         }
     }
 
@@ -505,7 +505,7 @@ export async function refresh(id) {
     }
     if (bugs.length > 0) {
         _(buglist.$root, ".buglist-header .buglist-btn").bugIDs = bugs.map(
-            (bug) => bug.id
+            (bug) => bug.id,
         );
         _(buglist.$root, ".buglist-header .buglist-btn").dataset.url =
             Bugzilla.buglistUrl(bugs.map((bug) => bug.id));

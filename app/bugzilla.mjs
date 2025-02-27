@@ -1,8 +1,8 @@
 import * as Global from "global";
 
 export function queryURL(query, components, includeFields) {
-    let search = new URLSearchParams();
-    query["query_format"] = "advanced";
+    const search = new URLSearchParams();
+    query.query_format = "advanced";
 
     // add provided query parameters
     let fieldNumber = 0;
@@ -77,7 +77,7 @@ export function queryURL(query, components, includeFields) {
                 "summary",
                 "triage_owner",
                 "type",
-            ].join(",")
+            ].join(","),
     );
     search.append("limit", "0");
 

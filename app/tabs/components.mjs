@@ -1,7 +1,7 @@
+import { _, __, debounce } from "util";
 import * as Dialog from "dialog";
 import * as Global from "global";
 import * as Tooltips from "tooltips";
-import { _, __, debounce } from "util";
 
 const g = {
     $table: undefined,
@@ -38,7 +38,7 @@ const onSelectedChanged = debounce(() => {
     if (selected.length > 50) {
         Tooltips.set(
             _("#selected-components-title"),
-            "More than 50 components selected"
+            "More than 50 components selected",
         );
     } else {
         Tooltips.set(_("#selected-components-title"), tooltip.join("\n"));
@@ -117,7 +117,7 @@ export async function initUI() {
         if (event.target.nodeName === "TD") {
             // clicking anywhere on a row should toggle the checkbox
             const $row = event.target.closest("tr");
-            if ($row && $row.classList.contains("row")) {
+            if ($row?.classList.contains("row")) {
                 _($row, "input[type=checkbox]").click();
             }
         }
@@ -133,7 +133,7 @@ export async function initUI() {
         const components = __("#components tr:not(.hidden) input:not(:checked)");
         if (components.length > 50) {
             await Dialog.alert(
-                "Too many visible components. Please filter to show fewer than 50."
+                "Too many visible components. Please filter to show fewer than 50.",
             );
             return;
         }

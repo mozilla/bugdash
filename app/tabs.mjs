@@ -1,9 +1,9 @@
+import { _, __, cloneTemplate, updateTemplate } from "util";
 import * as BugList from "buglist";
 import * as BugTable from "bugtable";
 import * as Bugzilla from "bugzilla";
 import * as Dialog from "dialog";
 import * as Global from "global";
-import { _, __, cloneTemplate, updateTemplate } from "util";
 
 function addTab(tab, $tabGroup) {
     let $tab = cloneTemplate(_("#tab-template"));
@@ -78,7 +78,7 @@ function addTabs() {
 function updateAuth() {
     const account = Global.getAccount();
     if (account) {
-        _("#username").textContent = account["real_name"];
+        _("#username").textContent = account.real_name;
         _("#nav #key-button").classList.add("authenticated");
     } else {
         _("#username").textContent = "";
@@ -143,7 +143,7 @@ export async function switchTo($tab) {
         }
         if (components.length >= 50) {
             await Dialog.alert(
-                "Too many components selected. Please select fewer than 50."
+                "Too many components selected. Please select fewer than 50.",
             );
             return;
         }
@@ -167,7 +167,7 @@ export async function switchTo($tab) {
     } else {
         document.location.hash = `tab.${selectedTab}`;
     }
-    let title = $tab.textContent.trim().replace(/ \(\d+\)/, "");
+    const title = $tab.textContent.trim().replace(/ \(\d+\)/, "");
     document.title = `BugDash - ${title}`;
 
     // notify tab
