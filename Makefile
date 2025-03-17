@@ -4,9 +4,9 @@ biome     := NODE_NO_WARNINGS=1 npx --yes --prefer-offline @biomejs/biome@1.9.4 
 .PHONY: format
 format: .git/hooks/pre-commit .format-web
 
-.format-web: .biome.json
-	./cache-bust update
+.format-web: .biome.json $(web-files)
 	$(biome) --write $(web-files)
+	./cache-bust update
 	@touch $@
 
 .PHONY: test

@@ -21,6 +21,7 @@ td.sub-border {
 
 .bugtable th.spanned {
     text-align: center;
+    vertical-align: middle;
 }
 
 .trends-defects .bugtable-header .info {
@@ -35,4 +36,20 @@ td.sub-border {
 
 .trends-defects .bugtable-header .actions {
     flex-grow: unset;
+}
+
+.trends-defects .bugtable .sub-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.trends-defects .bugtable .sub-header .actions {
+    display: flex;
+}
+
+.trends-defects .bugtable .sub-header .action {
+    cursor: default;
+    display: flex;
+    align-items: center;
 }

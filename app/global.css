@@ -142,3 +142,31 @@ body:not(.loading) #loading {
         transform: rotate(360deg);
     }
 }
+
+.options-menu {
+    font-weight: normal;
+    text-align: left;
+    user-select: none;
+    white-space: collapse;
+}
+
+.options-menu p {
+    color: #666;
+    font-size: 12px;
+    margin: 0;
+}
+
+.options-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.options-menu li {
+    margin-top: 2px;
+}
+
+.options-menu li:hover,
+.options-menu li.selected {
+    color: #00bfbf;
+}

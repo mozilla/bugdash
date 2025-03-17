@@ -35,7 +35,7 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="app/global.css?8002052a4cc50b1c13516ce04d1b0976"
+            href="app/global.css?a094240244633373e2aa380c13a976e3"
         />
         <link
             rel="stylesheet"
@@ -50,7 +50,7 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="app/tabs/overview.css?d742362be66351bbb921e354af8d304c"
+            href="app/tabs/overview.css?7c8e9135cc4c6ffd6c64b53d9f1bb6bb"
         />
         <link
             rel="stylesheet"
@@ -60,7 +60,7 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="app/buglist.css?68c5701b640b34e3ae4704b4c589e307"
+            href="app/buglist.css?620e54a3c69c44c45578bacf160ec123"
         />
         <link
             rel="stylesheet"
@@ -81,7 +81,7 @@
         <script type="importmap">{
     "imports": {
         "bugdash": "./app/bugdash.mjs?737e39dcbb34e19747c10552c1bbd539",
-        "buglist": "./app/buglist.mjs?34b842bd2d11eef710938f9c4aa14a12",
+        "buglist": "./app/buglist.mjs?c618699658a0375213bbf13a66db8522",
         "buglists/assigned-inactive": "./app/buglists/assigned-inactive.mjs?b67a90e725c212c02980ca7c8581275a",
         "buglists/blockers": "./app/buglists/blockers.mjs?f6e798f0359994ed20a373149cb49798",
         "buglists/blockers-unassigned": "./app/buglists/blockers-unassigned.mjs?a0cee09f85518dd9e32f9edc7e6e41ad",
@@ -105,11 +105,12 @@
         "bugzilla": "./app/bugzilla.mjs?dd6eb272598bd1a60c70acba11f7173a",
         "dialog": "./app/dialog.mjs?8c2b0b6af0aa3d362f724856cba39482",
         "global": "./app/global.mjs?57a5a70bb29a7739edda36e228d8d6c1",
+        "menus": "./app/menus.mjs?f766e80f5362fc3c647559fac6755822",
         "tabs": "./app/tabs.mjs?ab412902c846ef1daa0950117986f251",
         "tabs/components": "./app/tabs/components.mjs?b328fe75b376d4a17f489174156f6991",
         "tabs/help": "./app/tabs/help.mjs?beaaacb30a657ab9eb1e0383e9be2d62",
         "tabs/important": "./app/tabs/important.mjs?a6806c28e53a600a0e44bd26e1ae7df2",
-        "tabs/overview": "./app/tabs/overview.mjs?2d0ace2a18d024feef61f8dbb805dc28",
+        "tabs/overview": "./app/tabs/overview.mjs?e6d5c91d79b6b9f75158a73b85dc0e10",
         "tabs/reo": "./app/tabs/reo.mjs?ce8d5276985eefecf499a28b54375725",
         "tabs/stalled": "./app/tabs/stalled.mjs?e06cd9b45aacdd42569caf618d9b6018",
         "tabs/tracked": "./app/tabs/tracked.mjs?6a9d0e2e895455cd18e51c0ba53ff52a",
@@ -143,13 +144,22 @@
             </div>
         </div>
 
-        <div class="order-menu-template hidden">
+        <div id="order-menu-template" class="hidden">
             <p>Order by</p>
             <ul>
-                <li data-id="default">Default</li>
-                <li data-id="oldest">Oldest</li>
-                <li data-id="newest">Newest</li>
-                <li data-id="random">Random</li>
+                <li data-value="default">Default</li>
+                <li data-value="oldest">Oldest</li>
+                <li data-value="newest">Newest</li>
+                <li data-value="random">Random</li>
+            </ul>
+        </div>
+
+        <div id="closed-filter-menu-template" class="hidden">
+            <p>Opened</p>
+            <ul>
+                <li data-value="all">Any time</li>
+                <li data-value="1y">&lt; 1 year ago</li>
+                <li data-value="2y">&lt; 2 years ago</li>
             </ul>
         </div>
 
@@ -323,7 +333,7 @@
                             question_mark
                         </div>
                         <button class="refresh-btn material-icons">refresh</button>
-                        <div class="order-btn-container">
+                        <div class="action">
                             <button
                                 class="order-btn material-icons"
                                 data-mode="default"
@@ -494,8 +504,35 @@
                         <th rowspan="2" title="Estimated Burndown Time (years)">
                             Burn<br />Down
                         </th>
-                        <th class="spanned" colspan="6">Opened</th>
-                        <th class="spanned" colspan="6">Closed</th>
+                        <th class="spanned" colspan="6">
+                            <div class="sub-header">
+                                <div></div>
+                                <div class="sub-title">Opened</div>
+                                <div class="actions">
+                                    <div class="action">
+                                        <div class="material-icons" title="Bugs opened/created within the period.">
+                                            question_mark
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </th>
+                        <th class="spanned" colspan="6">
+                            <div class="sub-header">
+                                <div></div>
+                                <div class="sub-title">Closed</div>
+                                <div class="actions">
+                                    <div class="action">
+                                        <div class="material-icons" title="Bugs closed within the period.  Use the filter to restrict the list based on the bug's age.">
+                                            question_mark
+                                        </div>
+                                    </div>
+                                    <div class="action">
+                                        <button id="closed-filter-btn" class="material-icons">filter_alt</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </th>
                     </tr>
                     <tr class="no-border">
                         <th class="sub-border">All</th>

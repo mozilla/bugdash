@@ -2,6 +2,7 @@ import { _, __, chunked, cloneTemplate, shuffle, timeAgo, updateTemplate } from 
 import * as Bugzilla from "bugzilla";
 import * as Dialog from "dialog";
 import * as Global from "global";
+import * as Menu from "menus";
 import * as Tooltips from "tooltips";
 
 /* global tippy */
@@ -92,61 +93,22 @@ export function initUI() {
 }
 
 export function initUiLast() {
-    // tippy wasn't really designed for this, so this code is a bit awkward
     for (const $button of __(".order-btn")) {
-        tippy($button, {
-            trigger: "click",
-            interactive: true,
-            arrow: false,
-            placement: "bottom",
-            offset: [0, 2],
-            allowHTML: true,
-            content: () => {
-                const $content = _(".order-menu-template").cloneNode(true);
-                $content.classList.remove("order-menu-template");
-                $content.classList.add("order-menu");
-                $content.classList.remove("hidden");
-                $content.dataset.id = $button.closest(".buglist-container").id;
-                return $content.outerHTML;
+        const buglist = g.buglists[$button.closest(".buglist-container").id];
+        const $menuAction = $button.closest(".action");
+        Menu.initOptionsMenu(
+            $menuAction,
+            _("#order-menu-template"),
+            () => {
+                return buglist.order;
             },
-            onShow(instance) {
-                const buglist =
-                    g.buglists[_(instance.popper, ".order-menu").dataset.id];
-                for (const $li of __(instance.popper, ".order-menu li")) {
-                    $li.classList.remove("selected");
-                }
-                _(
-                    instance.popper,
-                    `.order-menu li[data-id="${buglist.order}"]`,
-                ).classList.add("selected");
+            (value, text) => {
+                Tooltips.set($menuAction, value === "default" ? "" : text);
+                $button.dataset.mode = value;
+                buglist.order = value;
+                refresh(buglist.id);
             },
-            onShown(instance) {
-                if (!instance.popper.dataset.initialised) {
-                    instance.popper.addEventListener("click", (event) => {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        instance.hide();
-
-                        const mode = event.target.dataset.id;
-                        $button.dataset.mode = mode;
-                        Tooltips.set(
-                            $button.closest(".order-btn-container"),
-                            mode === "default" ? "" : event.target.textContent,
-                        );
-
-                        const buglist =
-                            g.buglists[event.target.closest(".buglist-container").id];
-                        buglist.order = mode;
-                        refresh(buglist.id);
-                    });
-                    instance.popper.dataset.initialised = "1";
-                }
-            },
-        });
-        $button.addEventListener("click", (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-        });
+        );
     }
 }
 

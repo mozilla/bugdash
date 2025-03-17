@@ -34,7 +34,6 @@ def update_importmap():
         index,
     )
     INDEX_FILE.write_text(index)
-    subprocess.run(["make", ".format-html"], check=True)
 
     print(f"{INDEX_FILE.relative_to(ROOT)} importmap updated")
 

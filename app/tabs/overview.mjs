@@ -2,13 +2,16 @@ import { _, localiseNumbers, updateTemplate } from "util";
 import * as BugTable from "bugtable";
 import * as Bugzilla from "bugzilla";
 import * as Global from "global";
+import * as Menus from "menus";
+import * as Tooltips from "tooltips";
 
-/* eslint-disable camelcase */
+/* global tippy */
 
 const g = {
     openReady: false,
     trendsReady: false,
     me: {},
+    closedBugFilter: "all",
 };
 
 function calcMaintEffect(s1, s2, s3, s4, su) {
@@ -32,6 +35,20 @@ export function initUI() {
         tableContiner: ".trends-defects",
         updateFunc: updateTrendsDefects,
     });
+
+    const $menuAction = _("#closed-filter-btn").closest(".action");
+    Menus.initOptionsMenu(
+        $menuAction,
+        _("#closed-filter-menu-template"),
+        () => {
+            return g.closedBugFilter;
+        },
+        (value, text) => {
+            g.closedBugFilter = value;
+            Tooltips.set($menuAction, value === "all" ? "" : text);
+            _("#trendsDefects .refresh-btn").click();
+        },
+    );
 }
 
 async function updateOpenDefects() {
@@ -49,7 +66,7 @@ async function updateOpenDefects() {
                 count_only: "1",
             },
             Global.selectedComponents(),
-            "id,severity,status",
+            "id",
         );
     }
 
@@ -77,15 +94,12 @@ async function updateOpenDefects() {
                     Global.selectedComponents(),
                 ),
             );
-
-            // store totals to be used later for burndown calculation
-            g.me.open = calcMaintEffect(vars.s1, vars.s2, vars.s3, vars.s4, vars.su);
-
             return vars;
         },
     );
+
     g.openReady = true;
-    updateBurnDown();
+    await updateBurnDown();
 }
 
 async function updateTrendsDefects() {
@@ -94,21 +108,31 @@ async function updateTrendsDefects() {
     // build queries
     const queries = {};
     for (const weeks of ["1", "4", "12"]) {
+        let query = {
+            type: "defect",
+            f1: "creation_ts",
+            o1: "changedafter",
+            v1: `-${weeks}w`,
+        };
         queries[`w${weeks}_opened`] = Bugzilla.queryURL(
-            {
-                type: "defect",
-                chfield: "[Bug creation]",
-                chfieldfrom: `-${weeks}w`,
-            },
+            query,
             Global.selectedComponents(),
             "id,severity",
         );
+
+        query = {
+            type: "defect",
+            f1: "cf_last_resolved",
+            o1: "changedafter",
+            v1: `-${weeks}w`,
+        };
+        if (g.closedBugFilter !== "all") {
+            query.f2 = "creation_ts";
+            query.o2 = "changedafter";
+            query.v2 = `-${g.closedBugFilter}`;
+        }
         queries[`w${weeks}_closed`] = Bugzilla.queryURL(
-            {
-                type: "defect",
-                chfield: "cf_last_resolved",
-                chfieldfrom: `-${weeks}w`,
-            },
+            query,
             Global.selectedComponents(),
             "id,severity",
         );
@@ -183,13 +207,56 @@ async function updateTrendsDefects() {
         },
     );
     g.trendsReady = true;
-    updateBurnDown();
+    await updateBurnDown();
 }
 
-function updateBurnDown() {
+async function updateBurnDown() {
     if (!(g.openReady && g.trendsReady)) return;
 
-    const vars = {};
+    const queries = {};
+    for (const severity of ["s1", "s2", "s3", "s4", "--"]) {
+        const name = severity === "--" ? "su" : severity;
+
+        const query = {
+            resolution: "---",
+            type: "defect",
+            severity: severity,
+            count_only: "1",
+        };
+        if (g.closedBugFilter !== "all") {
+            query.f1 = "creation_ts";
+            query.o1 = "changedafter";
+            query.v1 = `-${g.closedBugFilter}`;
+        }
+        queries[name] = Bugzilla.queryURL(query, Global.selectedComponents(), "id");
+    }
+
+    const $trendsDefects = _("#trendsDefects");
+    $trendsDefects.classList.add("loading");
+    $trendsDefects.classList.remove("error");
+    let response;
+    try {
+        response = await Promise.all(
+            Object.values(queries).map((url) => Bugzilla.rest(url)),
+        );
+        $trendsDefects.classList.remove("loading");
+    } catch (error) {
+        $trendsDefects.classList.remove("loading");
+        $trendsDefects.classList.add("error");
+        // eslint-disable-next-line no-console
+        console.error(error);
+        document.body.classList.add("global-error");
+        return;
+    }
+
+    const names = Object.keys(queries);
+    let vars = {};
+    for (const [i, name] of names.entries()) {
+        vars[name] = response[i].bug_count;
+    }
+    g.me.open = calcMaintEffect(vars.s1, vars.s2, vars.s3, vars.s4, vars.su);
+
+    vars = {};
     for (const week of [1, 4, 12]) {
         const key = `w${week}`;
         vars[`w${week}_bd`] =
