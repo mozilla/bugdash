@@ -6,5 +6,7 @@ export function initUI() {
     const $content = _("#tracked-content");
 
     const $group = BugList.newGroup($content);
-    Tracked.init($group, false);
+    const $metricsGroup = BugList.newGroup($content);
+
+    Tracked.init($group, $metricsGroup, false);
 }
