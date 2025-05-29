@@ -15,7 +15,8 @@ export function init($container, usesComponents) {
             " set to affected\n" +
             "- tracking-firefox-" +
             `${releases.beta.version}` +
-            " set to blocking",
+            " set to blocking\n" +
+            "Bugs are order by creation date, oldest first.",
         query: {
             resolution: "---",
             f1: "cf_status_firefox_beta",
@@ -42,7 +43,8 @@ export function init($container, usesComponents) {
             `${releases.release.version}` +
             " set to any of disabled unaffected ---\n" +
             "Bugs with any of the following are ignored:\n" +
-            " - reporter is intermittent-bug-filer@mozilla.bugs",
+            " - reporter is intermittent-bug-filer@mozilla.bugs\n" +
+            "Bugs are order by creation date, oldest first.",
         query: {
             resolution: ["FIXED", "---"],
             keywords: "regression",
@@ -74,7 +76,8 @@ export function init($container, usesComponents) {
             `${releases.release.version}` +
             " set to any of affected fix-optional wonfix\n" +
             "Bugs with any of the following are ignored:\n" +
-            " - reporter is intermittent-bug-filer@mozilla.bugs",
+            " - reporter is intermittent-bug-filer@mozilla.bugs\n" +
+            "Bugs are order by creation date, oldest first.",
         query: {
             keywords: "regression,",
             keywords_type: "allwords",
@@ -113,7 +116,8 @@ export function init($container, usesComponents) {
             " set to affected\n" +
             "- tracking-firefox-" +
             `${releases.release.version}` +
-            " set to any of affected fix-optional wontfix",
+            " set to any of affected fix-optional wontfix\n" +
+            "Bugs are order by creation date, oldest first.",
         query: {
             bug_severity: ["blocker", "S1", "critical", "S2", "major"],
             keywords: "regression",
@@ -149,7 +153,8 @@ export function init($container, usesComponents) {
             " set to affected\n" +
             "- tracking-firefox-" +
             `${releases.beta.version}` +
-            " set to blocking or +",
+            " set to blocking or +\n" +
+            "Bugs are order by creation date, oldest first.",
         query: {
             resolution: "---",
             keywords: "crash, topcrash",
@@ -176,7 +181,8 @@ export function init($container, usesComponents) {
             " set to affected\n" +
             "- tracking-firefox-" +
             `${releases.release.version}` +
-            " set to any of unaffected ---",
+            " set to any of unaffected ---\n" +
+            "Bugs are order by creation date, oldest first.",
         query: {
             keywords: "topcrash",
             keywords_type: "anywords",
@@ -209,7 +215,8 @@ export function init($container, usesComponents) {
             " set to -\n" +
             "- stalled keywords\n" +
             "- Resolution set to any DUPLICATE WONTFIX INVALID\n" +
-            "- within the Testing products",
+            "- within the Testing products\n" +
+            "Bugs are order by creation date, oldest first.",
         query: {
             resolution: "---",
             keywords: "regression, perf",
@@ -262,7 +269,8 @@ export function init($container, usesComponents) {
             `${releases.beta.version}` +
             " set to any of affected fix-optional\n" +
             "Bugs with any of the following are ignored:\n" +
-            "- stalled keywords",
+            "- stalled keywords\n" +
+            "Bugs are order by creation date, oldest first.",
         query: {
             keywords: "sec-high, sec-critical",
             keywords_type: "anywords",
