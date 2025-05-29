@@ -8,7 +8,10 @@ export function init($container, usesComponents) {
         id: "beta-open-blockers",
         $container: $container,
         title: `${releases.beta.version} (Beta) Functional Open Blockers`,
-        description: "TODO",
+        description: 
+            "Bugs with all of the following:\n" + 
+            "- status-firefox-" + `${releases.beta.version}` + " set to affected\n" +
+            "- tracking-firefox-" + `${releases.beta.version}` + " set to blocking",
         query: {
             resolution: "---",
             f1: "cf_status_firefox_beta",
@@ -25,7 +28,13 @@ export function init($container, usesComponents) {
         id: "beta-unfixed-new-regressions",
         $container: $container,
         title: `${releases.beta.version} (Beta) Unfixed New Regressions`,
-        description: "TODO",
+        description: 
+            "Bugs with all of the following:\n" +
+            "- regression keyword\n" +
+            "- status-firefox-" + `${releases.beta.version}` + " set to any of affected fix-optional wontfix\n" +
+            "- tracking-firefox-" + `${releases.release.version}` + " set to any of disabled unaffected ---\n" +
+            "Bugs with any of the following are ignored:\n" +
+            " - reporter is intermittent-bug-filer@mozilla.bugs",
         query: {
             resolution: ["FIXED", "---"],
             keywords: "regression",
@@ -47,7 +56,13 @@ export function init($container, usesComponents) {
         id: "beta-open-carryover-regressions",
         $container: $container,
         title: `${releases.beta.version} (Beta) Open Carryover Regressions`,
-        description: "TODO",
+        description: 
+            "Bugs with all of the following:\n" +
+            "- regression keyword\n" +
+            "- status-firefox-" + `${releases.beta.version}` + " set to affected \n" +
+            "- tracking-firefox-" + `${releases.release.version}` + " set to any of affected fix-optional wonfix\n" +
+            "Bugs with any of the following are ignored:\n" +
+            " - reporter is intermittent-bug-filer@mozilla.bugs",
         query: {
             keywords: "regression,",
             keywords_type: "allwords",
@@ -77,7 +92,12 @@ export function init($container, usesComponents) {
         id: "beta-severe-carryover-regressions",
         $container: $container,
         title: `${releases.beta.version} (Beta) Severe Carryover Regressions`,
-        description: "TODO",
+        description: 
+            "Bugs with all of the following:\n" +
+            "- regression keyword\n" +
+            "- severity set to any of blocker S1 critical S2 major\n" +
+            "- status-firefox-" + `${releases.beta.version}` + " set to affected\n" +
+            "- tracking-firefox-" + `${releases.release.version}` + " set to any of affected fix-optional wontfix",
         query: {
             bug_severity: ["blocker", "S1", "critical", "S2", "major"],
             keywords: "regression",
@@ -105,7 +125,11 @@ export function init($container, usesComponents) {
         id: "beta-new-top-crashers",
         $container: $container,
         title: `${releases.beta.version} (Beta) New Top Crashers`,
-        description: "TODO",
+        description: 
+            "Bugs with all of the following:\n" + 
+            "- crash or topcrash keyword\n" +
+            "- status-firefox-" + `${releases.beta.version}` + " set to affected\n" +
+            "- tracking-firefox-" + `${releases.beta.version}` + " set to blocking or +",
         query: {
             resolution: "---",
             keywords: "crash, topcrash",
@@ -124,7 +148,11 @@ export function init($container, usesComponents) {
         id: "beta-tracked-crashers",
         $container: $container,
         title: `${releases.beta.version} (Beta) Tracked Crashers`,
-        description: "TODO",
+        description: 
+            "Bugs with all of the following:\n" + 
+            "- topcrash keyword\n" +
+            "- status-firefox-" + `${releases.beta.version}` + " set to affected\n" +
+            "- tracking-firefox-" + `${releases.release.version}` + " set to any of unaffected ---",
         query: {
             keywords: "topcrash",
             keywords_type: "anywords",
@@ -142,7 +170,16 @@ export function init($container, usesComponents) {
         id: "beta-perf-bug-affecting-beta",
         $container: $container,
         title: `${releases.beta.version} (Beta) Performance Bugs Affecting Beta`,
-        description: "TODO",
+        description: 
+        "Bugs with all of the following:\n" +
+            "- regression or perf keyword\n" +
+            "- status-firefox-" + `${releases.beta.version}` + " set to affected\n" +
+            "- tracking-firefox-" + `${releases.release.version}` + " set to any of unaffected ? ---\n" +
+            "Bugs with any of the following are ignored:\n" +
+            "- status-firefox" + `${releases.beta.version}` + " set to -\n" +
+            "- stalled keywords\n" +
+            "- Resolution set to any DUPLICATE WONTFIX INVALID\n" +
+            "- within the Testing products",
         query: {
             resolution: "---",
             keywords: "regression, perf",
@@ -185,10 +222,15 @@ export function init($container, usesComponents) {
     });
 
     BugList.append({
-        id: "beta-sec-all-high-crit-affecting-beta",
+        id: "beta-sec-high-crit-affecting-beta",
         $container: $container,
-        title: `${releases.beta.version} (Beta) Sec-High/Sec-All/Sec-Crit Affecting Beta`,
-        description: "TODO",
+        title: `${releases.beta.version} (Beta) Sec-High/Sec-Crit Affecting Beta`,
+        description: 
+            "Bugs with all of the following:\n" +
+            "- sec-high or sec-crit keyword\n" +
+            "- status-firefox-" + `${releases.beta.version}` + " set to any of affected fix-optional\n" +
+            "Bugs with any of the following are ignored:\n" +
+            "- stalled keywords" ,
         query: {
             keywords: "sec-high, sec-critical",
             keywords_type: "anywords",
