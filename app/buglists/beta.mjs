@@ -171,7 +171,7 @@ export function init($container, usesComponents) {
         $container: $container,
         title: `${releases.beta.version} (Beta) Performance Bugs Affecting Beta`,
         description: 
-        "Bugs with all of the following:\n" +
+            "Bugs with all of the following:\n" +
             "- regression or perf keyword\n" +
             "- status-firefox-" + `${releases.beta.version}` + " set to affected\n" +
             "- tracking-firefox-" + `${releases.release.version}` + " set to any of unaffected ? ---\n" +
