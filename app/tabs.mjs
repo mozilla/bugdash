@@ -66,7 +66,7 @@ function addTabs() {
     addTabGroup([
         {
             name: "reo",
-            title: "Regressions Triage",
+            title: "Regressions",
         },
         {
             name: "tracked",
