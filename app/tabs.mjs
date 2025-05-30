@@ -72,6 +72,10 @@ function addTabs() {
             name: "tracked",
             title: "Tracked",
         },
+        {
+            name: "beta",
+            title: "Beta",
+        },
     ]);
 }
 

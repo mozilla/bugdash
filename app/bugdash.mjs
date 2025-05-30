@@ -4,6 +4,7 @@ import * as BugTable from "bugtable";
 import * as Dialog from "dialog";
 import * as Global from "global";
 import * as Tabs from "tabs";
+import * as Beta from "tabs/beta";
 import * as Components from "tabs/components";
 import * as Help from "tabs/help";
 import * as Important from "tabs/important";
@@ -32,6 +33,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     Important.initUI();
     REO.initUI();
     Tracked.initUI();
+    Beta.initUI();
     Overview.initUI();
     Tooltips.initUI();
 
