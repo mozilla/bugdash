@@ -171,7 +171,7 @@ export async function switchTo($tab) {
     } else {
         document.location.hash = `tab.${selectedTab}`;
     }
-    const title = $tab.textContent.trim().replace(/ \(\d+\)/, "");
+    const title = $tab.innerText.trim().replace(/ \(\d+\)/, "");
     document.title = `BugDash - ${title}`;
 
     // notify tab
