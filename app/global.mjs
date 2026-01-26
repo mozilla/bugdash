@@ -15,6 +15,7 @@ const g = {
         "DevTools",
         "External Software Affecting Firefox",
         "Firefox Build System",
+        "Firefox Enterprise",
         "Firefox for Android",
         "Firefox for iOS",
         "Firefox",
