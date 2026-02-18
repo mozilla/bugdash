@@ -44,7 +44,11 @@ export function init($container, usesComponents) {
             " set to any of disabled unaffected ---\n" +
             "Bugs with any of the following are ignored:\n" +
             " - reporter is intermittent-bug-filer@mozilla.bugs\n" +
-            "Bugs are order by creation date, oldest first.",
+            "Bugs are order by creation date, oldest first.\n" +
+            "Triage guidelines:\n" +
+            "- <75 for early beta\n" +
+            "- <40 for late beta\n" +
+            "- <30 for RC week",
         query: {
             resolution: ["FIXED", "---"],
             keywords: "regression",
@@ -77,7 +81,11 @@ export function init($container, usesComponents) {
             " set to any of affected fix-optional wonfix\n" +
             "Bugs with any of the following are ignored:\n" +
             " - reporter is intermittent-bug-filer@mozilla.bugs\n" +
-            "Bugs are order by creation date, oldest first.",
+            "Bugs are order by creation date, oldest first.\n" +
+            "Threshold guidelines:\n" +
+            "- <110 for early beta\n" +
+            "- <60 for late beta\n" +
+            "- <10 for RC week",
         query: {
             keywords: "regression,",
             keywords_type: "allwords",
@@ -117,7 +125,11 @@ export function init($container, usesComponents) {
             "- tracking-firefox-" +
             `${releases.release.version}` +
             " set to any of affected fix-optional wontfix\n" +
-            "Bugs are order by creation date, oldest first.",
+            "Bugs are order by creation date, oldest first.\n" +
+            "Triage guidelines:\n" +
+            "- <18 for early beta\n" +
+            "- <10 for late beta\n" +
+            "- <3 for RC week",
         query: {
             bug_severity: ["blocker", "S1", "critical", "S2", "major"],
             keywords: "regression",
@@ -154,7 +166,11 @@ export function init($container, usesComponents) {
             "- tracking-firefox-" +
             `${releases.beta.version}` +
             " set to blocking or +\n" +
-            "Bugs are order by creation date, oldest first.",
+            "Bugs are order by creation date, oldest first.\n" +
+            "Triage guidelines:\n" +
+            "- <5 for early beta\n" +
+            "- <3 for late beta\n" +
+            "- <1 for RC week",
         query: {
             resolution: "---",
             keywords: "crash, topcrash",
@@ -182,7 +198,11 @@ export function init($container, usesComponents) {
             "- tracking-firefox-" +
             `${releases.release.version}` +
             " set to any of unaffected ---\n" +
-            "Bugs are order by creation date, oldest first.",
+            "Bugs are order by creation date, oldest first.\n" +
+            "Triage guidelines:\n" +
+            "- <5 for early beta\n" +
+            "- <3 for late beta\n" +
+            "- <1 for RC week",
         query: {
             keywords: "topcrash",
             keywords_type: "anywords",
@@ -216,7 +236,11 @@ export function init($container, usesComponents) {
             "- stalled keywords\n" +
             "- Resolution set to any DUPLICATE WONTFIX INVALID\n" +
             "- within the Testing products\n" +
-            "Bugs are order by creation date, oldest first.",
+            "Bugs are order by creation date, oldest first.\n" +
+            "Triage guidelines:\n" +
+            "- <5 for early beta\n" +
+            "- <3 for late beta\n" +
+            "- <1 for RC week",
         query: {
             resolution: "---",
             keywords: "regression, perf",
@@ -270,7 +294,11 @@ export function init($container, usesComponents) {
             " set to any of affected fix-optional\n" +
             "Bugs with any of the following are ignored:\n" +
             "- stalled keywords\n" +
-            "Bugs are order by creation date, oldest first.",
+            "Bugs are order by creation date, oldest first.\n" +
+            "Threshold guidelines:\n" +
+            "- <18 for early beta\n" +
+            "- <8 for late beta\n" +
+            "- <2 for RC week",
         query: {
             keywords: "sec-high, sec-critical",
             keywords_type: "anywords",
