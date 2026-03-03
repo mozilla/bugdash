@@ -12,7 +12,7 @@
     content: "▼";
 }
 
-.buglist-container.no-bugs:not(.lazy) .toggle,
+.buglist-container.no-bugs:not(.lazy-unloaded) .toggle,
 .buglist-container.no-bugs .summary {
     color: #bbb;
 }
@@ -118,6 +118,9 @@
 }
 
 .buglist-container.closed .buglist-loading,
+.buglist-container.closed .buglist-empty,
+.buglist-container.loading .buglist-empty,
+.buglist-container:not(.no-bugs) .buglist-empty,
 .buglist-container:not(.loading, .lazy-unloaded) .buglist-loading {
     display: none;
 }
@@ -126,7 +129,12 @@
     display: none;
 }
 
-.buglist-loading {
+.buglist-container.error .buglist-empty {
+    display: none;
+}
+
+.buglist-loading,
+.buglist-empty {
     padding: 8px;
     font-style: italic;
     border: 1px solid #28292a;
@@ -241,4 +249,8 @@
 .bug-row .keyword-sec-critical,
 .bug-row .keyword-sec-high {
     color: #dc143c;
+}
+
+.bug-row .sec-keyword {
+    font-weight: bold;
 }

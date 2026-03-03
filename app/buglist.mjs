@@ -26,7 +26,7 @@ export function initUI() {
                     $buglist.classList.contains("closed")
                 ) {
                     await Dialog.alert(
-                        "This list is expensive, and must be expanded before bugs can be loaded.",
+                        "This list can be expensive, and must be expanded before bugs can be loaded.",
                     );
                 } else {
                     refresh($buglist.id);
@@ -151,7 +151,7 @@ export function append({
     $root.id = id;
 
     if (lazyLoad) {
-        description = `${description.trim()}\n\nThis list is expensive to generate and will only load when expanded.`;
+        description = `${description.trim()}\n\nThis list can be expensive to generate and will only load when expanded.`;
     }
     updateTemplate($root, { title: title, description: description });
 
@@ -229,8 +229,13 @@ export async function refresh(id) {
     }
 
     if (buglist.lazyLoad) {
+        _(buglist.$root, ".buglist-header .counter").textContent = "";
         if (buglist.$root.classList.contains("closed")) {
             // don't load bugs in lazy-and-collapsed lists
+            // instead reset their state to force a reload when next opened
+            buglist.$root.classList.add("lazy-unloaded");
+            buglist.$root.classList.add("loading");
+            _(buglist.$root, ".buglist").innerHTML = "";
             return;
         }
         buglist.$root.classList.remove("lazy-unloaded");
