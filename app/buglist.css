@@ -129,6 +129,17 @@
     display: none;
 }
 
+.buglist-container:not(.closed) .counter-lazy,
+.buglist-container:not(.lazy) .counter-lazy,
+.buglist-container.lazy:not(.lazy-unloaded) .counter-lazy {
+    display: none;
+}
+
+.buglist-container.lazy-unloaded.closed .counter-lazy {
+    font-size: small;
+    color: #bbb;
+}
+
 .buglist-container.error .buglist-empty {
     display: none;
 }
