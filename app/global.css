@@ -183,3 +183,36 @@ body:not(.loading) #loading {
 .options-menu li.selected {
     color: #00bfbf;
 }
+
+#font-preload {
+    margin-top: 1em;
+    font-family: FiraGo, sans-serif;
+    color: transparent;
+}
+
+#font-preload .font-book {
+    font-weight: normal;
+}
+
+#font-preload .font-book-italic {
+    font-style: italic;
+    font-weight: normal;
+}
+
+#font-preload .font-medium {
+    font-weight: 500;
+}
+
+#font-preload .font-medium-italic {
+    font-style: italic;
+    font-weight: 500;
+}
+
+#font-preload .font-semibold {
+    font-weight: bold;
+}
+
+#font-preload .font-semibold-italic {
+    font-style: italic;
+    font-weight: bold;
+}
