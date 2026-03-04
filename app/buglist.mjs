@@ -144,6 +144,7 @@ export function append({
     limit,
     augmentRow,
     counterGuidelines,
+    beforeRefresh,
 } = {}) {
     const $root = cloneTemplate(_("#buglist-template")).querySelector(
         ".buglist-container",
@@ -172,6 +173,7 @@ export function append({
         initialised: false,
         augmentRow: augmentRow,
         counterGuidelines: counterGuidelines,
+        beforeRefresh: beforeRefresh,
     };
     if (lazyLoad) {
         $root.classList.add("lazy");
@@ -221,6 +223,9 @@ function setErrorState(buglist) {
 
 export async function refresh(id) {
     const buglist = g.buglists[id];
+    if (buglist.beforeRefresh) {
+        buglist.beforeRefresh(buglist);
+    }
 
     for (const $button of __(buglist.$root, "button")) {
         if (!$button.classList.contains("refresh-btn")) {
@@ -235,6 +240,7 @@ export async function refresh(id) {
             // instead reset their state to force a reload when next opened
             buglist.$root.classList.add("lazy-unloaded");
             buglist.$root.classList.add("loading");
+            buglist.$root.classList.remove("no-bugs");
             _(buglist.$root, ".buglist").innerHTML = "";
             return;
         }
