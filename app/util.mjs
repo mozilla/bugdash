@@ -54,25 +54,29 @@ export function updateTemplate($content, data) {
     }
 }
 
+const UNITS = [
+    ["y", 365 * 86400],
+    ["mo", 30 * 86400],
+    ["d", 86400],
+    ["h", 3600],
+    ["m", 60],
+];
+
 export function timeAgo(timestamp) {
-    const ss = Math.round(Date.now() - timestamp) / 1000;
-    const mm = Math.round(ss / 60);
-    const hh = Math.round(mm / 60);
-    const dd = Math.round(hh / 24);
-    const mo = Math.round(dd / 30);
-    const yy = Math.round(mo / 12);
-    if (ss < 10) return "Just now";
-    if (ss < 45) return `${ss} seconds ago`;
-    if (ss < 90) return "1 minute ago";
-    if (mm < 45) return `${mm} minutes ago`;
-    if (mm < 90) return "1 hour ago";
-    if (hh < 24) return `${hh} hours ago`;
-    if (hh < 36) return "1 day ago";
-    if (dd < 30) return `${dd} days ago`;
-    if (dd < 45) return "1 month ago";
-    if (mo < 12) return `${mo} months ago`;
-    if (mo < 18) return "1 year ago";
-    return `${yy} years ago`;
+    const elapsed = Math.floor((Date.now() - timestamp) / 1000);
+    for (let i = 0; i < UNITS.length; i++) {
+        const [unit, secs] = UNITS[i];
+        if (elapsed >= secs) {
+            const value = Math.floor(elapsed / secs);
+            const next = UNITS[i + 1];
+            if (next) {
+                const value2 = Math.floor((elapsed % secs) / next[1]);
+                if (value2 > 0) return `${value}${unit} ${value2}${next[0]}`;
+            }
+            return `${value}${unit}`;
+        }
+    }
+    return "just now";
 }
 
 export function hashCode(s) {

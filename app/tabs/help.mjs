@@ -40,7 +40,7 @@ export function initUI() {
         assigned_to_name: "Assignee",
         keywords: "regression, topcrash",
         keywords_title: "Keywords",
-        timestamp_ago: "3 days ago",
+        timestamp_ago: "3d 2h",
         timestamp: "Relevant timestamp; usually bug's creation",
     };
     const $row = cloneTemplate(_("#bug-row-template"));
