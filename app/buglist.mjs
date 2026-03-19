@@ -469,6 +469,10 @@ export async function refresh(id) {
             bugs.sort((a, b) => b.creation_epoch - a.creation_epoch);
             break;
         }
+        case "updated": {
+            bugs.sort((a, b) => a.updated_epoch - b.updated_epoch);
+            break;
+        }
         case "random": {
             bugs = shuffle(bugs);
             break;
