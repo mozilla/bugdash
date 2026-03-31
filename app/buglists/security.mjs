@@ -1,6 +1,6 @@
 import * as BugList from "buglist";
 import * as Bugzilla from "bugzilla";
-import { _ } from "util";
+import { _, __ } from "util";
 
 /* eslint-disable camelcase */
 
@@ -38,8 +38,9 @@ export function init($container) {
             const keywords = bug.keywords.split(" ");
             bug.sec_level = SEC_LEVELS.find((l) => keywords.includes(l));
             bug.sec_index = SEC_LEVELS.findIndex((l) => keywords.includes(l));
+            bug.stalled = keywords.includes("stalled");
         },
-        augmentRow: ($row) => {
+        augmentRow: ($row, bug) => {
             const $keywords = _($row, ".keywords");
             $keywords.innerHTML = $keywords.textContent
                 .split(" ")
@@ -52,6 +53,11 @@ export function init($container) {
                     return k;
                 })
                 .join(" ");
+            if (bug.stalled) {
+                for (const $tr of __($row, ".bug-row")) {
+                    $tr.classList.add("stalled-bug");
+                }
+            }
         },
         order: (a, b) => {
             return a.sec_index - b.sec_index || a.updated_epoch - b.updated_epoch;

@@ -514,7 +514,7 @@ export async function refresh(id) {
                 $tr.classList.add(i % 2 === 0 ? "odd" : "even");
             }
             if (buglist.augmentRow) {
-                buglist.augmentRow($row);
+                buglist.augmentRow($row, bug);
             }
             i++;
             $list.append($row);

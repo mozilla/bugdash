@@ -253,6 +253,10 @@
     text-align: right;
 }
 
+.bug-row.stalled-bug {
+    filter: opacity(0.25);
+}
+
 .bug-row .component {
     padding-right: 32px;
     padding-left: 32px;
