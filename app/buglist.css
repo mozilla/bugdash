@@ -62,13 +62,23 @@
 }
 
 .buglist-container .actions button,
-.buglist-container .actions .info {
+.buglist-container .actions .info,
+.buglist-container .actions .outdated {
     padding: 2px 4px;
     font-size: 22px;
 }
 
-.buglist-container .actions .info {
+.buglist-container .actions .info,
+.buglist-container .actions .outdated {
     display: inline-block;
+}
+
+.buglist-container .actions .outdated {
+    font-variation-settings: "FILL" 0;
+}
+
+.buglist-container:not(.outdated) .actions .outdated {
+    display: none;
 }
 
 .buglist-container .actions .action {

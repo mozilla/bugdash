@@ -254,6 +254,11 @@ export async function refresh(id) {
     buglist.initialised = true;
     $list.innerHTML = "";
 
+    if (buglist.outdatedTimer) {
+        clearTimeout(buglist.outdatedTimer);
+        buglist.outdatedTimer = undefined;
+    }
+
     // execute query
     let response;
     try {
@@ -262,6 +267,13 @@ export async function refresh(id) {
         setErrorState(buglist);
         return;
     }
+
+    buglist.outdatedTimer = setTimeout(
+        () => {
+            buglist.$root.classList.add("outdated");
+        },
+        1000 * 60 * 60 * 24,
+    );
 
     // exit early if there are too many bugs to avoid hitting BMO rate limits
     // we do this before applying filters as some filters request more data from BMO

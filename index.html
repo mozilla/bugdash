@@ -29,7 +29,7 @@
       type="text/css"
       href="app/tabs/help.css?c85e68301e2f59a3727b7f4884e85d71"
     >
-    <link rel="stylesheet" type="text/css" href="app/buglist.css?705f34df4e8470b0c84364ea36ec6214">
+    <link rel="stylesheet" type="text/css" href="app/buglist.css?8822e4b0dd33624bdd088f3c62227887">
     <link rel="stylesheet" type="text/css" href="app/bugtable.css?5d4ebc21b4656580d6e28319d737ebe3">
     <link rel="stylesheet" type="text/css" href="app/dialog.css?ac7e56024618ca7d27da454c08c7b17e">
     <link rel="stylesheet" type="text/css" href="app/tooltips.css?96325cf63a17b57c482ef97289322845">
@@ -38,7 +38,7 @@
     {
       "imports": {
         "bugdash": "./app/bugdash.mjs?3c86a2fd7435ff05ce0576cd3ab28183",
-        "buglist": "./app/buglist.mjs?be1b03a8cc991c34de6a1a9dcd289bc1",
+        "buglist": "./app/buglist.mjs?aa4d272c1a2aae16fd8d0f0fd90914b2",
         "buglists/assigned-inactive": "./app/buglists/assigned-inactive.mjs?b67a90e725c212c02980ca7c8581275a",
         "buglists/beta": "./app/buglists/beta.mjs?c6ef7768c95f7273ed2ad3b73a593802",
         "buglists/blockers": "./app/buglists/blockers.mjs?f6e798f0359994ed20a373149cb49798",
@@ -285,6 +285,12 @@
             <span class="counter-guidelines"></span>
           </div>
           <div class="actions">
+            <div
+              class="outdated material-icons"
+              title="This list was generated more than 24 hours ago."
+            >
+              warning
+            </div>
             <div class="info material-icons" data-title-field="description">question_mark</div>
             <button class="refresh-btn material-icons">refresh</button>
             <div class="action">
