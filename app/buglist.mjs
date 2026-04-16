@@ -136,6 +136,7 @@ export function append({
     description,
     query,
     include,
+    fetchBugs,
     template,
     augment,
     order,
@@ -162,6 +163,7 @@ export function append({
         $root: $root,
         query: query,
         includeFn: include,
+        fetchBugs: fetchBugs,
         $timestampTemplate: _(`#bug-row-timestamp-${template || "creation"}`),
         augmentFn: augment,
         order: "default",
@@ -257,7 +259,9 @@ export async function refresh(id) {
     // execute query
     let response;
     try {
-        response = await Bugzilla.rest(buglist.url);
+        response = buglist.fetchBugs
+            ? await buglist.fetchBugs(buglist)
+            : await Bugzilla.rest(buglist.url);
     } catch (_error) {
         setErrorState(buglist);
         return;
