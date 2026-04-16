@@ -76,6 +76,10 @@ function addTabs() {
             name: "beta",
             title: "Beta",
         },
+        {
+            name: "uplift",
+            title: "Potential Uplifts",
+        },
     ]);
 }
 
