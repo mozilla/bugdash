@@ -16,6 +16,7 @@
     margin-top: auto;
     margin-bottom: auto;
     color: #fff;
+    white-space: nowrap;
 }
 
 #nav #key-button:hover {
@@ -24,6 +25,10 @@
 
 #nav #key-button.authenticated {
     color: #daa520;
+}
+
+#tabs-content {
+    padding-bottom: 1em;
 }
 
 .tab-group {
@@ -117,4 +122,19 @@ body:not(.egg) #global-error .egg {
 
 .content {
     margin: 16px;
+}
+
+@media (max-width: 1080px) {
+    #help-tab-group {
+        display: none;
+    }
+    #nav {
+        font-size: 13px;
+    }
+    #nav .tab-group:not(:first-child) {
+        margin-left: 8px;
+    }
+    #refresh-all-button {
+        margin-left: 8px;
+    }
 }
