@@ -3,7 +3,16 @@ import * as Dialog from "dialog";
 import * as Global from "global";
 import * as Menu from "menus";
 import * as Tooltips from "tooltips";
-import { _, __, chunked, cloneTemplate, shuffle, timeAgo, updateTemplate } from "util";
+import {
+    _,
+    __,
+    arraysSameElements,
+    chunked,
+    cloneTemplate,
+    shuffle,
+    timeAgo,
+    updateTemplate,
+} from "util";
 
 /* global tippy */
 
@@ -145,6 +154,7 @@ export function append({
     augmentRow,
     counterGuidelines,
     beforeRefresh,
+    urlsBuilder,
 } = {}) {
     const $root = cloneTemplate(_("#buglist-template")).querySelector(
         ".buglist-container",
@@ -169,11 +179,12 @@ export function append({
         usesComponents: usesComponents,
         lazyLoad: lazyLoad,
         limit: limit,
-        url: undefined,
+        urls: [],
         initialised: false,
         augmentRow: augmentRow,
         counterGuidelines: counterGuidelines,
         beforeRefresh: beforeRefresh,
+        urlsBuilder: urlsBuilder || _defaultUrlsBuilder,
     };
     if (lazyLoad) {
         $root.classList.add("lazy");
@@ -183,14 +194,20 @@ export function append({
 
 export function updateQuery(id) {
     const buglist = g.buglists[id];
-    const url = Bugzilla.queryURL(
-        buglist.query,
-        buglist.usesComponents ? Global.selectedComponents() : undefined,
-    );
-    if (url !== buglist.url) {
-        buglist.url = url;
+    const updatedUrls = buglist.urlsBuilder(buglist);
+    if (!arraysSameElements(updatedUrls, buglist.urls)) {
+        buglist.urls = updatedUrls;
         refresh(id);
     }
+}
+
+function _defaultUrlsBuilder(buglist) {
+    return [
+        Bugzilla.queryURL(
+            buglist.query,
+            buglist.usesComponents ? Global.selectedComponents() : undefined,
+        ),
+    ];
 }
 
 const typeMaterialIconNames = {
@@ -260,9 +277,18 @@ export async function refresh(id) {
     }
 
     // execute query
-    let response;
+    let responseBugs;
     try {
-        response = await Bugzilla.rest(buglist.url);
+        const responses = await Promise.all(
+            buglist.urls.map((url) => Bugzilla.rest(url)),
+        );
+        const byId = new Map();
+        for (const response of responses) {
+            for (const bug of response.bugs) {
+                byId.set(bug.id, bug);
+            }
+        }
+        responseBugs = Array.from(byId.values());
     } catch (_error) {
         setErrorState(buglist);
         return;
@@ -278,19 +304,19 @@ export async function refresh(id) {
     // exit early if there are too many bugs to avoid hitting BMO rate limits
     // we do this before applying filters as some filters request more data from BMO
     const limit = buglist.limit || 2000;
-    if (response.bugs.length >= limit) {
+    if (responseBugs.length >= limit) {
         buglist.$root.classList.remove("loading");
         buglist.$root.classList.add("no-bugs");
         buglist.$root.classList.add("error");
         _(buglist.$root, ".buglist-header .counter").textContent =
-            `Too many bugs (${response.bugs.length})`;
+            `Too many bugs (${responseBugs.length})`;
         return;
     }
 
     // build results
     const now = Date.now();
     let bugs = [];
-    for (const bug of response.bugs) {
+    for (const bug of responseBugs) {
         bug.url = `https://bugzilla.mozilla.org/show_bug.cgi?id=${bug.id}`;
         bug.severity_title = severityTitles[bug.severity] || "";
         bug.creation_epoch = Date.parse(bug.creation_time);
