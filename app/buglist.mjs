@@ -294,6 +294,7 @@ export async function refresh(id) {
         return;
     }
 
+    buglist.$root.classList.remove("outdated");
     buglist.outdatedTimer = setTimeout(
         () => {
             buglist.$root.classList.add("outdated");
