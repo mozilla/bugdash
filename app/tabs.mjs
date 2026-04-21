@@ -96,7 +96,7 @@ export function initUI() {
 
     _("#nav").addEventListener("click", async (event) => {
         const $selected = event.target.closest(".tab");
-        if (!$selected || !$selected.dataset.tab) return;
+        if (!$selected?.dataset.tab) return;
         await switchTo($selected);
     });
 
