@@ -24,14 +24,21 @@ export function init($container) {
             "Timestamp shows last time bug was updated by anyone.",
         query: {
             resolution: "---",
-            keywords_type: "anywords",
-            keywords: SEC_LEVELS.join(","),
             f1: "bug_group",
             o1: "isnotempty",
             v1: "",
         },
         usesComponents: true,
         lazyLoad: true,
+        include: (bug) => {
+            // must be in a *-security group
+            const groups = typeof bug.groups === "string" ? [bug.groups] : bug.groups;
+            if (!groups.some((g) => g.endsWith("-security"))) return false;
+            // must have either a SEC_LEVELS keyword, or no security (sec-*) keywords at all
+            const keywords = bug.keywords.split(" ");
+            if (SEC_LEVELS.find((l) => keywords.includes(l))) return true;
+            return !keywords.some((k) => k.startsWith("sec-"));
+        },
         augment: (bug) => {
             bug.timestamp_ago = bug.updated_ago;
             bug.timestamp = bug.updated;
@@ -42,8 +49,10 @@ export function init($container) {
         },
         augmentRow: ($row, bug) => {
             const $keywords = _($row, ".keywords");
-            $keywords.innerHTML = $keywords.textContent
-                .split(" ")
+            $keywords.innerHTML = [
+                ...$keywords.textContent.split(" ").filter(Boolean),
+                ...(!bug.sec_level ? ["sec-unrated"] : []), // inject fake sec-unrated keyword
+            ]
                 .sort((a, b) => keywordOrder(a) - keywordOrder(b) || a.localeCompare(b))
                 .map((k) => {
                     if (SEC_LEVELS.includes(k))
