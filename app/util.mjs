@@ -42,8 +42,11 @@ export function updateTemplate($content, data) {
     // <div data-field="name"></div> + {"name": "bob"}
     // --> <div data-field="name">bob</div>
 
-    for (const [name, value] of Object.entries(data)) {
+    for (let [name, value] of Object.entries(data)) {
         for (const $el of __($content, `*[data-field=${name}]`)) {
+            if (Array.isArray(value)) {
+                value = value.join(" ");
+            }
             $el.textContent = value;
         }
         for (const field of ["href", "title", "id"]) {

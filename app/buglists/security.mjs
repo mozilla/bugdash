@@ -36,17 +36,15 @@ export function init($container) {
             const groups = typeof bug.groups === "string" ? [bug.groups] : bug.groups;
             if (!groups.some((g) => g.endsWith("-security"))) return false;
             // must have either a SEC_LEVELS keyword, or no security (sec-*) keywords at all
-            const keywords = bug.keywords.split(" ");
-            if (SEC_LEVELS.find((l) => keywords.includes(l))) return true;
-            return !keywords.some((k) => k.startsWith("sec-"));
+            if (SEC_LEVELS.find((l) => bug.keywords.includes(l))) return true;
+            return !bug.keywords.some((k) => k.startsWith("sec-"));
         },
         augment: (bug) => {
             bug.timestamp_ago = bug.updated_ago;
             bug.timestamp = bug.updated;
-            const keywords = bug.keywords.split(" ");
-            bug.sec_level = SEC_LEVELS.find((l) => keywords.includes(l));
-            bug.sec_index = SEC_LEVELS.findIndex((l) => keywords.includes(l));
-            bug.stalled = keywords.includes("stalled");
+            bug.sec_level = SEC_LEVELS.find((l) => bug.keywords.includes(l));
+            bug.sec_index = SEC_LEVELS.findIndex((l) => bug.keywords.includes(l));
+            bug.stalled = bug.keywords.includes("stalled");
         },
         augmentRow: ($row, bug) => {
             const $keywords = _($row, ".keywords");

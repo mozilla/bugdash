@@ -362,10 +362,6 @@ export async function refresh(id) {
             bug.needinfos = needinfos.sort((a, b) => b.age - a.age);
         }
 
-        if (bug.keywords) {
-            bug.keywords = bug.keywords.join(" ");
-        }
-
         bugs.push(bug);
     }
 
