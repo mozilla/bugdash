@@ -29,7 +29,7 @@
       type="text/css"
       href="app/tabs/help.css?c85e68301e2f59a3727b7f4884e85d71"
     >
-    <link rel="stylesheet" type="text/css" href="app/buglist.css?8822e4b0dd33624bdd088f3c62227887">
+    <link rel="stylesheet" type="text/css" href="app/buglist.css?891552c0f470b4c59dc67f942d33b057">
     <link rel="stylesheet" type="text/css" href="app/bugtable.css?5d4ebc21b4656580d6e28319d737ebe3">
     <link rel="stylesheet" type="text/css" href="app/dialog.css?ac7e56024618ca7d27da454c08c7b17e">
     <link rel="stylesheet" type="text/css" href="app/tooltips.css?96325cf63a17b57c482ef97289322845">
@@ -38,7 +38,7 @@
     {
       "imports": {
         "bugdash": "./app/bugdash.mjs?3c86a2fd7435ff05ce0576cd3ab28183",
-        "buglist": "./app/buglist.mjs?047e102540a3f4c033b65adede68c552",
+        "buglist": "./app/buglist.mjs?b050504769a184ee20c0ba8c4872acbb",
         "buglists/assigned-inactive": "./app/buglists/assigned-inactive.mjs?b67a90e725c212c02980ca7c8581275a",
         "buglists/beta": "./app/buglists/beta.mjs?c6ef7768c95f7273ed2ad3b73a593802",
         "buglists/blockers": "./app/buglists/blockers.mjs?f6e798f0359994ed20a373149cb49798",
@@ -50,16 +50,16 @@
         "buglists/long-tasks": "./app/buglists/long-tasks.mjs?19d1b6c5f947a13a9ee95bc086e1908c",
         "buglists/needinfo-escalated": "./app/buglists/needinfo-escalated.mjs?1a90a65c314b8cfd23e3dbe6ca00c7f7",
         "buglists/needinfo-stale": "./app/buglists/needinfo-stale.mjs?dc84c62b5d70b78f1a0b7d3f463b3923",
-        "buglists/recent-enhancements": "./app/buglists/recent-enhancements.mjs?166abc42e5b161dacb7a8b5b2f4f26af",
+        "buglists/recent-enhancements": "./app/buglists/recent-enhancements.mjs?c95ed94185b7a9d01083cc1d30a3d536",
         "buglists/recent-regressions": "./app/buglists/recent-regressions.mjs?cc6ff2953e2dbafabf00374136e09fc4",
-        "buglists/recent-tasks": "./app/buglists/recent-tasks.mjs?18b010d73eeb50a8691d054e9e1c89e1",
+        "buglists/recent-tasks": "./app/buglists/recent-tasks.mjs?e3a0aafb44daa5887a92b7dc01ce644e",
         "buglists/regressions": "./app/buglists/regressions.mjs?5bbbf6bfd80a2ee635a87f95f40e6bd9",
         "buglists/reo": "./app/buglists/reo.mjs?cea7533c254b4f1758ee030c75b4beb8",
-        "buglists/security": "./app/buglists/security.mjs?97dcbb4fb97126b098b2fd4c289e72b1",
+        "buglists/security": "./app/buglists/security.mjs?58f16e488e6bc6293b9577078dd9deb4",
         "buglists/stalled": "./app/buglists/stalled.mjs?da2d4f814ac5b70c90a3ebb32f3b23e6",
         "buglists/topcrashers": "./app/buglists/topcrashers.mjs?b747f1889a13ac5127212473cf75fc78",
         "buglists/tracked": "./app/buglists/tracked.mjs?47a696d9df9ad3ece6f367fb61e9c6e8",
-        "buglists/triage-needed": "./app/buglists/triage-needed.mjs?8e466c0f07b94bf9220da43c38e4e5a1",
+        "buglists/triage-needed": "./app/buglists/triage-needed.mjs?2ab63b30b4e8a29a2400208f0b795744",
         "buglists/uplift-candidates": "./app/buglists/uplift-candidates.mjs?cf1a47416d688b915c2fdb94eb817c02",
         "bugtable": "./app/bugtable.mjs?128cb6524e5d0568dcd5f4d646cec2b9",
         "bugzilla": "./app/bugzilla.mjs?19d143e25cc1a67f89963ad8556ba46c",
@@ -77,7 +77,7 @@
         "tabs/tracked": "./app/tabs/tracked.mjs?2c240c3e7d979a69693812392f2029d2",
         "tabs/triage": "./app/tabs/triage.mjs?deb37c0fc8702feee793c3d776fae4f2",
         "tooltips": "./app/tooltips.mjs?f6ce915e9ef0058cae9ecc157ad8a1a9",
-        "util": "./app/util.mjs?e80916bafd931112dede3cbeec5c772c"
+        "util": "./app/util.mjs?021b3f8fa143f314fcdc4fa6a8e39ab5"
       }
     }
     </script>
@@ -339,7 +339,7 @@
         </td>
         <td class="reporter" data-field="creator_nick" data-title-field="creator_name"></td>
         <td class="owner" data-field="assigned_to_nick" data-title-field="assigned_to_name"></td>
-        <td class="keywords" data-title-field="keywords_title" data-field="keywords"></td>
+        <td class="keywords" data-html="keywords_html" data-title-field="keywords_title"></td>
         <td class="timestamp"></td>
       </tr>
     </template>

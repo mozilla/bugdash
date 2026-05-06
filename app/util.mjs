@@ -35,6 +35,7 @@ export function cloneTemplate($template) {
 export function updateTemplate($content, data) {
     // simple templating engine built on data- attributes
     //   data-field        -> set textContent
+    //   data-html         -> set innerHTML
     //   data-href-field   -> set href attribute
     //   data-title-field  -> set title attribute
     //   data-id-field     -> set id attribute
@@ -42,12 +43,12 @@ export function updateTemplate($content, data) {
     // <div data-field="name"></div> + {"name": "bob"}
     // --> <div data-field="name">bob</div>
 
-    for (let [name, value] of Object.entries(data)) {
+    for (const [name, value] of Object.entries(data)) {
         for (const $el of __($content, `*[data-field=${name}]`)) {
-            if (Array.isArray(value)) {
-                value = value.join(" ");
-            }
-            $el.textContent = value;
+            $el.textContent = Array.isArray(value) ? value.join(" ") : value;
+        }
+        for (const $el of __($content, `*[data-html=${name}]`)) {
+            $el.innerHTML = value;
         }
         for (const field of ["href", "title", "id"]) {
             for (const $el of __($content, `*[data-${field}-field=${name}]`)) {

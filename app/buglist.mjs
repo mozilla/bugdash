@@ -151,7 +151,6 @@ export function append({
     usesComponents,
     lazyLoad,
     limit,
-    augmentRow,
     counterGuidelines,
     beforeRefresh,
     urlsBuilder,
@@ -181,7 +180,6 @@ export function append({
         limit: limit,
         urls: [],
         initialised: false,
-        augmentRow: augmentRow,
         counterGuidelines: counterGuidelines,
         beforeRefresh: beforeRefresh,
         urlsBuilder: urlsBuilder || _defaultUrlsBuilder,
@@ -462,7 +460,7 @@ export async function refresh(id) {
             bug.creator_nick === bug.creator_detail.real_name
                 ? ""
                 : bug.creator_detail.real_name;
-        // eslint-disable-next-line camelcase
+        bug.stalled = bug.keywords.includes("stalled");
         bug.needinfo_icon = " ";
 
         if (bug.needinfos.length > 0) {
@@ -537,6 +535,10 @@ export async function refresh(id) {
         const $template = _("#bug-row-template");
         let i = 0;
         for (const bug of bugs) {
+            // build keywords html
+            bug.keywords_html = bug.keywords
+                .map((kw) => `<span class="keyword-${kw}">${kw}</span>`)
+                .join(" ");
             // main row
             const $row = cloneTemplate($template);
             updateTemplate($row, bug);
@@ -547,9 +549,9 @@ export async function refresh(id) {
             // set odd/even class
             for (const $tr of __($row, "tr")) {
                 $tr.classList.add(i % 2 === 0 ? "odd" : "even");
-            }
-            if (buglist.augmentRow) {
-                buglist.augmentRow($row, bug);
+                if (bug.stalled) {
+                    $tr.classList.add("stalled-bug");
+                }
             }
             i++;
             $list.append($row);

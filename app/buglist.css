@@ -263,7 +263,7 @@
     text-align: right;
 }
 
-.bug-row.stalled-bug {
+.buglist-container:not(#stalled) .bug-row.stalled-bug {
     filter: opacity(0.25);
 }
 
@@ -272,15 +272,17 @@
     padding-left: 32px;
 }
 
+.bug-row span[class^="keyword-"] {
+    margin: 0 2px;
+}
+
 .bug-row .keyword-sec-critical,
-.bug-row .keyword-sec-high {
+.bug-row .keyword-sec-high,
+.bug-row .keyword-sec-moderate,
+.bug-row .keyword-sec-low {
     color: #dc143c;
 }
 
-.bug-row .sec-keyword {
-    color: #dc143c;
-}
-
-.bug-row .stalled-keyword {
+.bug-row .keyword-stalled {
     color: #4169e1;
 }

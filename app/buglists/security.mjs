@@ -1,6 +1,6 @@
 import * as BugList from "buglist";
 import * as Bugzilla from "bugzilla";
-import { _, __ } from "util";
+import { _ } from "util";
 
 /* eslint-disable camelcase */
 
@@ -10,8 +10,7 @@ function keywordOrder(k) {
     const i = SEC_LEVELS.indexOf(k);
     if (i !== -1) return i;
     if (k === "sec-unrated") return SEC_LEVELS.length;
-    if (k === "stalled") return SEC_LEVELS.length + 1;
-    return SEC_LEVELS.length + 2;
+    return SEC_LEVELS.length + 1;
 }
 
 export function init($container) {
@@ -44,28 +43,12 @@ export function init($container) {
             bug.timestamp = bug.updated;
             bug.sec_level = SEC_LEVELS.find((l) => bug.keywords.includes(l));
             bug.sec_index = SEC_LEVELS.findIndex((l) => bug.keywords.includes(l));
-            bug.stalled = bug.keywords.includes("stalled");
-        },
-        augmentRow: ($row, bug) => {
-            const $keywords = _($row, ".keywords");
-            $keywords.innerHTML = [
-                ...$keywords.textContent.split(" ").filter(Boolean),
-                ...(!bug.sec_level ? ["sec-unrated"] : []), // inject fake sec-unrated keyword
-            ]
-                .sort((a, b) => keywordOrder(a) - keywordOrder(b) || a.localeCompare(b))
-                .map((k) => {
-                    if (SEC_LEVELS.includes(k))
-                        return `<span class="sec-keyword">${k}</span>`;
-                    if (k === "stalled")
-                        return `<span class="stalled-keyword">${k}</span>`;
-                    return k;
-                })
-                .join(" ");
-            if (bug.stalled) {
-                for (const $tr of __($row, ".bug-row")) {
-                    $tr.classList.add("stalled-bug");
-                }
+            if (!bug.sec_level) {
+                bug.keywords.push("sec-unrated");
             }
+            bug.keywords.sort(
+                (a, b) => keywordOrder(a) - keywordOrder(b) || a.localeCompare(b),
+            );
         },
         order: (a, b) => {
             return a.sec_index - b.sec_index || a.updated_epoch - b.updated_epoch;
