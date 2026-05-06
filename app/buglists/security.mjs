@@ -9,8 +9,9 @@ const SEC_LEVELS = ["sec-critical", "sec-high", "sec-moderate", "sec-low"];
 function keywordOrder(k) {
     const i = SEC_LEVELS.indexOf(k);
     if (i !== -1) return i;
-    if (k === "stalled") return SEC_LEVELS.length;
-    return SEC_LEVELS.length + 1;
+    if (k === "sec-unrated") return SEC_LEVELS.length;
+    if (k === "stalled") return SEC_LEVELS.length + 1;
+    return SEC_LEVELS.length + 2;
 }
 
 export function init($container) {
