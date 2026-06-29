@@ -29,7 +29,7 @@
       type="text/css"
       href="app/tabs/help.css?c85e68301e2f59a3727b7f4884e85d71"
     >
-    <link rel="stylesheet" type="text/css" href="app/buglist.css?891552c0f470b4c59dc67f942d33b057">
+    <link rel="stylesheet" type="text/css" href="app/buglist.css?8c8a1dc0a351bf829f31ae3c92c3efc7">
     <link rel="stylesheet" type="text/css" href="app/bugtable.css?5d4ebc21b4656580d6e28319d737ebe3">
     <link rel="stylesheet" type="text/css" href="app/dialog.css?ac7e56024618ca7d27da454c08c7b17e">
     <link rel="stylesheet" type="text/css" href="app/tooltips.css?96325cf63a17b57c482ef97289322845">
@@ -38,7 +38,7 @@
     {
       "imports": {
         "bugdash": "./app/bugdash.mjs?3c86a2fd7435ff05ce0576cd3ab28183",
-        "buglist": "./app/buglist.mjs?b050504769a184ee20c0ba8c4872acbb",
+        "buglist": "./app/buglist.mjs?36663676566fd3c7b6f0cc24773fc982",
         "buglists/assigned-inactive": "./app/buglists/assigned-inactive.mjs?b67a90e725c212c02980ca7c8581275a",
         "buglists/beta": "./app/buglists/beta.mjs?c6ef7768c95f7273ed2ad3b73a593802",
         "buglists/blockers": "./app/buglists/blockers.mjs?f6e798f0359994ed20a373149cb49798",
@@ -329,7 +329,16 @@
             class="needinfo"
             data-title-field="needinfo_target"
             data-field="needinfo_icon"
-          ></span><span class="groups" data-title-field="groups" data-field="groups_icon"></span>
+          ></span><span class="groups" data-title-field="groups" data-field="groups_icon"></span
+          ><a
+            href="#"
+            class="triage-btn"
+            data-href-field="triage_url"
+            target="_blank"
+            title="Use bugbug to run the triage investigation for this bug"
+            aria-label="Use bugbug to run the triage investigation for this bug"
+            ><span aria-hidden="true">manage_search</span></a
+          >
         </td>
         <td class="severity" data-title-field="severity_title" data-field="severity"></td>
         <td class="priority" data-title-field="priority_title" data-field="priority"></td>

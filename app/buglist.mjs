@@ -16,6 +16,8 @@ import {
 
 /* global tippy */
 
+const TRIAGE_URL = "https://hackbot-ui-xxesjlbeoa-uc.a.run.app";
+
 const g = {
     buglists: {},
 };
@@ -317,6 +319,7 @@ export async function refresh(id) {
     let bugs = [];
     for (const bug of responseBugs) {
         bug.url = `https://bugzilla.mozilla.org/show_bug.cgi?id=${bug.id}`;
+        bug.triage_url = `${TRIAGE_URL}/?agent=frontend-triage&bug_id=${bug.id}`;
         bug.severity_title = severityTitles[bug.severity] || "";
         bug.creation_epoch = Date.parse(bug.creation_time);
         bug.creation_ago = timeAgo(bug.creation_epoch);

@@ -194,6 +194,21 @@
     color: #9248c8;
 }
 
+.bug-row .bug-icons a.triage-btn,
+.bug-row .bug-icons a.triage-btn:visited {
+    color: #777;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.bug-row .bug-icons a.triage-btn span {
+    cursor: pointer;
+}
+
+.bug-row .bug-icons a.triage-btn:hover {
+    color: #008080;
+}
+
 .buglist tr.odd {
     background: #fff;
 }
