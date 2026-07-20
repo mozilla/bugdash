@@ -18,6 +18,40 @@ import {
 
 const TRIAGE_URL = "https://hackbot-ui-xxesjlbeoa-uc.a.run.app";
 
+// Components in scope for bugbug's frontend-triage agent (Firefox desktop
+// frontend). Keyed as "Product::Component". Update if the agent broadens scope.
+const FRONTEND_TRIAGE_COMPONENTS = new Set([
+    // Firefox product
+    "Firefox::Address Bar",
+    "Firefox::Bookmarks & History",
+    "Firefox::General",
+    "Firefox::Menus",
+    "Firefox::New Tab Page",
+    "Firefox::Session Restore",
+    "Firefox::Sidebar",
+    "Firefox::Tabbed Browser",
+    "Firefox::Tabbed Browser: Split View",
+    "Firefox::Tabbed Browser: Tab Groups",
+    "Firefox::Theme",
+    "Firefox::Toolbars and Customization",
+    // Toolkit product (shared frontend UI / built-in pages)
+    "Toolkit::Alerts Service",
+    "Toolkit::Content Prompts",
+    "Toolkit::Error Pages",
+    "Toolkit::Find Toolbar",
+    "Toolkit::General",
+    "Toolkit::Picture-in-Picture",
+    "Toolkit::Popup Blocker",
+    "Toolkit::PopupNotifications and Notification Bars",
+    "Toolkit::Preferences",
+    "Toolkit::Printing",
+    "Toolkit::Reader Mode",
+    "Toolkit::Themes",
+    "Toolkit::Toolbars and Toolbar Customization",
+    "Toolkit::UI Widgets",
+    "Toolkit::Video/Audio Controls",
+]);
+
 const g = {
     buglists: {},
 };
@@ -156,6 +190,7 @@ export function append({
     counterGuidelines,
     beforeRefresh,
     urlsBuilder,
+    triageAgent,
 } = {}) {
     const $root = cloneTemplate(_("#buglist-template")).querySelector(
         ".buglist-container",
@@ -185,6 +220,7 @@ export function append({
         counterGuidelines: counterGuidelines,
         beforeRefresh: beforeRefresh,
         urlsBuilder: urlsBuilder || _defaultUrlsBuilder,
+        triageAgent: triageAgent,
     };
     if (lazyLoad) {
         $root.classList.add("lazy");
@@ -319,7 +355,12 @@ export async function refresh(id) {
     let bugs = [];
     for (const bug of responseBugs) {
         bug.url = `https://bugzilla.mozilla.org/show_bug.cgi?id=${bug.id}`;
-        bug.triage_url = `${TRIAGE_URL}/?agent=frontend-triage&bug_id=${bug.id}`;
+        bug.showTriage =
+            buglist.triageAgent &&
+            FRONTEND_TRIAGE_COMPONENTS.has(`${bug.product}::${bug.component}`);
+        bug.triage_url = bug.showTriage
+            ? `${TRIAGE_URL}/?agent=frontend-triage&bug_id=${bug.id}`
+            : "";
         bug.severity_title = severityTitles[bug.severity] || "";
         bug.creation_epoch = Date.parse(bug.creation_time);
         bug.creation_ago = timeAgo(bug.creation_epoch);
@@ -545,6 +586,9 @@ export async function refresh(id) {
             // main row
             const $row = cloneTemplate($template);
             updateTemplate($row, bug);
+            if (!bug.showTriage) {
+                _($row, ".triage-btn")?.remove();
+            }
             // replace the timestamp cell
             const $timestamp = cloneTemplate(buglist.$timestampTemplate);
             updateTemplate($timestamp, bug);

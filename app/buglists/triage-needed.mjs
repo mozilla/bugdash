@@ -31,5 +31,6 @@ export function init($container) {
             v4: "meta",
         },
         usesComponents: true,
+        triageAgent: true,
     });
 }

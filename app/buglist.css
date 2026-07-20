@@ -194,19 +194,25 @@
     color: #9248c8;
 }
 
-.bug-row .bug-icons a.triage-btn,
-.bug-row .bug-icons a.triage-btn:visited {
-    color: #777;
+.bug-row .timestamp a.triage-btn,
+.bug-row .timestamp a.triage-btn:visited {
+    display: block;
+    width: fit-content;
+    padding: 2px 6px;
+    margin: 0 0 4px auto;
+    font-size: 11px;
+    font-weight: normal;
+    color: #28292a;
+    white-space: nowrap;
     text-decoration: none;
     cursor: pointer;
+    border: 1px solid silver;
+    border-radius: 2px;
 }
 
-.bug-row .bug-icons a.triage-btn span {
-    cursor: pointer;
-}
-
-.bug-row .bug-icons a.triage-btn:hover {
+.bug-row .timestamp a.triage-btn:hover {
     color: #008080;
+    background: #ebebeb;
 }
 
 .buglist tr.odd {
