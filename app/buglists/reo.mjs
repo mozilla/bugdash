@@ -13,7 +13,6 @@ export function init($container, ver) {
             `- status-firefox${ver.nightly} set to affected\n` +
             `- status-firefox${ver.beta} set to any of unaffected ? ---\n` +
             "Bugs with any of the following are ignored:\n" +
-            "- open NEEDINFO request\n" +
             `- tracking-firefox${ver.nightly} is -\n` +
             "- stalled or intermittent-failure keywords\n" +
             "- within the Testing product\n" +
@@ -44,9 +43,6 @@ export function init($container, ver) {
             o5: "equals",
             v5: "---",
             f6: "CP",
-            f7: "flagtypes.name",
-            o7: "notsubstring",
-            v7: "needinfo",
             f8: `cf_tracking_firefox${ver.nightly}`,
             o8: "notequals",
             v8: "-",
@@ -57,80 +53,6 @@ export function init($container, ver) {
             o10: "nowordssubstr",
             v10: "stalled,intermittent-failure",
         },
-    });
-
-    BugList.append({
-        id: `reo-${ver.name}-new-ni`,
-        $container: $container,
-        template: "needinfo",
-        title: `${ver.nightly} (${ver.title}) New Bugs With NEEDINFO`,
-        description:
-            "Bugs with all of the following:\n" +
-            "- regression keyword\n" +
-            `- status-firefox${ver.nightly} set to affected\n` +
-            `- status-firefox${ver.beta} set to any of unaffected ? ---\n` +
-            "- open NEEDINFO request\n" +
-            "Bugs with any of the following are ignored:\n" +
-            `- tracking-firefox${ver.nightly} is -\n` +
-            "- stalled or intermittent-failure keywords\n" +
-            "- within the Testing product\n" +
-            "Bugs are order by needinfo date, oldest first.",
-        query: {
-            classification: [
-                "Client Software",
-                "Components",
-                "Developer Infrastructure",
-                "Other",
-                "Server Software",
-            ],
-            keywords: "regression",
-            keywords_type: "allwords",
-            resolution: "---",
-            o1: "equals",
-            v1: "affected",
-            f1: `cf_status_firefox${ver.nightly}`,
-            j2: "OR",
-            f2: "OP",
-            f3: `cf_status_firefox${ver.beta}`,
-            o3: "equals",
-            v3: "unaffected",
-            f4: `cf_status_firefox${ver.beta}`,
-            o4: "equals",
-            v4: "?",
-            f5: `cf_status_firefox${ver.beta}`,
-            o5: "equals",
-            v5: "---",
-            f6: "CP",
-            f7: "flagtypes.name",
-            o7: "anywordssubstr",
-            v7: "needinfo",
-            f8: `cf_tracking_firefox${ver.nightly}`,
-            o8: "notequals",
-            v8: "-",
-            f9: "product",
-            o9: "notequals",
-            v9: "Testing",
-            f10: "keywords",
-            o10: "nowordssubstr",
-            v10: "stalled,intermittent-failure",
-        },
-        augment: (bug) => {
-            let nickSuffix = "";
-            let nameSuffix = "";
-            if (bug.needinfos[0].requestee === bug.triage_owner) {
-                nickSuffix = " (T)";
-                nameSuffix = " (Triage Owner)";
-            } else if (bug.needinfos[0].requestee === bug.creator) {
-                nickSuffix = " (R)";
-                nameSuffix = " (Reporter)";
-            }
-            bug.needinfo_nick = bug.needinfos[0].requestee_nick + nickSuffix;
-            bug.needinfo_name = bug.needinfos[0].requestee_name + nameSuffix;
-            bug.needinfo_date = bug.needinfos[0].date;
-            bug.needinfo_ago = bug.needinfos[0].ago;
-            bug.needinfo_epoch = bug.needinfos[0].epoch;
-        },
-        order: (a, b) => a.needinfo_epoch - b.needinfo_epoch,
     });
 
     BugList.append({
@@ -143,7 +65,6 @@ export function init($container, ver) {
             `- status-firefox${ver.nightly} set to affected\n` +
             "Bugs with any of the following are ignored:\n" +
             `- status-firefox${ver.beta} set to any of unaffected ? ---\n` +
-            "- open NEEDINFO request\n" +
             `- tracking-firefox${ver.nightly} is -\n` +
             "- stalled or intermittent-failure keywords\n" +
             "- within the Testing product\n" +
@@ -175,9 +96,6 @@ export function init($container, ver) {
             o5: "equals",
             v5: "---",
             f6: "CP",
-            o7: "notsubstring",
-            v7: "needinfo",
-            f7: "flagtypes.name",
             f8: `cf_tracking_firefox${ver.nightly}`,
             o8: "notequals",
             v8: "-",
@@ -194,84 +112,6 @@ export function init($container, ver) {
         order: (a, b) =>
             a.assigned_sortkey - b.assigned_sortkey ||
             a.updated_epoch - b.updated_epoch,
-    });
-
-    BugList.append({
-        id: `reo-${ver.name}-carryover-ni`,
-        $container: $container,
-        template: "needinfo",
-        title: `${ver.nightly} (${ver.title}) Carry Over Bugs With NEEDINFO`,
-        description:
-            "Bugs with all of the following:\n" +
-            "- regression keyword\n" +
-            `- status-firefox${ver.nightly} set to affected\n` +
-            "- open NEEDINFO request\n" +
-            "Bugs with any of the following are ignored:\n" +
-            `- status-firefox${ver.beta} set to any of unaffected ? ---\n` +
-            `- tracking-firefox${ver.nightly} is -\n` +
-            "- stalled or intermittent-failure keywords\n" +
-            "- within the Testing products\n" +
-            "Bugs are order by unassigned, then by needinfo date (oldest first)",
-        query: {
-            classification: [
-                "Client Software",
-                "Components",
-                "Developer Infrastructure",
-                "Other",
-                "Server Software",
-            ],
-            keywords: "regression",
-            keywords_type: "allwords",
-            resolution: "---",
-            f1: `cf_status_firefox${ver.nightly}`,
-            o1: "equals",
-            v1: "affected",
-            n2: "1",
-            j2: "OR",
-            f2: "OP",
-            f3: `cf_status_firefox${ver.beta}`,
-            o3: "equals",
-            v3: "unaffected",
-            f4: `cf_status_firefox${ver.beta}`,
-            o4: "equals",
-            v4: "?",
-            f5: `cf_status_firefox${ver.beta}`,
-            o5: "equals",
-            v5: "---",
-            f6: "CP",
-            o7: "anywordssubstr",
-            v7: "needinfo",
-            f7: "flagtypes.name",
-            f8: `cf_tracking_firefox${ver.nightly}`,
-            o8: "notequals",
-            v8: "-",
-            f9: "product",
-            o9: "notequals",
-            v9: "Testing",
-            f10: "keywords",
-            o10: "nowordssubstr",
-            v10: "stalled,intermittent-failure",
-        },
-        augment: (bug) => {
-            bug.assigned_sortkey = bug.assigned_to === "nobody@mozilla.org" ? 0 : 1;
-            let nickSuffix = "";
-            let nameSuffix = "";
-            if (bug.needinfos[0].requestee === bug.triage_owner) {
-                nickSuffix = " (T)";
-                nameSuffix = " (Triage Owner)";
-            } else if (bug.needinfos[0].requestee === bug.creator) {
-                nickSuffix = " (R)";
-                nameSuffix = " (Reporter)";
-            }
-            bug.needinfo_nick = bug.needinfos[0].requestee_nick + nickSuffix;
-            bug.needinfo_name = bug.needinfos[0].requestee_name + nameSuffix;
-            bug.needinfo_date = bug.needinfos[0].date;
-            bug.needinfo_ago = bug.needinfos[0].ago;
-            bug.needinfo_epoch = bug.needinfos[0].epoch;
-        },
-        order: (a, b) =>
-            a.assigned_sortkey - b.assigned_sortkey ||
-            a.needinfo_epoch - b.needinfo_epoch,
     });
 
     BugList.append({
