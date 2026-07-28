@@ -1,4 +1,12 @@
-/* Regressions team filter — minimal functional styling only */
+/* Regressions page filters — minimal functional styling only */
+
+/* Holds one line whether or not it has text, so showing or clearing the active
+   filter summary doesn't shift everything below it. line-height is set here
+   rather than inherited so min-height matches the rendered line exactly. */
+#reo-filters-active {
+    min-height: 1.3em;
+    line-height: 1.3;
+}
 
 #reo-teams {
     margin-bottom: 1em;

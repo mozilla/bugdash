@@ -7,10 +7,24 @@ import * as Global from "global";
 const g = {
     // teams selected in the Regressions page team filter; empty = no filtering
     teams: new Set(),
+    // quick filters selected in the Regressions page filter bar; when any are
+    // active a bug is kept if it matches ANY of them (OR). All false = no
+    // filtering.
+    filters: {
+        severityHigh: false,
+        missingSeverity: false,
+        unassigned: false,
+        missingRegressor: false,
+        withoutNeedinfo: false,
+    },
 };
 
 export function setTeams(teams) {
     g.teams = new Set(teams);
+}
+
+export function setFilters(next) {
+    Object.assign(g.filters, next);
 }
 
 function maxFieldNumber(query) {
@@ -93,9 +107,49 @@ function appendTeamFilter(query) {
     query[`f${n}`] = "CP"; // close team OR group
 }
 
+// Append the active quick filters as a single top-level AND clause containing
+// an OR group.
+function appendQuickFilters(query) {
+    const clauses = [];
+    if (g.filters.severityHigh) {
+        clauses.push(["bug_severity", "anyexact", "S1,S2"]);
+    }
+    if (g.filters.missingSeverity) {
+        clauses.push(["bug_severity", "anyexact", "--"]);
+    }
+    if (g.filters.unassigned) {
+        clauses.push(["assigned_to", "equals", "nobody@mozilla.org"]);
+    }
+    if (g.filters.missingRegressor) {
+        clauses.push(["regressed_by", "isempty", ""]);
+    }
+    if (g.filters.withoutNeedinfo) {
+        clauses.push(["flagtypes.name", "notsubstring", "needinfo"]);
+    }
+    if (clauses.length === 0) {
+        return;
+    }
+
+    let n = maxFieldNumber(query) + 1;
+    query[`f${n}`] = "OP";
+    query[`j${n}`] = "OR";
+    n++;
+    for (const [field, op, value] of clauses) {
+        query[`f${n}`] = field;
+        query[`o${n}`] = op;
+        query[`v${n}`] = value;
+        n++;
+    }
+    query[`f${n}`] = "CP";
+}
+
+// The team and quick filters are injected as independent top-level AND clauses.
+// Each computes its field offset from the current max f#, so they chain without
+// collision.
 function reoUrlsBuilder(buglist) {
     const query = { ...buglist.query };
     appendTeamFilter(query);
+    appendQuickFilters(query);
     return [Bugzilla.queryURL(query)];
 }
 

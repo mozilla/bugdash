@@ -6,7 +6,29 @@ import { _, __, cloneTemplate } from "util";
 
 /* global tippy */
 
+const FILTER_DEFS = [
+    { id: "reo-filter-severity-high", key: "severityHigh", label: "Severity S2+" },
+    {
+        id: "reo-filter-missing-severity",
+        key: "missingSeverity",
+        label: "Missing severity",
+    },
+    { id: "reo-filter-unassigned", key: "unassigned", label: "Unassigned" },
+    {
+        id: "reo-filter-missing-regressor",
+        key: "missingRegressor",
+        label: "Missing regressor",
+    },
+    {
+        id: "reo-filter-without-needinfo",
+        key: "withoutNeedinfo",
+        label: "Without NEEDINFO",
+    },
+];
+
 const g = {
+    // quick filters: last-applied state (for dirty detection)
+    appliedFilters: Object.fromEntries(FILTER_DEFS.map((d) => [d.key, false])),
     // teams filter: applied set, popover node, and its tippy instance
     appliedTeams: new Set(),
     $popover: undefined,
@@ -18,6 +40,43 @@ function refreshLists() {
         BugList.updateQuery($buglist.id);
     }
 }
+
+/* ---- quick filters ---- */
+
+function checkedFilters() {
+    return Object.fromEntries(FILTER_DEFS.map((d) => [d.key, _(`#${d.id}`).checked]));
+}
+
+function updateFilterButtons() {
+    const checked = checkedFilters();
+    const dirty = FILTER_DEFS.some((d) => checked[d.key] !== g.appliedFilters[d.key]);
+    const anyChecked = Object.values(checked).some(Boolean);
+    const anyApplied = Object.values(g.appliedFilters).some(Boolean);
+    // Apply is only meaningful when the checkboxes differ from what's applied.
+    _("#reo-filter-apply").disabled = !dirty;
+    // Clear is only meaningful when there's something to clear.
+    _("#reo-filter-clear").disabled = !anyChecked && !anyApplied;
+}
+
+// Empty when nothing is applied; the element keeps its height either way (see
+// reo.css), so applying or clearing a filter can't shift the page below it.
+function updateFilterIndicator() {
+    const active = FILTER_DEFS.filter((d) => g.appliedFilters[d.key]);
+    _("#reo-filters-active").textContent =
+        active.length > 0
+            ? `Filtering: ${active.map((d) => d.label).join(" OR ")}`
+            : "";
+}
+
+function applyFilters() {
+    g.appliedFilters = checkedFilters();
+    REO.setFilters(g.appliedFilters);
+    refreshLists();
+    updateFilterIndicator();
+    updateFilterButtons();
+}
+
+/* ---- teams filter ---- */
 
 // unique team names from the loaded Bugzilla components, sorted alphabetically
 // with the "(none)" bucket last
@@ -166,6 +225,20 @@ function buildPopover() {
 
 export function initUI() {
     const $content = _("#reo-content");
+
+    // quick filter bar
+    $content.append(cloneTemplate(_("#reo-filters-template")).firstElementChild);
+    for (const def of FILTER_DEFS) {
+        _(`#${def.id}`).addEventListener("change", updateFilterButtons);
+    }
+    _("#reo-filter-apply").addEventListener("click", applyFilters);
+    _("#reo-filter-clear").addEventListener("click", () => {
+        for (const def of FILTER_DEFS) {
+            _(`#${def.id}`).checked = false;
+        }
+        applyFilters();
+    });
+    updateFilterButtons();
 
     // teams filter
     $content.append(cloneTemplate(_("#reo-teams-template")).firstElementChild);
