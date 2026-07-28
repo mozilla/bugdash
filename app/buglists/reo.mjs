@@ -1,11 +1,109 @@
 import * as BugList from "buglist";
+import * as Bugzilla from "bugzilla";
+import * as Global from "global";
 
 /* eslint-disable camelcase */
+
+const g = {
+    // teams selected in the Regressions page team filter; empty = no filtering
+    teams: new Set(),
+};
+
+export function setTeams(teams) {
+    g.teams = new Set(teams);
+}
+
+function maxFieldNumber(query) {
+    return Math.max(
+        0,
+        ...Object.keys(query)
+            .filter((k) => /^f\d+$/.test(k))
+            .map((k) => Number(k.slice(1))),
+    );
+}
+
+// Restrict the query to components belonging to the selected teams. Components
+// are grouped by product; within each product a single `component anyexact`
+// matches the comma-free names, with an `equals` fallback for names that
+// themselves contain a comma (which anyexact would mis-split). This keeps the
+// generated URL compact enough to avoid Bugzilla's URL length limit.
+function appendTeamFilter(query) {
+    if (g.teams.size === 0) {
+        return;
+    }
+
+    const byProduct = new Map();
+    const productTotals = new Map();
+    for (const c of Global.allComponents()) {
+        productTotals.set(c.product, (productTotals.get(c.product) ?? 0) + 1);
+        if (!g.teams.has(c.team || "(none)")) {
+            continue;
+        }
+        if (!byProduct.has(c.product)) {
+            byProduct.set(c.product, []);
+        }
+        byProduct.get(c.product).push(c.component);
+    }
+    if (byProduct.size === 0) {
+        return;
+    }
+
+    let n = maxFieldNumber(query) + 1;
+    query[`f${n}`] = "OP";
+    query[`j${n}`] = "OR";
+    n++;
+    for (const [product, components] of byProduct) {
+        // When every component of a product is selected, matching on the product
+        // alone is equivalent and far shorter. Without this, selecting all teams
+        // enumerates every component and Bugzilla rejects the URL as too long.
+        if (components.length === productTotals.get(product)) {
+            query[`f${n}`] = "product";
+            query[`o${n}`] = "equals";
+            query[`v${n}`] = product;
+            n++;
+            continue;
+        }
+        query[`f${n}`] = "OP";
+        n++;
+        query[`f${n}`] = "product";
+        query[`o${n}`] = "equals";
+        query[`v${n}`] = product;
+        n++;
+        query[`f${n}`] = "OP";
+        query[`j${n}`] = "OR";
+        n++;
+        const safe = components.filter((c) => !c.includes(","));
+        if (safe.length > 0) {
+            query[`f${n}`] = "component";
+            query[`o${n}`] = "anyexact";
+            query[`v${n}`] = safe.join(",");
+            n++;
+        }
+        for (const c of components.filter((c) => c.includes(","))) {
+            query[`f${n}`] = "component";
+            query[`o${n}`] = "equals";
+            query[`v${n}`] = c;
+            n++;
+        }
+        query[`f${n}`] = "CP"; // close component sub-group
+        n++;
+        query[`f${n}`] = "CP"; // close product block
+        n++;
+    }
+    query[`f${n}`] = "CP"; // close team OR group
+}
+
+function reoUrlsBuilder(buglist) {
+    const query = { ...buglist.query };
+    appendTeamFilter(query);
+    return [Bugzilla.queryURL(query)];
+}
 
 export function init($container, ver) {
     BugList.append({
         id: `reo-${ver.name}-new`,
         $container: $container,
+        urlsBuilder: reoUrlsBuilder,
         title: `${ver.nightly} (${ver.title}) New Bugs`,
         description:
             "Bugs with all of the following:\n" +
@@ -58,6 +156,7 @@ export function init($container, ver) {
     BugList.append({
         id: `reo-${ver.name}-carryover`,
         $container: $container,
+        urlsBuilder: reoUrlsBuilder,
         title: `${ver.nightly} (${ver.title}) Carry Over Bugs`,
         description:
             "Bugs with all of the following:\n" +
@@ -117,6 +216,7 @@ export function init($container, ver) {
     BugList.append({
         id: `reo-${ver.name}-burndown`,
         $container: $container,
+        urlsBuilder: reoUrlsBuilder,
         title: `${ver.nightly} (${ver.title}) Burndown List`,
         description:
             "Bugs with all of the following:\n" +

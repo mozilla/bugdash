@@ -29,6 +29,7 @@
       type="text/css"
       href="app/tabs/help.css?c85e68301e2f59a3727b7f4884e85d71"
     >
+    <link rel="stylesheet" type="text/css" href="app/tabs/reo.css?3e80db09d6d99efd8c5081b12a174568">
     <link rel="stylesheet" type="text/css" href="app/buglist.css?891552c0f470b4c59dc67f942d33b057">
     <link rel="stylesheet" type="text/css" href="app/bugtable.css?5d4ebc21b4656580d6e28319d737ebe3">
     <link rel="stylesheet" type="text/css" href="app/dialog.css?ac7e56024618ca7d27da454c08c7b17e">
@@ -54,7 +55,7 @@
         "buglists/recent-regressions": "./app/buglists/recent-regressions.mjs?cc6ff2953e2dbafabf00374136e09fc4",
         "buglists/recent-tasks": "./app/buglists/recent-tasks.mjs?e3a0aafb44daa5887a92b7dc01ce644e",
         "buglists/regressions": "./app/buglists/regressions.mjs?5bbbf6bfd80a2ee635a87f95f40e6bd9",
-        "buglists/reo": "./app/buglists/reo.mjs?7b1f46b631671862e657c75a3466f97b",
+        "buglists/reo": "./app/buglists/reo.mjs?3eb3073e357f3209dca4e6c7bf84e37b",
         "buglists/security": "./app/buglists/security.mjs?58f16e488e6bc6293b9577078dd9deb4",
         "buglists/stalled": "./app/buglists/stalled.mjs?da2d4f814ac5b70c90a3ebb32f3b23e6",
         "buglists/topcrashers": "./app/buglists/topcrashers.mjs?b747f1889a13ac5127212473cf75fc78",
@@ -72,7 +73,7 @@
         "tabs/help": "./app/tabs/help.mjs?61201f8aedc7ee3a1827b596237a9466",
         "tabs/important": "./app/tabs/important.mjs?f824d7e360e756bb8de02c24c01831f9",
         "tabs/overview": "./app/tabs/overview.mjs?a3a226d77b36255540f08a03fbf8b0b9",
-        "tabs/reo": "./app/tabs/reo.mjs?a5d489d2f9012bba5bf1847eab4b879f",
+        "tabs/reo": "./app/tabs/reo.mjs?ae4d66baf7dcba4dd7a894f6c899c117",
         "tabs/stalled": "./app/tabs/stalled.mjs?35ad2cb4ab092aef77c455daca511acb",
         "tabs/tracked": "./app/tabs/tracked.mjs?2c240c3e7d979a69693812392f2029d2",
         "tabs/triage": "./app/tabs/triage.mjs?deb37c0fc8702feee793c3d776fae4f2",
@@ -260,6 +261,31 @@
       <div data-id-field="outer" class="content">
         <div data-id-field="inner"></div>
       </div>
+    </template>
+
+    <!-- template: reo team filter -->
+    <template id="reo-teams-template">
+      <div id="reo-teams">
+        <button id="reo-teams-button"><span id="reo-teams-label">Filter by teams</span> ▾</button>
+      </div>
+    </template>
+    <template id="reo-teams-popover-template">
+      <div id="reo-teams-popover">
+        <input type="search" id="reo-teams-search" placeholder="Search teams…">
+        <div id="reo-teams-list"></div>
+        <div id="reo-teams-count">None selected</div>
+        <div id="reo-teams-actions">
+          <button id="reo-teams-select-all">Select all</button>
+          <button id="reo-teams-select-none" disabled>Select none</button>
+          <button id="reo-teams-apply" disabled>Apply</button>
+        </div>
+      </div>
+    </template>
+    <template id="reo-teams-row-template">
+      <label class="reo-teams-row">
+        <input type="checkbox">
+        <span class="reo-teams-name"></span>
+      </label>
     </template>
 
     <!-- template: buglist group -->

@@ -1,0 +1,57 @@
+/* Regressions team filter — minimal functional styling only */
+
+#reo-teams {
+    margin-bottom: 1em;
+}
+
+/* Fixed rather than content-sized: the longest team name is close to tippy's
+   default max width, so an auto width visibly reflowed whenever the selection
+   count changed length. 24em fits the longest name without truncating it, and
+   leaves the button row room to stay on one line. */
+#reo-teams-popover {
+    width: 24em;
+}
+
+#reo-teams-search {
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 0.5em;
+}
+
+#reo-teams-list {
+    max-height: 16em;
+    overflow-y: auto;
+}
+
+.reo-teams-row {
+    display: flex;
+    gap: 0.4em;
+    align-items: center;
+    white-space: nowrap;
+}
+
+/* ellipsis rather than overflow, should a team name ever outgrow the popover */
+.reo-teams-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* own line, so its changing text can't reflow the button row */
+#reo-teams-count {
+    margin-top: 0.5em;
+    white-space: nowrap;
+}
+
+#reo-teams-actions {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+    margin-top: 0.5em;
+}
+
+/* Apply commits; the select all/none pair only stages. Pushing Apply to the
+   trailing edge separates the two groups and keeps it in the primary position. */
+#reo-teams-apply {
+    margin-left: auto;
+}
