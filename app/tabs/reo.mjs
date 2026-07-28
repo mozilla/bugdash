@@ -9,11 +9,11 @@ export function initUI() {
     const releases = Global.releaseData();
     const versions = [
         {
-            name: "nightly",
-            title: "Nightly",
-            release: releases.release.version,
-            beta: releases.beta.version,
-            nightly: releases.nightly.version,
+            name: "release",
+            title: "Release",
+            release: releases.release.version - 2,
+            beta: releases.beta.version - 2,
+            nightly: releases.nightly.version - 2,
         },
         {
             name: "beta",
@@ -23,11 +23,11 @@ export function initUI() {
             nightly: releases.nightly.version - 1,
         },
         {
-            name: "release",
-            title: "Release",
-            release: releases.release.version - 2,
-            beta: releases.beta.version - 2,
-            nightly: releases.nightly.version - 2,
+            name: "nightly",
+            title: "Nightly",
+            release: releases.release.version,
+            beta: releases.beta.version,
+            nightly: releases.nightly.version,
         },
     ];
 
