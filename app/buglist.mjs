@@ -153,22 +153,46 @@ export function newGroup($container) {
 }
 
 export function append({
+    // {string} unique id, used as the container's dom id
     id,
+    // {Element} parent element to append the list's dom to
     $container,
+    // {string} heading shown in the list's header
     title,
+    // {string} explanatory text shown in the list's header
     description,
+    // {object} bugzilla search query used to build the default request url
     query,
+    // {(bug) => boolean|Promise<boolean>} per-bug filter, run on full records;
+    // return falsy to exclude a bug
     include,
+    // {boolean} if true, also run `include` during overflow ranking, against
+    // partial records, before full records are fetched
     earlyFilter,
+    // {string} timestamp cell template name to use (defaults to "creation")
     template,
+    // {(bug) => void} per-bug function to add/derive extra template fields,
+    // run after the built-in ones
     augment,
+    // {(a, b) => number} default sort comparator, used until the user picks
+    // another order from the list's menu
     order,
+    // {string[]} extra bug fields that `include`/`order` need from a partial
+    // (pre-truncation) record, beyond the fields fetched by default
     partialFields,
+    // {boolean} if true, scope the query to the selected components, and skip
+    // refresh when none are selected
     usesComponents,
+    // {boolean} if true, don't fetch until the list is expanded
     lazyLoad,
+    // {number} max bugs to fetch/display before truncating (defaults to 2000)
     limit,
+    // {string} text shown behind a "guidelines" link next to the counter
     counterGuidelines,
+    // {(buglist) => void} called at the start of refresh, before fetching
     beforeRefresh,
+    // {(buglist) => string[]} builds the list of request urls to fetch
+    // (defaults to a single query url built from `query`)
     urlsBuilder,
 } = {}) {
     const $root = cloneTemplate(_("#buglist-template")).querySelector(
