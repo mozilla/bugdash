@@ -2,6 +2,12 @@ import * as BugList from "buglist";
 
 /* eslint-disable camelcase */
 
+const ESCALATION_BOT = "release-mgmt-account-bot@mozilla.tld";
+
+function escalationNeedinfo(bug) {
+    return bug.needinfos.find((ni) => ni.setter === ESCALATION_BOT);
+}
+
 export function init($container) {
     BugList.append({
         id: "needinfo-escalated",
@@ -19,35 +25,27 @@ export function init($container) {
             v1: "needinfo",
         },
         usesComponents: true,
-        include: (bug) => {
-            for (const ni of bug.needinfos) {
-                if (ni.setter === "release-mgmt-account-bot@mozilla.tld") {
-                    return true;
-                }
-            }
-            return false;
-        },
+        partialFields: ["flags"],
+        earlyFilter: true,
+        include: (bug) => escalationNeedinfo(bug) !== undefined,
         augment: (bug) => {
-            for (const ni of bug.needinfos) {
-                if (ni.setter === "release-mgmt-account-bot@mozilla.tld") {
-                    let nickSuffix = "";
-                    let nameSuffix = "";
-                    if (ni.requestee === bug.triage_owner) {
-                        nickSuffix = " (T)";
-                        nameSuffix = " (Triage Owner)";
-                    } else if (ni.requestee === bug.creator) {
-                        nickSuffix = " (R)";
-                        nameSuffix = " (Reporter)";
-                    }
-                    bug.needinfo_nick = ni.requestee_nick + nickSuffix;
-                    bug.needinfo_name = ni.requestee_name + nameSuffix;
-                    bug.needinfo_date = ni.date;
-                    bug.needinfo_ago = ni.ago;
-                    bug.needinfo_epoch = ni.epoch;
-                    return;
-                }
+            const ni = escalationNeedinfo(bug);
+            if (!ni) return;
+            let nickSuffix = "";
+            let nameSuffix = "";
+            if (ni.requestee === bug.triage_owner) {
+                nickSuffix = " (T)";
+                nameSuffix = " (Triage Owner)";
+            } else if (ni.requestee === bug.creator) {
+                nickSuffix = " (R)";
+                nameSuffix = " (Reporter)";
             }
+            bug.needinfo_nick = ni.requestee_nick + nickSuffix;
+            bug.needinfo_name = ni.requestee_name + nameSuffix;
+            bug.needinfo_date = ni.date;
+            bug.needinfo_ago = ni.ago;
+            bug.needinfo_epoch = ni.epoch;
         },
-        order: (a, b) => a.needinfo_epoch - b.needinfo_epoch,
+        order: (a, b) => escalationNeedinfo(a).epoch - escalationNeedinfo(b).epoch,
     });
 }

@@ -9,6 +9,7 @@ import {
     arraysSameElements,
     chunked,
     cloneTemplate,
+    localiseNumbers,
     shuffle,
     timeAgo,
     updateTemplate,
@@ -46,7 +47,7 @@ export function initUI() {
             // open-in-bugzilla button
             const $buglistBtn = event.target.closest(".buglist-btn");
             if ($buglistBtn) {
-                window.open(Bugzilla.buglistUrl($buglistBtn.bugIDs), "_blank");
+                window.open($buglistBtn.dataset.url, "_blank");
                 return;
             }
 
@@ -158,9 +159,11 @@ export function append({
     description,
     query,
     include,
+    earlyFilter,
     template,
     augment,
     order,
+    partialFields,
     usesComponents,
     lazyLoad,
     limit,
@@ -184,10 +187,12 @@ export function append({
         $root: $root,
         query: query,
         includeFn: include,
+        earlyFilter: !!earlyFilter,
         $timestampTemplate: _(`#bug-row-timestamp-${template || "creation"}`),
         augmentFn: augment,
         order: "default",
         orderFn: order,
+        partialFields: partialFields || [],
         usesComponents: usesComponents,
         lazyLoad: lazyLoad,
         limit: limit,
@@ -237,16 +242,131 @@ const severityTitles = {
     normal: "Retriage",
 };
 
+// fields needed to rank/filter a partial record, before its full record is fetched;
+// a list adds to this via the `partialFields` option to append()
+const BASE_PARTIAL_FIELDS = ["id", "creation_time", "last_change_time"];
+
+// bug?id=... URLs get too long past a few hundred ids, so full-record refetches
+// after truncation are chunked, and the same threshold decides whether the
+// open-in-bugzilla button can list ids explicitly or must link to the query instead
+const ID_FETCH_CHUNK_SIZE = 400;
+
+const orderTooltips = {
+    default: "the list order",
+    oldest: "oldest first",
+    newest: "newest first",
+    updated: "last updated",
+    random: "a random order",
+};
+
+function deriveSortFields(bug, now) {
+    // fields derived from raw bugzilla data that a list's order/include functions
+    // may use; works equally on a partial record (ranking, pre-truncation) and a
+    // full one (final sort), so a comparator written against these fields needs no
+    // knowledge of which record shape it is given
+    bug.creation_epoch = Date.parse(bug.creation_time);
+    bug.creation_ago = timeAgo(bug.creation_epoch);
+    bug.creation = new Date(bug.creation_epoch).toLocaleString();
+    bug.updated_epoch = Date.parse(bug.last_change_time);
+    bug.updated_ago = timeAgo(bug.updated_epoch);
+    bug.updated = new Date(bug.updated_epoch).toLocaleString();
+
+    if (bug.flags !== undefined) {
+        const needinfos = [];
+        for (const flag of bug.flags) {
+            if (flag.name === "needinfo") {
+                flag.epoch = Date.parse(flag.creation_date);
+                flag.date = new Date(flag.epoch).toLocaleString();
+                flag.age = Math.ceil((now - flag.epoch) / (1000 * 3600 * 24));
+                flag.ago = timeAgo(flag.epoch);
+                needinfos.push(flag);
+            }
+        }
+        bug.needinfos = needinfos.sort((a, b) => b.age - a.age);
+    }
+}
+
+function sortBugs(bugs, buglist) {
+    switch (buglist.order) {
+        case "oldest": {
+            return bugs.sort((a, b) => a.creation_epoch - b.creation_epoch);
+        }
+        case "newest": {
+            return bugs.sort((a, b) => b.creation_epoch - a.creation_epoch);
+        }
+        case "updated": {
+            return bugs.sort((a, b) => a.updated_epoch - b.updated_epoch);
+        }
+        case "random": {
+            return shuffle(bugs);
+        }
+        default: {
+            if (buglist.orderFn) {
+                return bugs.sort(buglist.orderFn);
+            }
+            return bugs.sort((a, b) => a.creation_epoch - b.creation_epoch);
+        }
+    }
+}
+
+async function fetchMerged(urls) {
+    const responses = await Promise.all(urls.map((url) => Bugzilla.rest(url)));
+    const byId = new Map();
+    for (const response of responses) {
+        for (const bug of response.bugs) {
+            byId.set(bug.id, bug);
+        }
+    }
+    return Array.from(byId.values());
+}
+
+async function rankOverflow(buglist, limit) {
+    // a list has more matching bugs than `limit`: fetch just enough fields to
+    // filter and order every matching bug, then return the winning ids so their
+    // full records can be fetched afterwards. this avoids ever holding more than
+    // `limit` full bug records at once.
+    const fields = Array.from(
+        new Set([...BASE_PARTIAL_FIELDS, ...buglist.partialFields]),
+    );
+    const urls = buglist.urls.map((url) =>
+        Bugzilla.withParams(url, { limit: "0", include_fields: fields.join(",") }),
+    );
+    let bugs = await fetchMerged(urls);
+
+    const now = Date.now();
+    for (const bug of bugs) {
+        deriveSortFields(bug, now);
+    }
+
+    if (buglist.earlyFilter && buglist.includeFn) {
+        bugs = bugs.filter((bug) => buglist.includeFn(bug));
+    }
+
+    // note: this total is measured after the early filter (if any), but the
+    // overflow decision that led here was made on the raw, unfiltered count, so
+    // it's possible for `total` to end up <= limit here after all
+    const total = bugs.length;
+    bugs = sortBugs(bugs, buglist);
+    const truncated = bugs.length > limit;
+    if (truncated) {
+        bugs = bugs.slice(0, limit);
+    }
+    return { ids: bugs.map((bug) => bug.id), total, truncated };
+}
+
 function setErrorState(buglist) {
     buglist.$root.classList.remove("loading");
     buglist.$root.classList.add("closed");
     buglist.$root.classList.add("no-bugs");
     buglist.$root.classList.add("error");
+    buglist.$root.classList.remove("truncated");
     if (buglist.$root.classList.contains("lazy")) {
         buglist.$root.classList.add("lazy-unloaded");
         buglist.$root.classList.add("loading");
     }
-    _(buglist.$root, ".buglist-header .counter").textContent = "Failed to load bugs";
+    const $counter = _(buglist.$root, ".buglist-header .counter");
+    $counter.textContent = "Failed to load bugs";
+    Tooltips.set($counter, "");
 }
 
 export async function refresh(id) {
@@ -279,27 +399,44 @@ export async function refresh(id) {
     buglist.$root.classList.add("loading");
     buglist.$root.classList.remove("no-bugs");
     buglist.$root.classList.remove("error");
+    buglist.$root.classList.remove("truncated");
     buglist.initialised = true;
     $list.innerHTML = "";
+    Tooltips.set(_(buglist.$root, ".buglist-header .buglist-btn"), "");
 
     if (buglist.outdatedTimer) {
         clearTimeout(buglist.outdatedTimer);
         buglist.outdatedTimer = undefined;
     }
 
-    // execute query
+    // execute query, capped one above the limit so overflow can be detected without
+    // downloading more than necessary
+    const limit = buglist.limit ?? 2000;
     let responseBugs;
+    let total;
+    let truncated = false;
     try {
-        const responses = await Promise.all(
-            buglist.urls.map((url) => Bugzilla.rest(url)),
+        responseBugs = await fetchMerged(
+            buglist.urls.map((url) => Bugzilla.withParams(url, { limit: limit + 1 })),
         );
-        const byId = new Map();
-        for (const response of responses) {
-            for (const bug of response.bugs) {
-                byId.set(bug.id, bug);
-            }
+        if (responseBugs.length > limit) {
+            // more bugs match than the limit allows: rank the full match set from a
+            // cheap partial fetch, then fetch full records for only the winners, to
+            // avoid hitting BMO rate limits by downloading everything
+            const ranked = await rankOverflow(buglist, limit);
+            total = ranked.total;
+            truncated = ranked.truncated;
+            responseBugs =
+                ranked.ids.length === 0
+                    ? []
+                    : await fetchMerged(
+                          chunked(ranked.ids, ID_FETCH_CHUNK_SIZE).map((chunk) =>
+                              Bugzilla.idsURL(chunk),
+                          ),
+                      );
+        } else {
+            total = responseBugs.length;
         }
-        responseBugs = Array.from(byId.values());
     } catch (_error) {
         setErrorState(buglist);
         return;
@@ -313,33 +450,15 @@ export async function refresh(id) {
         1000 * 60 * 60 * 24,
     );
 
-    // exit early if there are too many bugs to avoid hitting BMO rate limits
-    // we do this before applying filters as some filters request more data from BMO
-    const limit = buglist.limit || 2000;
-    if (responseBugs.length >= limit) {
-        buglist.$root.classList.remove("loading");
-        buglist.$root.classList.add("no-bugs");
-        buglist.$root.classList.add("error");
-        _(buglist.$root, ".buglist-header .counter").textContent =
-            `Too many bugs (${responseBugs.length})`;
-        return;
-    }
-
     // build results
     const now = Date.now();
     let bugs = [];
     for (const bug of responseBugs) {
+        deriveSortFields(bug, now);
         bug.url = `https://bugzilla.mozilla.org/show_bug.cgi?id=${bug.id}`;
         bug.severity_title = severityTitles[bug.severity] || "";
-        bug.creation_epoch = Date.parse(bug.creation_time);
-        bug.creation_ago = timeAgo(bug.creation_epoch);
-        bug.creation = new Date(bug.creation_epoch).toLocaleString();
-        bug.updated_epoch = Date.parse(bug.last_change_time);
-        bug.updated_ago = timeAgo(bug.updated_epoch);
-        bug.updated = new Date(bug.updated_epoch).toLocaleString();
         bug.type_icon = typeMaterialIconNames[bug.type];
         if (bug.groups.length > 0) {
-            bug.groups = bug.groups.join(",");
             bug.groups_icon = typeMaterialIconNames.private;
         }
         bug.owner =
@@ -359,20 +478,6 @@ export async function refresh(id) {
         bug.severity = bug.severity === "--" ? "-" : bug.severity;
         bug.priority = bug.priority === "--" ? "-" : bug.priority;
         bug.team = Global.getComponent(bug.product, bug.component)?.team;
-
-        if (bug.flags !== undefined) {
-            const needinfos = [];
-            for (const flag of bug.flags) {
-                if (flag.name === "needinfo") {
-                    flag.epoch = Date.parse(flag.creation_date);
-                    flag.date = new Date(flag.epoch).toLocaleString();
-                    flag.age = Math.ceil((now - flag.epoch) / (1000 * 3600 * 24));
-                    flag.ago = timeAgo(flag.epoch);
-                    needinfos.push(flag);
-                }
-            }
-            bug.needinfos = needinfos.sort((a, b) => b.age - a.age);
-        }
 
         bugs.push(bug);
     }
@@ -413,9 +518,23 @@ export async function refresh(id) {
         bugs = bugs.filter((bug) => bug.include);
     }
 
-    _(buglist.$root, ".buglist-header .counter").textContent = `${bugs.length} bug${
-        bugs.length === 1 ? "" : "s"
-    }`;
+    buglist.$root.classList.toggle("truncated", truncated);
+    const $counter = _(buglist.$root, ".buglist-header .counter");
+    if (truncated) {
+        const counterVars = { count: bugs.length, total: total };
+        localiseNumbers(counterVars);
+        $counter.textContent = `${counterVars.count} of ${counterVars.total} bugs`;
+        Tooltips.set(
+            $counter,
+            `Limited to the first ${counterVars.count} bugs` +
+                (buglist.order === "default"
+                    ? ""
+                    : `, sorted by ${orderTooltips[buglist.order]}`),
+        );
+    } else {
+        $counter.textContent = `${bugs.length} bug${bugs.length === 1 ? "" : "s"}`;
+        Tooltips.set($counter, "");
+    }
 
     // get details of needinfo requestees
     const usernamesSet = new Set();
@@ -507,43 +626,28 @@ export async function refresh(id) {
     }
 
     // sort
-    switch (buglist.order) {
-        case "oldest": {
-            bugs.sort((a, b) => a.creation_epoch - b.creation_epoch);
-            break;
-        }
-        case "newest": {
-            bugs.sort((a, b) => b.creation_epoch - a.creation_epoch);
-            break;
-        }
-        case "updated": {
-            bugs.sort((a, b) => a.updated_epoch - b.updated_epoch);
-            break;
-        }
-        case "random": {
-            bugs = shuffle(bugs);
-            break;
-        }
-        default: {
-            if (buglist.orderFn) {
-                bugs.sort(buglist.orderFn);
-            } else {
-                bugs.sort((a, b) => a.creation_epoch - b.creation_epoch);
-            }
-            break;
-        }
-    }
+    bugs = sortBugs(bugs, buglist);
 
     // update dom
     for (const $button of __(buglist.$root, "button")) {
         $button.disabled = false;
     }
     if (bugs.length > 0) {
-        _(buglist.$root, ".buglist-header .buglist-btn").bugIDs = bugs.map(
-            (bug) => bug.id,
-        );
-        _(buglist.$root, ".buglist-header .buglist-btn").dataset.url =
-            Bugzilla.buglistUrl(bugs.map((bug) => bug.id));
+        const ids = bugs.map((bug) => bug.id);
+        const $buglistBtn = _(buglist.$root, ".buglist-header .buglist-btn");
+        if (ids.length <= ID_FETCH_CHUNK_SIZE) {
+            $buglistBtn.dataset.url = Bugzilla.buglistUrl(ids);
+        } else if (buglist.urls.length === 1) {
+            // too many ids to list explicitly in a buglist.cgi url, so link to
+            // the underlying query instead
+            $buglistBtn.dataset.url = Bugzilla.queryUrlToBuglistUrl(buglist.urls[0]);
+        } else {
+            // too many ids to list explicitly, and the list spans more than one
+            // query (eg. uplift-candidates), so there's no single query url that
+            // covers every matching bug either
+            $buglistBtn.disabled = true;
+            Tooltips.set($buglistBtn, "Too many bugs to open in Bugzilla");
+        }
 
         // add to dom
         const $template = _("#bug-row-template");
@@ -574,7 +678,9 @@ export async function refresh(id) {
     } else {
         buglist.$root.classList.add("closed");
         buglist.$root.classList.add("no-bugs");
+        buglist.$root.classList.remove("truncated");
         _(buglist.$root, ".buglist-header .counter").textContent = "No bugs";
+        Tooltips.set(_(buglist.$root, ".buglist-header .counter"), "");
         _(buglist.$root, ".buglist-header .order-btn").disabled = true;
         _(buglist.$root, ".buglist-header .buglist-btn").disabled = true;
     }

@@ -13,6 +13,10 @@ function keywordOrder(k) {
     return SEC_LEVELS.length + 1;
 }
 
+function secIndex(bug) {
+    return SEC_LEVELS.findIndex((l) => bug.keywords.includes(l));
+}
+
 export function init($container) {
     BugList.append({
         id: "secbugs",
@@ -30,10 +34,11 @@ export function init($container) {
         },
         usesComponents: true,
         lazyLoad: true,
+        partialFields: ["keywords", "groups"],
+        earlyFilter: true,
         include: (bug) => {
             // must be in a *-security group
-            const groups = typeof bug.groups === "string" ? [bug.groups] : bug.groups;
-            if (!groups.some((g) => g.endsWith("-security"))) return false;
+            if (!bug.groups.some((g) => g.endsWith("-security"))) return false;
             // must have either a SEC_LEVELS keyword, or no security (sec-*) keywords at all
             if (SEC_LEVELS.find((l) => bug.keywords.includes(l))) return true;
             return !bug.keywords.some((k) => k.startsWith("sec-"));
@@ -42,7 +47,7 @@ export function init($container) {
             bug.timestamp_ago = bug.updated_ago;
             bug.timestamp = bug.updated;
             bug.sec_level = SEC_LEVELS.find((l) => bug.keywords.includes(l));
-            bug.sec_index = SEC_LEVELS.findIndex((l) => bug.keywords.includes(l));
+            bug.sec_index = secIndex(bug);
             if (!bug.sec_level) {
                 bug.keywords.push("sec-unrated");
             }
@@ -50,9 +55,7 @@ export function init($container) {
                 (a, b) => keywordOrder(a) - keywordOrder(b) || a.localeCompare(b),
             );
         },
-        order: (a, b) => {
-            return a.sec_index - b.sec_index || a.updated_epoch - b.updated_epoch;
-        },
+        order: (a, b) => secIndex(a) - secIndex(b) || a.updated_epoch - b.updated_epoch,
         beforeRefresh: (buglist) => {
             _(buglist.$root, ".buglist-empty").textContent = Bugzilla.getApiKey()
                 ? "No visible bugs"

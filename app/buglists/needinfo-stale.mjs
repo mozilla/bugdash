@@ -23,6 +23,8 @@ export function init($container) {
             v2: "stalled",
         },
         usesComponents: true,
+        partialFields: ["flags"],
+        earlyFilter: true,
         include: (bug) => {
             for (const ni of bug.needinfos) {
                 if (ni.setter !== ni.requestee) {
@@ -47,6 +49,6 @@ export function init($container) {
             bug.needinfo_ago = bug.needinfos[0].ago;
             bug.needinfo_epoch = bug.needinfos[0].epoch;
         },
-        order: (a, b) => a.needinfo_epoch - b.needinfo_epoch,
+        order: (a, b) => a.needinfos[0].epoch - b.needinfos[0].epoch,
     });
 }

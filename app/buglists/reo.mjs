@@ -2,6 +2,10 @@ import * as BugList from "buglist";
 
 /* eslint-disable camelcase */
 
+function assignedSortKey(bug) {
+    return bug.assigned_to === "nobody@mozilla.org" ? 0 : 1;
+}
+
 export function init($container, ver) {
     BugList.append({
         id: `reo-${ver.name}-new`,
@@ -106,11 +110,12 @@ export function init($container, ver) {
             o10: "nowordssubstr",
             v10: "stalled,intermittent-failure",
         },
+        partialFields: ["assigned_to"],
         augment: (bug) => {
-            bug.assigned_sortkey = bug.assigned_to === "nobody@mozilla.org" ? 0 : 1;
+            bug.assigned_sortkey = assignedSortKey(bug);
         },
         order: (a, b) =>
-            a.assigned_sortkey - b.assigned_sortkey ||
+            assignedSortKey(a) - assignedSortKey(b) ||
             a.updated_epoch - b.updated_epoch,
     });
 

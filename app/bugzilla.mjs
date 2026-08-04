@@ -1,5 +1,23 @@
 import * as Global from "global";
 
+const DEFAULT_INCLUDE_FIELDS = [
+    "assigned_to",
+    "component",
+    "creation_time",
+    "creator",
+    "flags",
+    "groups",
+    "id",
+    "keywords",
+    "last_change_time",
+    "priority",
+    "product",
+    "severity",
+    "summary",
+    "triage_owner",
+    "type",
+];
+
 export function queryURL(query, components, includeFields) {
     const search = new URLSearchParams();
     query.query_format = "advanced";
@@ -58,29 +76,31 @@ export function queryURL(query, components, includeFields) {
     fieldNumber++;
     search.append(`f${fieldNumber}`, "CP");
 
-    search.append(
-        "include_fields",
-        includeFields ||
-            [
-                "assigned_to",
-                "component",
-                "creation_time",
-                "creator",
-                "flags",
-                "groups",
-                "id",
-                "keywords",
-                "last_change_time",
-                "priority",
-                "product",
-                "severity",
-                "summary",
-                "triage_owner",
-                "type",
-            ].join(","),
-    );
+    search.append("include_fields", includeFields || DEFAULT_INCLUDE_FIELDS.join(","));
     search.append("limit", "0");
 
+    return `bug?${search.toString()}`;
+}
+
+export function withParams(url, params) {
+    // override/add query parameters on an endpoint string as returned by queryURL()
+    const [path, query] = url.split("?");
+    const search = new URLSearchParams(query);
+    for (const [name, value] of Object.entries(params)) {
+        search.set(name, value);
+    }
+    return `${path}?${search.toString()}`;
+}
+
+export function idsURL(ids, includeFields) {
+    // fetch full records for an explicit set of bug ids, bypassing query_format=advanced
+    // as no product/component grouping is needed once the ids are known
+    const search = new URLSearchParams();
+    for (const id of ids) {
+        search.append("id", id);
+    }
+    search.append("include_fields", includeFields || DEFAULT_INCLUDE_FIELDS.join(","));
+    search.append("limit", "0");
     return `bug?${search.toString()}`;
 }
 
