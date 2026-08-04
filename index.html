@@ -12,7 +12,7 @@
     <link rel="preload" href="assets/FiraGO-SemiBold.woff2" as="font" crossorigin>
     <link rel="preload" href="assets/FiraGO-SemiBoldItalic.woff2" as="font" crossorigin>
     <link rel="preload" href="assets/MaterialSymbolsOutlined.woff" as="font" crossorigin>
-    <link rel="stylesheet" type="text/css" href="app/global.css?918d6c143b1a52b1de00f7e76ab7da59">
+    <link rel="stylesheet" type="text/css" href="app/global.css?7595b226ee02ecce47c9ff94349e5e39">
     <link rel="stylesheet" type="text/css" href="app/tabs.css?ca7403e3db88d22db6ab983b9702ca43">
     <link
       rel="stylesheet"
@@ -29,7 +29,7 @@
       type="text/css"
       href="app/tabs/help.css?c85e68301e2f59a3727b7f4884e85d71"
     >
-    <link rel="stylesheet" type="text/css" href="app/buglist.css?891552c0f470b4c59dc67f942d33b057">
+    <link rel="stylesheet" type="text/css" href="app/buglist.css?9317993d3d0e2362f7bad7f6e33e4db2">
     <link rel="stylesheet" type="text/css" href="app/bugtable.css?5d4ebc21b4656580d6e28319d737ebe3">
     <link rel="stylesheet" type="text/css" href="app/dialog.css?ac7e56024618ca7d27da454c08c7b17e">
     <link rel="stylesheet" type="text/css" href="app/tooltips.css?96325cf63a17b57c482ef97289322845">
@@ -38,7 +38,7 @@
     {
       "imports": {
         "bugdash": "./app/bugdash.mjs?3c86a2fd7435ff05ce0576cd3ab28183",
-        "buglist": "./app/buglist.mjs?b050504769a184ee20c0ba8c4872acbb",
+        "buglist": "./app/buglist.mjs?87ec1fc62681e5b832533b0617a6bf58",
         "buglists/assigned-inactive": "./app/buglists/assigned-inactive.mjs?b67a90e725c212c02980ca7c8581275a",
         "buglists/beta": "./app/buglists/beta.mjs?c6ef7768c95f7273ed2ad3b73a593802",
         "buglists/blockers": "./app/buglists/blockers.mjs?f6e798f0359994ed20a373149cb49798",
@@ -64,12 +64,12 @@
         "bugtable": "./app/bugtable.mjs?128cb6524e5d0568dcd5f4d646cec2b9",
         "bugzilla": "./app/bugzilla.mjs?19d143e25cc1a67f89963ad8556ba46c",
         "dialog": "./app/dialog.mjs?8c2b0b6af0aa3d362f724856cba39482",
-        "global": "./app/global.mjs?199fc2f5b0456cbd1c61686060d3c15c",
-        "menus": "./app/menus.mjs?f766e80f5362fc3c647559fac6755822",
+        "global": "./app/global.mjs?8d5d4ba438507260c0bc231c4a0a186a",
+        "menus": "./app/menus.mjs?f33513c3ca008f756ae49b4bc7c6b51b",
         "tabs": "./app/tabs.mjs?0553c5fead3541a3c81e2f357795b1d3",
         "tabs/beta": "./app/tabs/beta.mjs?590b7c9936790717155c21da70f37222",
         "tabs/components": "./app/tabs/components.mjs?91527e62099e894ee6915c6794ea505b",
-        "tabs/help": "./app/tabs/help.mjs?61201f8aedc7ee3a1827b596237a9466",
+        "tabs/help": "./app/tabs/help.mjs?04c6f50741a38667be4c9eefb787b820",
         "tabs/important": "./app/tabs/important.mjs?f824d7e360e756bb8de02c24c01831f9",
         "tabs/overview": "./app/tabs/overview.mjs?a3a226d77b36255540f08a03fbf8b0b9",
         "tabs/reo": "./app/tabs/reo.mjs?a5d489d2f9012bba5bf1847eab4b879f",
@@ -120,6 +120,13 @@
         <li data-value="newest">Newest</li>
         <li data-value="updated">Updated</li>
         <li data-value="random">Random</li>
+      </ul>
+    </div>
+
+    <div id="bug-menu-template" class="hidden">
+      <p>Open in</p>
+      <ul>
+        <li data-value="hackbot"><a href="" target="_blank">Hackbot</a></li>
       </ul>
     </div>
 
@@ -312,7 +319,7 @@
         <td class="bug-id">
           <a href="#" data-href-field="url" data-field="id" target="_blank"></a>
         </td>
-        <td colspan="7">
+        <td colspan="6">
           <a
             href="#"
             class="bug-summary"
@@ -321,6 +328,7 @@
             target="_blank"
           ></a>
         </td>
+        <td class="bug-actions"><button class="bug-menu-btn material-icons">more_horiz</button></td>
       </tr>
       <tr class="bug-row bug-meta">
         <td class="bug-icons material-icons">

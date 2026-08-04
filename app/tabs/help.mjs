@@ -48,6 +48,7 @@ export function initUI() {
     const $timestamp = cloneTemplate(_("#bug-row-timestamp-creation"));
     updateTemplate($timestamp, bug_values);
     _($row, ".timestamp").append($timestamp);
+    _($row, ".bug-menu-btn").title = "Bug-specific actions";
     _($sample, ".buglist").append($row);
 
     $sample.addEventListener("click", (event) => {

@@ -99,6 +99,19 @@ export function initUI() {
             }
         }
     });
+
+    Menu.initSharedMenu(".bug-menu-btn", _("#bug-menu-template"), ($button, $item) => {
+        if ($item.dataset.value === "hackbot") {
+            const bug = $button.closest(".bug-row").bug;
+            const buglistId = $button.closest(".buglist-container").id;
+            const hackbotAgent = Global.getHackbotAgent(buglistId, bug);
+            let url = `https://hackbot.moz.tools/?bug_id=${bug.id}`;
+            if (hackbotAgent) {
+                url = `${url}&agent=${hackbotAgent}`;
+            }
+            window.open(url);
+        }
+    });
 }
 
 export function initUiLast() {
@@ -345,6 +358,7 @@ export async function refresh(id) {
         }
         bug.severity = bug.severity === "--" ? "-" : bug.severity;
         bug.priority = bug.priority === "--" ? "-" : bug.priority;
+        bug.team = Global.getComponent(bug.product, bug.component)?.team;
 
         if (bug.flags !== undefined) {
             const needinfos = [];
@@ -546,9 +560,10 @@ export async function refresh(id) {
             const $timestamp = cloneTemplate(buglist.$timestampTemplate);
             updateTemplate($timestamp, bug);
             _($row, ".timestamp").append($timestamp);
-            // set odd/even class
+            // bug-row attributes
             for (const $tr of __($row, "tr")) {
                 $tr.classList.add(i % 2 === 0 ? "odd" : "even");
+                $tr.bug = bug;
                 if (bug.stalled) {
                     $tr.classList.add("stalled-bug");
                 }

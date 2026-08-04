@@ -179,6 +179,15 @@ body:not(.loading) #loading {
     margin-top: 2px;
 }
 
+.options-menu li a {
+    color: #fff;
+}
+
+.options-menu li a:hover {
+    color: #00bfbf;
+    text-decoration: none;
+}
+
 .options-menu li:hover,
 .options-menu li.selected {
     color: #00bfbf;

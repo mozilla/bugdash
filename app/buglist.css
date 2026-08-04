@@ -263,6 +263,23 @@
     text-align: right;
 }
 
+.bug-row .bug-actions {
+    text-align: right;
+}
+
+.bug-row .bug-actions button {
+    margin-right: -8px;
+    color: #777;
+    background: transparent;
+    border: none;
+}
+
+.bug-row .bug-actions button:hover,
+.bug-row .bug-actions button.menu-open {
+    color: #000;
+    outline: 1px solid silver;
+}
+
 .buglist-container:not(#stalled) .bug-row.stalled-bug {
     filter: opacity(0.25);
 }

@@ -36,6 +36,13 @@ export function allComponents() {
     return g.components;
 }
 
+export function getHackbotAgent(buglistId, bug) {
+    if (buglistId === "triage-needed" && bug.team === "Frontend") {
+        return "frontend-triage";
+    }
+    return undefined;
+}
+
 export function selectedComponents() {
     const result = [];
     for (const $cb of __("#components input:checked")) {
@@ -174,6 +181,12 @@ async function loadComponents() {
 
 export async function clearComponentsCache() {
     window.localStorage.setItem("componentsID", "");
+}
+
+export function getComponent(productName, componentName) {
+    return g.components.find(
+        (c) => c.product === productName && c.component === componentName,
+    );
 }
 
 export async function loadUser() {
