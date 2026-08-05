@@ -101,18 +101,22 @@ export function initUI() {
         }
     });
 
-    Menu.initSharedMenu(".bug-menu-btn", _("#bug-menu-template"), ($button, $item) => {
-        if ($item.dataset.value === "hackbot") {
-            const bug = $button.closest(".bug-row").bug;
-            const buglistId = $button.closest(".buglist-container").id;
-            const hackbotAgent = Global.getHackbotAgent(buglistId, bug);
-            let url = `https://hackbot.moz.tools/?bug_id=${bug.id}`;
-            if (hackbotAgent) {
-                url = `${url}&agent=${hackbotAgent}`;
+    Menu.initSharedMenu(
+        ".bug-menu-btn",
+        _("#bug-menu-template"),
+        (_evt, $button, $item) => {
+            if ($item.dataset.value === "hackbot") {
+                const bug = $button.closest(".bug-row").bug;
+                const buglistId = $button.closest(".buglist-container").id;
+                const hackbotAgent = Global.getHackbotAgent(buglistId, bug);
+                let url = `https://hackbot.moz.tools/?bug_id=${bug.id}`;
+                if (hackbotAgent) {
+                    url = `${url}&agent=${hackbotAgent}`;
+                }
+                _($item, "a").href = url;
             }
-            window.open(url);
-        }
-    });
+        },
+    );
 }
 
 export function initUiLast() {

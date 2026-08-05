@@ -105,10 +105,8 @@ export function initSharedMenu(selector, $optionsTemplate, onSelect, onShow) {
                 instance.popper.addEventListener("click", (menuEvent) => {
                     const $item = menuEvent.target.closest("li[data-value]");
                     if (!$item) return;
-                    menuEvent.preventDefault();
-                    menuEvent.stopPropagation();
                     hideSharedMenu();
-                    onSelect($button, $item);
+                    onSelect(menuEvent, $button, $item);
                 });
             },
             onHidden(instance) {
