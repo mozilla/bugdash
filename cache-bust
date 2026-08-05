@@ -1,4 +1,5 @@
 #!/usr/bin/env -S uv run --script --python 3.13 --managed-python
+import argparse
 import hashlib
 import json
 import re
@@ -133,12 +134,13 @@ def check_attributes() -> None:
 
 
 def main() -> None:
-    if len(sys.argv) != 2 or sys.argv[1] not in ("update", "check"):
-        print("usage: cache-bust {update|check}", file=sys.stderr)
-        print("       update : update cache busting references", file=sys.stderr)
-        print("       check  : verify cache busting references", file=sys.stderr)
-        sys.exit(1)
-    if sys.argv[1] == "update":
+    parser = argparse.ArgumentParser(description="Cache busting is fun.")
+    subparsers = parser.add_subparsers(dest="command", required=True)
+    subparsers.add_parser("update", help="update cache busting references")
+    subparsers.add_parser("check", help="verify cache busting references")
+    args = parser.parse_args()
+
+    if args.command == "update":
         update_importmap()
         update_attributes()
     else:
