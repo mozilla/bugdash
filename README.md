@@ -7,6 +7,8 @@ Can be visited directly at https://bugdash.moz.tools/
 
 ## Development
 
+`node` and `uv` must be installed.
+
 To run a web server locally use `make run`.
 
 Use `make format test` to reformat the code and ensure tests pass before
