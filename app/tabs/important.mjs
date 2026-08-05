@@ -1,6 +1,7 @@
 import * as BugList from "buglist";
 import * as Blockers from "buglists/blockers";
 import * as Criticals from "buglists/criticals";
+import * as Intermittent from "buglists/intermittent";
 import * as Regressions from "buglists/regressions";
 import * as Security from "buglists/security";
 import * as TopCrashers from "buglists/topcrashers";
@@ -14,6 +15,7 @@ export function initUI() {
     Blockers.init($group);
     Criticals.init($group);
     TopCrashers.init($group);
+    Intermittent.init($group);
     Security.init($group);
 
     $group = BugList.newGroup($content);
