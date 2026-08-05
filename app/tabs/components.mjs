@@ -78,7 +78,7 @@ function applyFilter() {
     // no need to filter if unchanged
     const queryOptions = [
         _("#component-filter").value.trim().toLowerCase(),
-        _("#filter-scope").value,
+        getFilterScope(),
         _("#filter-selected").checked.toString(),
     ].join("\n");
     if (queryOptions === g.lastQuery) {
@@ -91,7 +91,7 @@ function applyFilter() {
     // component title or team that contain all of the filter words
     const queryWords = query.split(/\s+/);
     let matches = 0;
-    const field = _("#filter-scope").value;
+    const field = getFilterScope();
     for (const c of Global.allComponents()) {
         if (queryWords.every((w) => c[field].toLowerCase().includes(w))) {
             _(`#c${c.id}-row`).classList.remove("hidden");
@@ -127,7 +127,10 @@ export async function initUI() {
     });
 
     _("#component-filter").addEventListener("keyup", debounce(onFilterKeyUp, 100));
-    _("#filter-scope").addEventListener("change", applyFilter);
+
+    for (const $filter of __("input[name=filter-scope]")) {
+        $filter.addEventListener("change", applyFilter);
+    }
 
     _("#filter-all").addEventListener("click", async () => {
         const components = __("#components tr:not(.hidden) input:not(:checked)");
@@ -154,7 +157,9 @@ export async function initUI() {
     _("#filter-selected").addEventListener("click", () => {
         if (_("#filter-selected").checked) {
             _("#component-filter").disabled = true;
-            _("#filter-scope").disabled = true;
+            for (const $filter of __("input[name=filter-scope]")) {
+                $filter.disabled = true;
+            }
             for (const $cb of __("#components input")) {
                 const $tr = $cb.closest("tr");
                 if ($cb.checked) {
@@ -166,7 +171,9 @@ export async function initUI() {
             g.lastQuery = undefined;
         } else {
             _("#component-filter").disabled = false;
-            _("#filter-scope").disabled = false;
+            for (const $filter of __("input[name=filter-scope]")) {
+                $filter.disabled = false;
+            }
             applyFilter();
         }
     });
@@ -220,7 +227,7 @@ function saveToURL() {
 
     // if the filter scope is a team and all components in that team are selected
     // then use that team as the search params
-    if (selected.length > 0 && _("#filter-scope").value === "team") {
+    if (selected.length > 0 && getFilterScope() === "team") {
         const team = selected[0].team;
         const teamComponents = Global.allComponents().filter((c) => c.team === team);
         if (
@@ -266,4 +273,8 @@ function refreshTable() {
 
         g.$table.append($row);
     }
+}
+
+function getFilterScope() {
+    return _("#filter-scope-team").checked ? "team" : "title";
 }

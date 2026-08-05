@@ -12,6 +12,7 @@ body:not(.component-warning) #selected-components-warning {
 }
 
 #filter-scope {
+    display: inline-block;
     margin-right: 16px;
 }
 

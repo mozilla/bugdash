@@ -17,7 +17,7 @@
     <link
       rel="stylesheet"
       type="text/css"
-      href="app/tabs/components.css?81df030d4f78569caae8a4bd932dc1cd"
+      href="app/tabs/components.css?8c7b56427fd2c6298b04c9dd7558a9d7"
     >
     <link
       rel="stylesheet"
@@ -69,7 +69,7 @@
         "menus": "./app/menus.mjs?b15d8d22de22dd41934ce22b526c6281",
         "tabs": "./app/tabs.mjs?0553c5fead3541a3c81e2f357795b1d3",
         "tabs/beta": "./app/tabs/beta.mjs?590b7c9936790717155c21da70f37222",
-        "tabs/components": "./app/tabs/components.mjs?91527e62099e894ee6915c6794ea505b",
+        "tabs/components": "./app/tabs/components.mjs?4c0b830941cdb3528d59021b1510ed54",
         "tabs/help": "./app/tabs/help.mjs?04c6f50741a38667be4c9eefb787b820",
         "tabs/important": "./app/tabs/important.mjs?9e8f53e276d2fe5ebeb0b01a602fff09",
         "tabs/overview": "./app/tabs/overview.mjs?a3a226d77b36255540f08a03fbf8b0b9",
@@ -224,10 +224,12 @@
 
       <div>
         <input id="component-filter" type="search" placeholder="Filter…">
-        <select id="filter-scope">
-          <option value="title">Name</option>
-          <option value="team">Team</option>
-        </select>
+        <div id="filter-scope">
+          <input type="radio" name="filter-scope" id="filter-scope-name" checked>
+          <label for="filter-scope-name">Name</label>
+          <input type="radio" name="filter-scope" id="filter-scope-team">
+          <label for="filter-scope-team">Team</label>
+        </div>
         <div id="filter-actions">
           <button id="filter-all">Select Visible</button>
           <button id="filter-none-visible">Deselect Visible</button>
