@@ -105,7 +105,8 @@ export function initUI() {
         ".bug-menu-btn",
         _("#bug-menu-template"),
         (_evt, $button, $item) => {
-            if ($item.dataset.value === "hackbot") {
+            const item = $item.dataset.value;
+            if (item === "hackbot") {
                 const bug = $button.closest(".bug-row").bug;
                 const buglistId = $button.closest(".buglist-container").id;
                 const hackbotAgent = Global.getHackbotAgent(buglistId, bug);
@@ -114,6 +115,21 @@ export function initUI() {
                     url = `${url}&agent=${hackbotAgent}`;
                 }
                 _($item, "a").href = url;
+            } else if (item === "of") {
+                const bug = $button.closest(".bug-row").bug;
+                const endday = new Date();
+                const startday = new Date(endday);
+                startday.setUTCDate(startday.getUTCDate() - 7);
+                const format = (date) => date.toISOString().slice(0, 10);
+                const url =
+                    "https://treeherder.mozilla.org/intermittent-failures/bugdetails" +
+                    `?startday=${format(startday)}&endday=${format(endday)}&tree=all&bug=${bug.id}`;
+                _($item, "a").href = url;
+            }
+        },
+        (bug, $menu) => {
+            if (!bug.keywords.includes("intermittent-failure")) {
+                _($menu, "li[data-value=of]").classList.add("disabled");
             }
         },
     );

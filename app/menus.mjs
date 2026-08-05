@@ -98,13 +98,18 @@ export function initSharedMenu(selector, $optionsTemplate, onSelect, onShow) {
                 $menu.id = "";
                 $menu.classList.add("options-menu");
                 $menu.classList.remove("hidden");
-                onShow?.($button, $menu);
+                onShow?.($button.closest(".bug-row").bug, $menu);
                 return $menu.outerHTML;
             },
             onShown(instance) {
                 instance.popper.addEventListener("click", (menuEvent) => {
                     const $item = menuEvent.target.closest("li[data-value]");
                     if (!$item) return;
+                    if ($item.classList.contains("disabled")) {
+                        menuEvent.preventDefault();
+                        menuEvent.stopPropagation();
+                        return;
+                    }
                     hideSharedMenu();
                     onSelect(menuEvent, $button, $item);
                 });

@@ -184,13 +184,21 @@ body:not(.loading) #loading {
 }
 
 .options-menu li a:hover {
-    color: #00bfbf;
     text-decoration: none;
 }
 
-.options-menu li:hover,
-.options-menu li.selected {
+.options-menu li:not(.disabled) a:hover {
     color: #00bfbf;
+}
+
+.options-menu li:not(.disabled):hover,
+.options-menu li:not(.disabled).selected {
+    color: #00bfbf;
+}
+
+.options-menu li.disabled {
+    cursor: default;
+    opacity: 0.25;
 }
 
 #font-preload {
