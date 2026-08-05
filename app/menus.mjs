@@ -102,6 +102,11 @@ export function initSharedMenu(selector, $optionsTemplate, onSelect, onShow) {
                 return $menu.outerHTML;
             },
             onShown(instance) {
+                for (const $li of __(instance.popper, ".options-menu li")) {
+                    if ($li.classList.contains("disabled")) {
+                        _($li, "a").removeAttribute("href");
+                    }
+                }
                 instance.popper.addEventListener("click", (menuEvent) => {
                     const $item = menuEvent.target.closest("li[data-value]");
                     if (!$item) return;
