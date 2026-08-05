@@ -9,7 +9,7 @@ export function init($container) {
         title: "Intermittent",
         description:
             "Bugs with the 'intermittent' keyword.\n" +
-            "Bugs are order by last updated, oldest first.\n" +
+            "Bugs are order by last updated, newest first.\n" +
             "Timestamp shows last modified.",
         query: {
             resolution: "---",
@@ -22,6 +22,6 @@ export function init($container) {
             bug.timestamp_ago = bug.updated_ago;
             bug.timestamp = bug.updated;
         },
-        order: (a, b) => a.updated_epoch - b.updated_epoch,
+        order: (a, b) => b.updated_epoch - a.updated_epoch,
     });
 }
