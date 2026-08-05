@@ -2,6 +2,7 @@ web-files := $(shell find . \( -name '*.css' -o -name '*.html' -o -name '*.mjs' 
 biome     := NODE_NO_WARNINGS=1 npx --yes @biomejs/biome@2.5.7 check --config-path=.biome.json
 py-files  := cache-bust
 ruff      := uvx ruff@0.16.1
+zizmor    := uvx zizmor@1.29.0
 
 .PHONY: format
 format: .git/hooks/pre-commit .format-web .format-py
@@ -22,6 +23,7 @@ test:
 	$(biome) $(web-files)
 	$(ruff) check --config .ruff.toml $(py-files)
 	$(ruff) format --config .ruff.toml --check $(py-files)
+	$(zizmor) .github/workflows --strict-collection --pedantic --no-progress
 	./cache-bust check
 
 .PHONY: fix
