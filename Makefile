@@ -1,11 +1,11 @@
 web-files := $(shell find . \( -name '*.css' -o -name '*.html' -o -name '*.mjs' \) -print)
-biome     := NODE_NO_WARNINGS=1 npx --yes @biomejs/biome@2.4.12 check --config-path=.biome.json
+biome     := NODE_NO_WARNINGS=1 npx --yes @biomejs/biome@2.5.7 check --config-path=.biome.json
 
 .PHONY: format
 format: .git/hooks/pre-commit .format-web
 
 .format-web: .biome.json $(web-files)
-	$(biome) --write $(web-files)
+	$(biome) --write .biome.json $(web-files)
 	./cache-bust update
 	$(biome) --write index.html
 	@touch $@

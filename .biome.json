@@ -1,5 +1,6 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.2/schema.json",
+  "root": false,
+  "$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
@@ -17,7 +18,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "style": {
         "noDescendingSpecificity": "off",
         "noInferrableTypes": "error",
@@ -47,6 +48,12 @@
   "javascript": {
     "formatter": {
       "quoteStyle": "double"
+    }
+  },
+  "json": {
+    "formatter": {
+      "indentStyle": "space",
+      "indentWidth": 2
     }
   },
   "html": {
