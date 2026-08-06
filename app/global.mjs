@@ -37,7 +37,10 @@ export function allComponents() {
 }
 
 export function getHackbotAgent(buglistId, bug) {
-    if (buglistId === "triage-needed" && bug.team === "Frontend") {
+    if (
+        buglistId === "triage-needed" &&
+        (bug.product === "Firefox" || bug.product === "Toolkit")
+    ) {
         return "frontend-triage";
     }
     return undefined;
