@@ -188,6 +188,15 @@ export async function initUI() {
     document.addEventListener("tab.components", () => {
         document.body.classList.remove("component-warning");
         saveToURL();
+
+        const searchParams = new URLSearchParams(window.location.search);
+        if (searchParams.has("team")) {
+            _("#filter-scope-team").checked = true;
+            _("#component-filter").value = searchParams.get("team");
+            applyFilter();
+            _("#component-filter").select();
+        }
+
         _("#component-filter").focus();
     });
 }
@@ -225,15 +234,13 @@ function saveToURL() {
 
     const selected = Global.selectedComponents();
 
-    // if the filter scope is a team and all components in that team are selected
-    // then use that team as the search params
-    if (selected.length > 0 && getFilterScope() === "team") {
-        const team = selected[0].team;
+    // if all components are in the same team and all of the team's components
+    // are selected - switch to using a team filter
+    const teams = new Set(selected.map((c) => c.team));
+    if (teams.size === 1) {
+        const [team] = teams;
         const teamComponents = Global.allComponents().filter((c) => c.team === team);
-        if (
-            selected.every((c) => c.team === team) &&
-            selected.length === teamComponents.length
-        ) {
+        if (selected.length === teamComponents.length) {
             searchParams.append("team", team);
         }
     }
