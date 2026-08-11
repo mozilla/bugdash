@@ -12,12 +12,12 @@
     <link rel="preload" href="assets/FiraGO-SemiBold.woff2" as="font" crossorigin>
     <link rel="preload" href="assets/FiraGO-SemiBoldItalic.woff2" as="font" crossorigin>
     <link rel="preload" href="assets/MaterialSymbolsOutlined.woff" as="font" crossorigin>
-    <link rel="stylesheet" type="text/css" href="app/global.css?b20d07515b25f6427a5a1eedf542bb52">
+    <link rel="stylesheet" type="text/css" href="app/global.css?82f3d181ef7983f5602240181a205c62">
     <link rel="stylesheet" type="text/css" href="app/tabs.css?ca7403e3db88d22db6ab983b9702ca43">
     <link
       rel="stylesheet"
       type="text/css"
-      href="app/tabs/components.css?8c7b56427fd2c6298b04c9dd7558a9d7"
+      href="app/tabs/components.css?aef471c03f57f0dd2632d9ba2c571274"
     >
     <link
       rel="stylesheet"
@@ -29,16 +29,22 @@
       type="text/css"
       href="app/tabs/help.css?c85e68301e2f59a3727b7f4884e85d71"
     >
-    <link rel="stylesheet" type="text/css" href="app/buglist.css?9317993d3d0e2362f7bad7f6e33e4db2">
+    <link rel="stylesheet" type="text/css" href="app/buglist.css?a7d4c05c0721e6fdbf46a53a04b7d98b">
     <link rel="stylesheet" type="text/css" href="app/bugtable.css?5d4ebc21b4656580d6e28319d737ebe3">
     <link rel="stylesheet" type="text/css" href="app/dialog.css?ac7e56024618ca7d27da454c08c7b17e">
+    <link rel="stylesheet" type="text/css" href="app/filters.css?7d79e228e2bb63ff61a814c63f2ed584">
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="app/multiselect.css?6d99ed18144490d63d527ab2a01d78c3"
+    >
     <link rel="stylesheet" type="text/css" href="app/tooltips.css?96325cf63a17b57c482ef97289322845">
     <link rel="icon shortcut" href="assets/bugdash.svg" type="image/svg">
     <script type="importmap">
     {
       "imports": {
-        "bugdash": "./app/bugdash.mjs?3c86a2fd7435ff05ce0576cd3ab28183",
-        "buglist": "./app/buglist.mjs?2be7bc384ba6f18d06331b77f47274b6",
+        "bugdash": "./app/bugdash.mjs?5cd80b1116af83d1ad95891a54cad184",
+        "buglist": "./app/buglist.mjs?1d4e4d57cd36273bdb375a6d01dfc200",
         "buglists/assigned-inactive": "./app/buglists/assigned-inactive.mjs?b67a90e725c212c02980ca7c8581275a",
         "buglists/beta": "./app/buglists/beta.mjs?c6ef7768c95f7273ed2ad3b73a593802",
         "buglists/blockers": "./app/buglists/blockers.mjs?f6e798f0359994ed20a373149cb49798",
@@ -63,13 +69,15 @@
         "buglists/triage-needed": "./app/buglists/triage-needed.mjs?2ab63b30b4e8a29a2400208f0b795744",
         "buglists/uplift-candidates": "./app/buglists/uplift-candidates.mjs?cf1a47416d688b915c2fdb94eb817c02",
         "bugtable": "./app/bugtable.mjs?128cb6524e5d0568dcd5f4d646cec2b9",
-        "bugzilla": "./app/bugzilla.mjs?71698fd80e04211f861e46d23e44c4e7",
+        "bugzilla": "./app/bugzilla.mjs?4b5f7620904d7327151c109ae6ead597",
         "dialog": "./app/dialog.mjs?8c2b0b6af0aa3d362f724856cba39482",
+        "filters": "./app/filters.mjs?0037e2f867b0a083a263c937ef35ce68",
         "global": "./app/global.mjs?78d54fe99d934ac06f3a912454a7e5ff",
         "menus": "./app/menus.mjs?5661dda5c36ffbfc94c8708012b16a5f",
-        "tabs": "./app/tabs.mjs?0553c5fead3541a3c81e2f357795b1d3",
+        "multiselect": "./app/multiselect.mjs?22345150a7d2dc34ac91c1d39058aa0c",
+        "tabs": "./app/tabs.mjs?54fa8858ee01344b8a9ffd286d91f9be",
         "tabs/beta": "./app/tabs/beta.mjs?590b7c9936790717155c21da70f37222",
-        "tabs/components": "./app/tabs/components.mjs?5c32843e766e445f89760f2f38061831",
+        "tabs/components": "./app/tabs/components.mjs?ad83e2010ab7f4e200be438c93ca0196",
         "tabs/help": "./app/tabs/help.mjs?04c6f50741a38667be4c9eefb787b820",
         "tabs/important": "./app/tabs/important.mjs?9e8f53e276d2fe5ebeb0b01a602fff09",
         "tabs/overview": "./app/tabs/overview.mjs?a3a226d77b36255540f08a03fbf8b0b9",
@@ -78,6 +86,7 @@
         "tabs/tracked": "./app/tabs/tracked.mjs?2c240c3e7d979a69693812392f2029d2",
         "tabs/triage": "./app/tabs/triage.mjs?deb37c0fc8702feee793c3d776fae4f2",
         "tooltips": "./app/tooltips.mjs?f6ce915e9ef0058cae9ecc157ad8a1a9",
+        "urlhash": "./app/urlhash.mjs?8199dfbd66804644cd90f29defadb3e4",
         "util": "./app/util.mjs?021b3f8fa143f314fcdc4fa6a8e39ab5"
       }
     }
@@ -143,10 +152,10 @@
 
     <div id="nav">
       <div id="help-tab-group" class="tab-group">
-        <div class="tab" data-tab="help">Help</div>
+        <div class="tab" data-tab="help" data-no-filter="1">Help</div>
       </div>
       <div id="components-tab-group" class="tab-group">
-        <div class="tab selected" data-tab="components">
+        <div class="tab selected" data-tab="components" data-no-filter="1">
           <span id="selected-components-title"
             >Components
             <span id="selected-components-count"></span>
@@ -167,6 +176,9 @@
       >
         refresh
       </div>
+      <div id="buglist-filter-button" class="nav-button material-icons" title="Filters">
+        filter_list
+      </div>
       <div class="tab filler">
         <span
           id="global-error"
@@ -178,6 +190,64 @@
       </div>
       <div id="username"></div>
       <div id="key-button" class="nav-button material-icons" title="Set Bugzilla API-Key">key</div>
+    </div>
+
+    <div id="buglist-filters" class="hidden">
+      Filter bug lists to those matching any of:
+      <div class="filter">
+        <input type="checkbox" id="filter-severity">
+        <label for="filter-severity">Severity:</label>
+        <multi-select id="filter-severity-value" placeholder="None">
+          <option>S1</option>
+          <option>S2</option>
+          <option>S3</option>
+          <option>S4</option>
+        </multi-select>
+      </div>
+      <div class="filter">
+        <input type="checkbox" id="filter-priority">
+        <label for="filter-priority">Priority:</label>
+        <multi-select id="filter-priority-value" placeholder="None">
+          <option>P1</option>
+          <option>P2</option>
+          <option>P3</option>
+          <option>P4</option>
+          <option>P5</option>
+        </multi-select>
+      </div>
+      <div class="filter">
+        <input type="checkbox" id="filter-team">
+        <label for="filter-team">Team:</label>
+        <multi-select id="filter-team-value" placeholder="None"></multi-select>
+      </div>
+      <div class="filter">
+        <input type="checkbox" id="filter-needinfo">
+        <label for="filter-needinfo">Needinfo:</label>
+        <input
+          type="radio"
+          name="filter-needinfo-value"
+          id="filter-needinfo-missing"
+          disabled
+          checked
+        >
+        <label for="filter-needinfo-missing">Missing</label>
+        <input type="radio" name="filter-needinfo-value" id="filter-needinfo-present" disabled>
+        <label for="filter-needinfo-present">Present</label>
+      </div>
+      <div class="filter">
+        <input type="checkbox" id="filter-regressor">
+        <label for="filter-regressor">Regressor:</label>
+        <input
+          type="radio"
+          name="filter-regressor-value"
+          id="filter-regressor-missing"
+          disabled
+          checked
+        >
+        <label for="filter-regressor-missing">Missing</label>
+        <input type="radio" name="filter-regressor-value" id="filter-regressor-present" disabled>
+        <label for="filter-regressor-present">Present</label>
+      </div>
     </div>
 
     <div id="tabs-content"></div>
@@ -264,7 +334,9 @@
     </div>
 
     <!-- template: tab -->
-    <template id="tab-template"> <div class="tab" data-tab="" data-field="title"></div> </template>
+    <template id="tab-template">
+      <div class="tab" data-tab="" data-field="title"></div>
+    </template>
 
     <!-- template: tab-content -->
     <template id="tab-content-template">
@@ -294,6 +366,7 @@
           <div>
             <span class="counter-lazy">Expand to load bugs</span>
             <span class="counter"></span>
+            <span class="counter-filtered"></span>
             <span class="counter-guidelines"></span>
           </div>
           <div class="actions">
@@ -332,7 +405,9 @@
             target="_blank"
           ></a>
         </td>
-        <td class="bug-actions"><button class="bug-menu-btn material-icons">more_horiz</button></td>
+        <td class="bug-actions">
+          <button class="bug-menu-btn material-icons">more_horiz</button>
+        </td>
       </tr>
       <tr class="bug-row bug-meta">
         <td class="bug-icons material-icons">
@@ -373,7 +448,9 @@
           <div class="summary">Open Defects by Severity</div>
           <div class="loading-spinner"></div>
           <div class="error">Failed to load bugs</div>
-          <div class="actions"><button class="refresh-btn material-icons">refresh</button></div>
+          <div class="actions">
+            <button class="refresh-btn material-icons">refresh</button>
+          </div>
         </div>
         <table class="bugtable">
           <tr>
@@ -405,7 +482,9 @@
               >About Maintenance Effectiveness</a
             >
           </div>
-          <div class="actions"><button class="refresh-btn material-icons">refresh</button></div>
+          <div class="actions">
+            <button class="refresh-btn material-icons">refresh</button>
+          </div>
         </div>
         <table class="bugtable">
           <tr>
@@ -595,6 +674,6 @@
 
     <script src="assets/popperjs-2.11.7.min.js"></script>
     <script src="assets/tippyjs-6.3.7.min.js"></script>
-    <script type="module" src="app/bugdash.mjs?3c86a2fd7435ff05ce0576cd3ab28183"></script>
+    <script type="module" src="app/bugdash.mjs?5cd80b1116af83d1ad95891a54cad184"></script>
   </body>
 </html>

@@ -12,6 +12,7 @@ const DEFAULT_INCLUDE_FIELDS = [
     "last_change_time",
     "priority",
     "product",
+    "regressed_by",
     "severity",
     "summary",
     "triage_owner",

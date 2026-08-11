@@ -1,7 +1,9 @@
 import * as BugList from "buglist";
 import * as BugTable from "bugtable";
 import * as Dialog from "dialog";
+import * as Filters from "filters";
 import * as Global from "global";
+import * as MultiSelect from "multiselect";
 import * as Tabs from "tabs";
 import * as Beta from "tabs/beta";
 import * as Components from "tabs/components";
@@ -13,16 +15,19 @@ import * as Stalled from "tabs/stalled";
 import * as Tracked from "tabs/tracked";
 import * as Triage from "tabs/triage";
 import * as Tooltips from "tooltips";
+import * as UrlHash from "urlhash";
 import { _ } from "util";
 
 window.addEventListener("DOMContentLoaded", async () => {
     // init helpers
     Dialog.initUI();
+    MultiSelect.initUI();
 
     // load data
     await Global.initData();
 
     // init ui
+    Filters.initUI();
     Help.initUI();
     BugList.initUI();
     BugTable.initUI();
@@ -55,11 +60,12 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     window.addEventListener("popstate", async () => {
         const $tab = hashToTab() || _(".tab[data-tab=components]");
+        Filters.loadFromHash();
         await Tabs.switchTo($tab);
     });
 });
 
 function hashToTab() {
-    const hash = document.location.hash.slice(1);
-    return hash.startsWith("tab.") ? _(`.tab[data-tab=${hash.slice(4)}`) : undefined;
+    const [tab] = UrlHash.get("tab") ?? [];
+    return tab ? _(`.tab[data-tab="${tab}"]`) : undefined;
 }

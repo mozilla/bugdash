@@ -185,6 +185,14 @@ export async function initUI() {
     loadFromURL();
     onSelectedChanged();
 
+    document.addEventListener("tab.changed", (evt) => {
+        if (evt.detail.tab === "components") {
+            _("#tabs-content").classList.add("hidden");
+        } else {
+            _("#tabs-content").classList.remove("hidden");
+        }
+    });
+
     document.addEventListener("tab.components", () => {
         document.body.classList.remove("component-warning");
         saveToURL();

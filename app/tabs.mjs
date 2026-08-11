@@ -3,6 +3,7 @@ import * as BugTable from "bugtable";
 import * as Bugzilla from "bugzilla";
 import * as Dialog from "dialog";
 import * as Global from "global";
+import * as UrlHash from "urlhash";
 import { _, __, cloneTemplate, updateTemplate } from "util";
 
 function addTab(tab, $tabGroup) {
@@ -10,6 +11,9 @@ function addTab(tab, $tabGroup) {
     updateTemplate($tab, tab);
     $tab = $tab.firstElementChild;
     $tab.dataset.tab = tab.name;
+    if (tab.noFilter) {
+        $tab.dataset.noFilter = "1";
+    }
     $tabGroup.append($tab);
     const $content = cloneTemplate(_("#tab-content-template"));
     updateTemplate($content, {
@@ -62,6 +66,7 @@ function addTabs() {
     addComponentsTab({
         name: "overview",
         title: "Overview",
+        noFilter: true,
     });
     addTabGroup([
         {
@@ -165,15 +170,27 @@ export async function switchTo($tab) {
     const selectedTab = $tab.dataset.tab;
     _(`#tab-${selectedTab}`).classList.add("selected");
 
-    // update doc hash and title
+    // update doc hash and title, leaving other segments (eg. filters) intact.
+    // the components tab drops back to "/", discarding the query string, which
+    // its own tab.components handler immediately rebuilds
+    const state = UrlHash.read();
     if (selectedTab === "components") {
-        history.pushState("", "", "/");
+        state.delete("tab");
+        UrlHash.write(state, { push: true, path: "/" });
     } else {
-        document.location.hash = `tab.${selectedTab}`;
+        state.set("tab", [selectedTab]);
+        UrlHash.write(state, { push: true });
     }
     const title = $tab.innerText.trim().replace(/ \(\d+\)/, "");
     document.title = `BugDash - ${title}`;
 
     // notify tab
     document.dispatchEvent(new Event(`tab.${selectedTab}`));
+    document.dispatchEvent(
+        new CustomEvent("tab.changed", { detail: { tab: selectedTab } }),
+    );
+}
+
+export function activeTab() {
+    return _(".tab.selected");
 }

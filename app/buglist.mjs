@@ -400,6 +400,8 @@ async function rankOverflow(buglist, limit) {
 
 function setErrorState(buglist) {
     buglist.$root.classList.remove("loading");
+    buglist.$root.classList.remove("filtered");
+    buglist.$root.classList.remove("all-filtered");
     buglist.$root.classList.add("closed");
     buglist.$root.classList.add("no-bugs");
     buglist.$root.classList.add("error");
@@ -433,6 +435,8 @@ export async function refresh(id) {
             buglist.$root.classList.add("lazy-unloaded");
             buglist.$root.classList.add("loading");
             buglist.$root.classList.remove("no-bugs");
+            buglist.$root.classList.remove("filtered");
+            buglist.$root.classList.remove("all-filtered");
             _(buglist.$root, ".buglist").innerHTML = "";
             return;
         }
@@ -563,6 +567,7 @@ export async function refresh(id) {
     }
 
     buglist.$root.classList.toggle("truncated", truncated);
+    buglist.$root.bugCount = bugs.length;
     const $counter = _(buglist.$root, ".buglist-header .counter");
     if (truncated) {
         const counterVars = { count: bugs.length, total: total };
@@ -730,4 +735,8 @@ export async function refresh(id) {
     }
 
     buglist.$root.classList.remove("loading");
+
+    document.dispatchEvent(
+        new CustomEvent("buglist.refresh", { detail: { buglistId: buglist.$root.id } }),
+    );
 }

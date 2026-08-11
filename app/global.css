@@ -88,14 +88,6 @@ select {
     border-radius: 2px;
 }
 
-input[type="text"],
-input[type="search"] {
-    width: 40em;
-    padding: 4px 8px;
-    border: 1px solid silver;
-    border-radius: 2px;
-}
-
 .hidden {
     display: none !important;
 }

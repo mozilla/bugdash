@@ -1,0 +1,118 @@
+multi-select {
+    position: relative;
+    display: inline-block;
+    width: 20em;
+    vertical-align: baseline;
+}
+
+multi-select:not(:defined) {
+    visibility: hidden;
+}
+
+multi-select option {
+    display: none;
+}
+
+.multiselect-field {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+    min-height: 1.4em;
+    padding: 3px 8px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    background: #fff;
+    border: 1px solid silver;
+    border-radius: 2px;
+}
+
+.multiselect-placeholder {
+    font-style: italic;
+    color: #666;
+}
+
+.multiselect-tag {
+    display: inline-flex;
+    gap: 2px;
+    align-items: center;
+    padding: 1px 2px 1px 6px;
+    background: #ddd;
+    border-radius: 2px;
+}
+
+.multiselect-tag-remove {
+    cursor: pointer;
+    opacity: 0.75;
+}
+
+.multiselect-tag-remove:hover {
+    opacity: 1;
+}
+
+multi-select[disabled] .multiselect-field {
+    cursor: default;
+    opacity: 0.5;
+}
+
+multi-select[disabled] .multiselect-tag-remove {
+    cursor: default;
+}
+
+.multiselect-caret {
+    margin-left: auto;
+    color: #666;
+}
+
+.multiselect-popup {
+    position: absolute;
+    z-index: 1000;
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 2px;
+    background: #fff;
+    border: 1px solid silver;
+    border-radius: 2px;
+    box-shadow: 0 0 10px 1px rgb(0 0 0 / 10%);
+}
+
+.multiselect-search {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 4px 8px;
+    border: none;
+    border-bottom: 1px solid silver;
+    border-radius: 0;
+}
+
+.multiselect-list {
+    max-height: 15em;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+    list-style: none;
+}
+
+.multiselect-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+.multiselect-list li:hover,
+.multiselect-list li.active {
+    background: #eee;
+}
+
+.multiselect-list li.selected {
+    color: #008080;
+}
+
+.multiselect-empty {
+    padding: 4px 8px;
+    font-style: italic;
+    color: #666;
+}

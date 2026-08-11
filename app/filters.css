@@ -1,0 +1,24 @@
+body.show-filters #buglist-filter-button {
+    color: #008080;
+}
+
+#buglist-filters {
+    padding: 8px;
+    margin: 16px;
+    background: #eee;
+    border: 1px solid #28292a;
+    border-radius: 4px;
+}
+
+#buglist-filters .filter {
+    margin: 8px;
+}
+
+#buglist-filters .filter.disabled {
+    opacity: 0.75;
+}
+
+#buglist-filters label {
+    display: inline-block;
+    min-width: 5em;
+}

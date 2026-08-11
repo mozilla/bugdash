@@ -104,11 +104,30 @@
 }
 
 .buglist-container.loading:not(.lazy) .buglist-header .counter,
+.buglist-container.loading:not(.lazy) .buglist-header .counter-filtered,
 .buglist-container.loading:not(.lazy) .buglist-header .counter-guidelines {
     display: none;
 }
 
-.buglist-header .counter {
+.buglist-container.loading .buglist-empty {
+    display: none !important;
+}
+
+.buglist-container:not(.filtered) .buglist-header .counter-filtered {
+    display: none;
+}
+
+.buglist-container.filtered .buglist-header .counter-filtered {
+    display: unset;
+}
+
+.buglist-container.filtered .buglist-header .counter,
+.buglist-container.filtered .buglist-header .counter-guidelines {
+    display: none;
+}
+
+.buglist-header .counter,
+.buglist-header .counter-filtered {
     color: #008080;
 }
 
@@ -129,10 +148,13 @@
 
 .buglist-container.closed .buglist-loading,
 .buglist-container.closed .buglist-empty,
-.buglist-container.loading .buglist-empty,
 .buglist-container:not(.no-bugs) .buglist-empty,
 .buglist-container:not(.loading, .lazy-unloaded) .buglist-loading {
     display: none;
+}
+
+body.show-filters .buglist-container:not(.closed).all-filtered .buglist-empty {
+    display: block;
 }
 
 .buglist-container.lazy.lazy-unloaded .buglist-header .loading-spinner {

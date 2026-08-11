@@ -21,6 +21,13 @@ body:not(.component-warning) #selected-components-warning {
     margin-top: 2px;
 }
 
+#component-filter {
+    width: 40em;
+    padding: 4px 8px;
+    border: 1px solid silver;
+    border-radius: 2px;
+}
+
 #component-filter.disabled {
     color: #bbb;
     background: #f8f8f8;
