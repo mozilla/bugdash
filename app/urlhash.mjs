@@ -3,7 +3,7 @@
 // this module owns the grammar only; each feature owns the meaning of its own
 // segment ("tab" belongs to tabs, "f" to filters)
 
-const SEGMENT_DELIMITER = "|";
+const SEGMENT_DELIMITER = ";";
 const KEY_DELIMITER = ".";
 const KEY_ORDER = ["tab", "f"];
 
