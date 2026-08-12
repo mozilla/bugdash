@@ -29,7 +29,7 @@
       type="text/css"
       href="app/tabs/help.css?c85e68301e2f59a3727b7f4884e85d71"
     >
-    <link rel="stylesheet" type="text/css" href="app/buglist.css?a7d4c05c0721e6fdbf46a53a04b7d98b">
+    <link rel="stylesheet" type="text/css" href="app/buglist.css?93203bba9f9a190d1bc3d682b5487339">
     <link rel="stylesheet" type="text/css" href="app/bugtable.css?5d4ebc21b4656580d6e28319d737ebe3">
     <link rel="stylesheet" type="text/css" href="app/dialog.css?ac7e56024618ca7d27da454c08c7b17e">
     <link rel="stylesheet" type="text/css" href="app/filters.css?7d79e228e2bb63ff61a814c63f2ed584">
@@ -44,7 +44,7 @@
     {
       "imports": {
         "bugdash": "./app/bugdash.mjs?5cd80b1116af83d1ad95891a54cad184",
-        "buglist": "./app/buglist.mjs?1d4e4d57cd36273bdb375a6d01dfc200",
+        "buglist": "./app/buglist.mjs?54046cfae66d8dee7f8a639f831ba116",
         "buglists/assigned-inactive": "./app/buglists/assigned-inactive.mjs?b67a90e725c212c02980ca7c8581275a",
         "buglists/beta": "./app/buglists/beta.mjs?c6ef7768c95f7273ed2ad3b73a593802",
         "buglists/blockers": "./app/buglists/blockers.mjs?f6e798f0359994ed20a373149cb49798",
@@ -71,7 +71,7 @@
         "bugtable": "./app/bugtable.mjs?128cb6524e5d0568dcd5f4d646cec2b9",
         "bugzilla": "./app/bugzilla.mjs?4b5f7620904d7327151c109ae6ead597",
         "dialog": "./app/dialog.mjs?8c2b0b6af0aa3d362f724856cba39482",
-        "filters": "./app/filters.mjs?0037e2f867b0a083a263c937ef35ce68",
+        "filters": "./app/filters.mjs?d795f3ee4239cf888a15cf30ec1c78dc",
         "global": "./app/global.mjs?78d54fe99d934ac06f3a912454a7e5ff",
         "menus": "./app/menus.mjs?5661dda5c36ffbfc94c8708012b16a5f",
         "multiselect": "./app/multiselect.mjs?22345150a7d2dc34ac91c1d39058aa0c",
@@ -381,7 +381,9 @@
             <div class="action">
               <button class="order-btn material-icons" data-mode="default">sort</button>
             </div>
-            <button class="buglist-btn material-icons">bug_report</button>
+            <div class="action">
+              <button class="buglist-btn material-icons">bug_report</button>
+            </div>
           </div>
         </div>
         <div class="buglist-loading">Loading…</div>

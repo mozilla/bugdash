@@ -68,6 +68,10 @@
     font-size: 22px;
 }
 
+.buglist-container .actions button:disabled {
+    cursor: default;
+}
+
 .buglist-container .actions .info,
 .buglist-container .actions .outdated {
     display: inline-block;

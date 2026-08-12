@@ -47,7 +47,12 @@ export function initUI() {
             // open-in-bugzilla button
             const $buglistBtn = event.target.closest(".buglist-btn");
             if ($buglistBtn) {
-                window.open($buglistBtn.dataset.url, "_blank");
+                // bugs have two rows, we just want the non-meta row
+                const ids = Array.from(
+                    __($buglist, ".bug-row:not(.bug-meta):not(.hidden)"),
+                    ($tr) => $tr.bug.id,
+                );
+                window.open(Bugzilla.buglistUrl(ids), "_blank");
                 return;
             }
 
@@ -292,7 +297,7 @@ const BASE_PARTIAL_FIELDS = ["id", "creation_time", "last_change_time"];
 
 // bug?id=... URLs get too long past a few hundred ids, so full-record refetches
 // after truncation are chunked, and the same threshold decides whether the
-// open-in-bugzilla button can list ids explicitly or must link to the query instead
+// open-in-bugzilla button has too many bugs to open
 const ID_FETCH_CHUNK_SIZE = 400;
 
 const orderTooltips = {
@@ -410,9 +415,26 @@ function setErrorState(buglist) {
         buglist.$root.classList.add("lazy-unloaded");
         buglist.$root.classList.add("loading");
     }
+    updateBuglistButtonState(buglist.$root);
     const $counter = _(buglist.$root, ".buglist-header .counter");
     $counter.textContent = "Failed to load bugs";
     Tooltips.set($counter, "");
+}
+
+// updates the open-in-bugzilla button to match the bugs currently visible in the
+// dom; call whenever rows are added, removed, hidden or unhidden
+export function updateBuglistButtonState($buglist) {
+    if (!g.buglists[$buglist.id]) return; // eg. the help tab's sample list
+    // bugs have two rows each, the primary one isn't .bug-meta
+    const count = __($buglist, ".bug-row:not(.bug-meta):not(.hidden)").length;
+    const tooMany = count > ID_FETCH_CHUNK_SIZE;
+    const $buglistBtn = _($buglist, ".buglist-header .buglist-btn");
+    $buglistBtn.disabled = count === 0 || tooMany;
+    // the tooltip goes on the wrapper, as disabled buttons don't get mouse events
+    Tooltips.set(
+        $buglistBtn.closest(".action"),
+        tooMany ? "Too many bugs to open in Bugzilla" : "",
+    );
 }
 
 export async function refresh(id) {
@@ -438,6 +460,7 @@ export async function refresh(id) {
             buglist.$root.classList.remove("filtered");
             buglist.$root.classList.remove("all-filtered");
             _(buglist.$root, ".buglist").innerHTML = "";
+            updateBuglistButtonState(buglist.$root);
             return;
         }
         buglist.$root.classList.remove("lazy-unloaded");
@@ -450,7 +473,10 @@ export async function refresh(id) {
     buglist.$root.classList.remove("truncated");
     buglist.initialised = true;
     $list.innerHTML = "";
-    Tooltips.set(_(buglist.$root, ".buglist-header .buglist-btn"), "");
+    Tooltips.set(
+        _(buglist.$root, ".buglist-header .buglist-btn").closest(".action"),
+        "",
+    );
 
     if (buglist.outdatedTimer) {
         clearTimeout(buglist.outdatedTimer);
@@ -682,22 +708,6 @@ export async function refresh(id) {
         $button.disabled = false;
     }
     if (bugs.length > 0) {
-        const ids = bugs.map((bug) => bug.id);
-        const $buglistBtn = _(buglist.$root, ".buglist-header .buglist-btn");
-        if (ids.length <= ID_FETCH_CHUNK_SIZE) {
-            $buglistBtn.dataset.url = Bugzilla.buglistUrl(ids);
-        } else if (buglist.urls.length === 1) {
-            // too many ids to list explicitly in a buglist.cgi url, so link to
-            // the underlying query instead
-            $buglistBtn.dataset.url = Bugzilla.queryUrlToBuglistUrl(buglist.urls[0]);
-        } else {
-            // too many ids to list explicitly, and the list spans more than one
-            // query (eg. uplift-candidates), so there's no single query url that
-            // covers every matching bug either
-            $buglistBtn.disabled = true;
-            Tooltips.set($buglistBtn, "Too many bugs to open in Bugzilla");
-        }
-
         // add to dom
         const $template = _("#bug-row-template");
         let i = 0;
@@ -731,8 +741,8 @@ export async function refresh(id) {
         _(buglist.$root, ".buglist-header .counter").textContent = "No bugs";
         Tooltips.set(_(buglist.$root, ".buglist-header .counter"), "");
         _(buglist.$root, ".buglist-header .order-btn").disabled = true;
-        _(buglist.$root, ".buglist-header .buglist-btn").disabled = true;
     }
+    updateBuglistButtonState(buglist.$root);
 
     buglist.$root.classList.remove("loading");
 

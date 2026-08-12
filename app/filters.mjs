@@ -1,3 +1,4 @@
+import * as BugList from "buglist";
 import * as Global from "global";
 import * as Tabs from "tabs";
 import * as UrlHash from "urlhash";
@@ -61,11 +62,12 @@ function setFiltersVisible() {
     // hide filters panel when disabled
     if (!document.body.classList.contains("show-filters")) {
         _("#buglist-filters").classList.add("hidden");
-        for (const $buglist of __(".buglist-container")) {
+        for (const $buglist of __("#tabs-content .buglist-container")) {
             $buglist.classList.remove("filtered");
             for (const $tr of __($buglist, ".bug-row")) {
                 $tr.classList.remove("hidden");
             }
+            BugList.updateBuglistButtonState($buglist);
         }
         return;
     }
@@ -254,6 +256,7 @@ function applyFiltersToBuglist($buglist) {
     if (!_($buglist, ".bug-row")) {
         $buglist.classList.remove("filtered");
         $buglist.classList.remove("all-filtered");
+        BugList.updateBuglistButtonState($buglist);
         return;
     }
 
@@ -311,11 +314,8 @@ function applyFiltersToBuglist($buglist) {
 
     // handle when all bugs are filtered out
     const visibleCount = Object.values(visible).filter(Boolean).length;
-    if (visibleCount === 0) {
-        $buglist.classList.add("all-filtered");
-    } else {
-        $buglist.classList.remove("all-filtered");
-    }
+    $buglist.classList.toggle("all-filtered", visibleCount === 0);
+    BugList.updateBuglistButtonState($buglist);
 
     const $counter = _($buglist, ".counter-filtered");
     const counterVars = { count: visibleCount, total: $buglist.bugCount };
