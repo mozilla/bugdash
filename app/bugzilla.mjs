@@ -154,6 +154,37 @@ export async function whoami() {
     return response.error && response.code === 306 ? undefined : response;
 }
 
+function restError(response, responseData, body) {
+    const parts = [];
+    if (!response.ok) {
+        parts.push(`HTTP ${response.status} ${response.statusText}`.trim());
+    }
+    if (responseData?.code !== undefined && responseData.code !== null) {
+        parts.push(`Bugzilla error ${responseData.code}`);
+    }
+
+    // bugzilla's error message isn't always a string, and isn't always set
+    const message = responseData?.message;
+    let detail = "";
+    if (typeof message === "string") {
+        detail = message.trim();
+    } else if (message !== undefined && message !== null) {
+        detail = JSON.stringify(message);
+    }
+    if (!detail) {
+        detail = body.replaceAll(/\s+/g, " ").trim();
+        if (detail.length > 200) {
+            detail = `${detail.slice(0, 200)}...`;
+        }
+    }
+
+    const prefix = parts.join(", ");
+    if (prefix && detail) {
+        return new Error(`${prefix}: ${detail}`);
+    }
+    return new Error(prefix || detail || "unknown error");
+}
+
 export async function rest(endpoint, args, ignoreErrors, textResponse) {
     let url = `https://bugzilla.mozilla.org/rest/${endpoint}`;
     if (args) {
@@ -170,6 +201,7 @@ export async function rest(endpoint, args, ignoreErrors, textResponse) {
     const timerId = setTimeout(() => controller.abort(), 60000);
 
     let response;
+    let body;
     try {
         response = await fetch(url, {
             method: "GET",
@@ -182,18 +214,39 @@ export async function rest(endpoint, args, ignoreErrors, textResponse) {
             },
             signal: controller.signal,
         });
+        body = await response.text();
     } catch (error) {
-        clearTimeout(timerId);
         controller.abort();
-        throw new Error(error.message);
+        throw new Error(
+            error.name === "AbortError"
+                ? `Bugzilla request timed out: ${endpoint}`
+                : `Bugzilla request failed: ${error.message}`,
+        );
+    } finally {
+        clearTimeout(timerId);
     }
-    const responseData = textResponse ? await response.text() : await response.json();
-    clearTimeout(timerId);
-    if (!response.ok && !responseData) {
-        throw new Error(response.statusText);
+
+    if (textResponse) {
+        if (!response.ok) {
+            throw restError(response, undefined, body);
+        }
+        return body;
     }
-    if (responseData.error && !ignoreErrors) {
-        throw new Error(responseData.message);
+
+    let responseData;
+    try {
+        responseData = JSON.parse(body);
+    } catch {
+        throw restError(response, undefined, body);
+    }
+    if (responseData?.error) {
+        if (ignoreErrors) {
+            return responseData;
+        }
+        throw restError(response, responseData, body);
+    }
+    if (!response.ok) {
+        throw restError(response, undefined, body);
     }
     return responseData;
 }

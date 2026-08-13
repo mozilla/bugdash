@@ -151,7 +151,10 @@ async function loadComponents() {
                 });
             }
         } catch (error) {
-            await Dialog.alert(`Failed to load Bugzilla components: ${error}`);
+            document.body.classList.add("global-error");
+            await Dialog.alert(
+                `Failed to load Bugzilla components (${product}): ${error.message ?? error}`,
+            );
             return;
         }
     }
