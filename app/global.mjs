@@ -72,54 +72,32 @@ export function releaseData() {
 
 async function loadVersions() {
     setLoadingStage("Firefox versions");
+    // consumers rely on the versions being consecutive:
+    // nightly == beta + 1 == release + 2
     let response = await fetch(
-        `https://product-details.mozilla.org/1.0/firefox_versions.json?${Date.now()}`,
+        `https://whattrainisitnow.com/api/lando/uplift/train/?${Date.now()}`,
     );
+    if (!response.ok) {
+        throw new Error(`Failed to load Firefox versions: ${response.status}`);
+    }
     let data = await response.json();
-    g.nightly = {};
-    g.nightly.version = data.FIREFOX_NIGHTLY.split(".")[0];
-    g.nightly.statusFlag = `cf_status_firefox${g.nightly.version}`;
-    g.beta = {};
-    g.beta.version = data.FIREFOX_DEVEDITION.split(".")[0];
-    g.beta.statusFlag = `cf_status_firefox${g.beta.version}`;
-    g.release = {};
-    g.release.version = data.LATEST_FIREFOX_VERSION.split(".")[0];
-    g.release.statusFlag = `cf_status_firefox${g.release.version}`;
-
-    setLoadingStage("Firefox releases");
-    response = await fetch(
-        `https://product-details.mozilla.org/1.0/firefox.json?${Date.now()}`,
-    );
-    data = await response.json();
-
-    // load the versions, skipping beta, esr, and rc
-    const versions = {};
-    for (const entry of Object.entries(data.releases)) {
-        let versionStr = entry[0].replace(/^firefox-/, "");
-        if (Number(versionStr.split(".")[0]) <= 120) continue; // we can ignore old releases
-        if (/(?:\.\d+b\d+|esr|rc\d+)$/.test(versionStr)) continue;
-        if (versionStr.split(".").length === 2) {
-            versionStr = `${versionStr}.0`; // 129.0 --> 129.0.0
-        }
-        versions[versionStr] = entry[1].date;
+    for (const channel of ["nightly", "beta", "release"]) {
+        g[channel] = {
+            version: String(data[channel].version),
+            statusFlag: `cf_status_firefox${data[channel].version}`,
+        };
     }
 
-    // find the .0 release date, or the next following if that doesn't exist
-    for (const channel of ["beta", "release"]) {
-        const mergeVer = Number(g[channel].version) - 2;
-        let dot = 0;
-        while (dot <= 5) {
-            if (`${mergeVer}.0.${dot}` in versions) {
-                g[channel].date = versions[`${mergeVer}.0.${dot}`];
-                break;
-            }
-            dot++;
-        }
-        if (!g[channel].date) {
-            // biome-ignore lint/suspicious/noConsole: should never happen
-            console.error(`Failed to find merge date for ${channel}`);
-            document.body.classList.add("global-error");
-        }
+    // the date the current beta version entered nightly
+    response = await fetch(
+        `https://whattrainisitnow.com/api/release/schedule/?version=${g.beta.version}&${Date.now()}`,
+    );
+    data = response.ok ? await response.json() : {};
+    g.beta.date = data.nightly_start?.slice(0, 10);
+    if (!g.beta.date) {
+        // biome-ignore lint/suspicious/noConsole: should never happen
+        console.error(`Failed to find nightly start for ${g.beta.version}`);
+        document.body.classList.add("global-error");
     }
 
     // biome-ignore-start lint/suspicious/noConsole: info

@@ -11,8 +11,8 @@ export function init($container) {
         $container: $container,
         title: "Important Recent Regressions Without Decision",
         description:
-            "Bugs with a regression keyword created since the start " +
-            `of the current Beta cycle (${releases.beta.date}) that do not have both ` +
+            "Bugs with a regression keyword created since the current Beta " +
+            `version entered Nightly (${releases.beta.date}) that do not have both ` +
             `status-firefox${releases.beta.version} and ` +
             `status-firefox${releases.release.version} set.\n` +
             "Bugs with an open NEEDINFO request are ignored.\n" +
