@@ -42,3 +42,11 @@
 .notification-dismiss:hover {
     background: #00000014;
 }
+
+.notification.clickable .notification-message {
+    cursor: pointer;
+}
+
+.notification.clickable .notification-message:hover {
+    text-decoration: underline;
+}

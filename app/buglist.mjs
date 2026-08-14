@@ -214,8 +214,6 @@ export function append({
     limit,
     // {string} text shown behind a "guidelines" link next to the counter
     counterGuidelines,
-    // {(buglist) => void} called at the start of refresh, before fetching
-    beforeRefresh,
     // {(buglist) => string[]} builds the list of request urls to fetch
     // (defaults to a single query url built from `query`)
     urlsBuilder,
@@ -248,7 +246,6 @@ export function append({
         urls: [],
         initialised: false,
         counterGuidelines: counterGuidelines,
-        beforeRefresh: beforeRefresh,
         urlsBuilder: urlsBuilder || _defaultUrlsBuilder,
     };
     if (lazyLoad) {
@@ -439,9 +436,6 @@ export function updateBuglistButtonState($buglist) {
 
 export async function refresh(id) {
     const buglist = g.buglists[id];
-    if (buglist.beforeRefresh) {
-        buglist.beforeRefresh(buglist);
-    }
 
     for (const $button of __(buglist.$root, "button")) {
         if (!$button.classList.contains("refresh-btn")) {

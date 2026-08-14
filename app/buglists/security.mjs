@@ -1,6 +1,4 @@
 import * as BugList from "buglist";
-import * as Bugzilla from "bugzilla";
-import { _ } from "util";
 
 /* eslint-disable camelcase */
 
@@ -56,10 +54,5 @@ export function init($container) {
             );
         },
         order: (a, b) => secIndex(a) - secIndex(b) || a.updated_epoch - b.updated_epoch,
-        beforeRefresh: (buglist) => {
-            _(buglist.$root, ".buglist-empty").textContent = Bugzilla.getApiKey()
-                ? "No visible bugs"
-                : "Bugzilla API-Key not set";
-        },
     });
 }

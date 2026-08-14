@@ -3,6 +3,7 @@ import * as BugTable from "bugtable";
 import * as Bugzilla from "bugzilla";
 import * as Dialog from "dialog";
 import * as Global from "global";
+import * as Notifications from "notifications";
 import * as UrlHash from "urlhash";
 import { _, __, cloneTemplate, updateTemplate } from "util";
 
@@ -89,9 +90,14 @@ function updateAuth() {
     if (account) {
         _("#username").textContent = account.real_name;
         _("#nav #key-button").classList.add("authenticated");
+        Notifications.remove({ key: "missing-api-key" });
     } else {
         _("#username").textContent = "";
         _("#nav #key-button").classList.remove("authenticated");
+        Notifications.info("No Bugzilla API-Key set; only public bugs are visible.", {
+            key: "missing-api-key",
+            onClick: () => _("#key-button").click(),
+        });
     }
 }
 
