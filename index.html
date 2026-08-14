@@ -38,6 +38,11 @@
       type="text/css"
       href="app/multiselect.css?6d99ed18144490d63d527ab2a01d78c3"
     >
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="app/notifications.css?375e4afe55fd73169c77d6db8a30f943"
+    >
     <link rel="stylesheet" type="text/css" href="app/tooltips.css?96325cf63a17b57c482ef97289322845">
     <link rel="icon shortcut" href="assets/bugdash.svg" type="image/svg">
     <script type="importmap">
@@ -72,9 +77,10 @@
         "bugzilla": "./app/bugzilla.mjs?ba3304456c55b745809bb688fb79d9ce",
         "dialog": "./app/dialog.mjs?8c2b0b6af0aa3d362f724856cba39482",
         "filters": "./app/filters.mjs?d795f3ee4239cf888a15cf30ec1c78dc",
-        "global": "./app/global.mjs?81085392159d78556036fdae46fae70c",
+        "global": "./app/global.mjs?4b130649f21bcc5baae62e1a8a98c54d",
         "menus": "./app/menus.mjs?5661dda5c36ffbfc94c8708012b16a5f",
         "multiselect": "./app/multiselect.mjs?22345150a7d2dc34ac91c1d39058aa0c",
+        "notifications": "./app/notifications.mjs?107c79831cd0ec7f26a1568563f66de0",
         "tabs": "./app/tabs.mjs?54fa8858ee01344b8a9ffd286d91f9be",
         "tabs/beta": "./app/tabs/beta.mjs?590b7c9936790717155c21da70f37222",
         "tabs/components": "./app/tabs/components.mjs?ad83e2010ab7f4e200be438c93ca0196",
@@ -191,6 +197,16 @@
       <div id="username"></div>
       <div id="key-button" class="nav-button material-icons" title="Set Bugzilla API-Key">key</div>
     </div>
+
+    <div id="notifications"></div>
+
+    <template id="notification-template">
+      <div class="notification">
+        <span class="material-icons" data-field="icon"></span>
+        <span class="notification-message" data-field="message"></span>
+        <span class="notification-dismiss material-icons">close</span>
+      </div>
+    </template>
 
     <div id="buglist-filters" class="hidden">
       Filter bug lists to those matching any of:

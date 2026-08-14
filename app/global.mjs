@@ -1,5 +1,6 @@
 import * as Bugzilla from "bugzilla";
 import * as Dialog from "dialog";
+import * as Notifications from "notifications";
 import { _, __, hashCode, setLoadingStage } from "util";
 
 const g = {
@@ -72,32 +73,50 @@ export function releaseData() {
 
 async function loadVersions() {
     setLoadingStage("Firefox versions");
+
     // consumers rely on the versions being consecutive:
     // nightly == beta + 1 == release + 2
-    let response = await fetch(
-        `https://whattrainisitnow.com/api/lando/uplift/train/?${Date.now()}`,
-    );
-    if (!response.ok) {
-        throw new Error(`Failed to load Firefox versions: ${response.status}`);
-    }
-    let data = await response.json();
-    for (const channel of ["nightly", "beta", "release"]) {
-        g[channel] = {
-            version: String(data[channel].version),
-            statusFlag: `cf_status_firefox${data[channel].version}`,
-        };
-    }
+    try {
+        let response = await fetch(
+            `https://whattrainisitnow.com/api/lando/uplift/train/?${Date.now()}`,
+        );
+        if (response.ok) {
+            const data = await response.json();
+            for (const channel of ["nightly", "beta", "release"]) {
+                g[channel] = {
+                    version: String(data[channel].version),
+                    statusFlag: `cf_status_firefox${data[channel].version}`,
+                };
+            }
+        }
 
-    // the date the current beta version entered nightly
-    response = await fetch(
-        `https://whattrainisitnow.com/api/release/schedule/?version=${g.beta.version}&${Date.now()}`,
-    );
-    data = response.ok ? await response.json() : {};
-    g.beta.date = data.nightly_start?.slice(0, 10);
-    if (!g.beta.date) {
-        // biome-ignore lint/suspicious/noConsole: should never happen
-        console.error(`Failed to find nightly start for ${g.beta.version}`);
-        document.body.classList.add("global-error");
+        // the date the current beta version entered nightly
+        if (g.beta) {
+            response = await fetch(
+                `https://whattrainisitnow.com/api/release/schedule/?version=${g.beta.version}&${Date.now()}`,
+            );
+            if (response.ok) {
+                const data = await response.json();
+                g.beta.date = data.nightly_start?.slice(0, 10);
+            }
+        }
+    } catch {
+        // fall through
+    }
+    if (!g.nightly || !g.beta || !g.release) {
+        Notifications.error(
+            "Failed to load Firefox versions, some lists might not work",
+        );
+        // provide clearly fake values so lists don't throw exceptions
+        g.nightly = { version: "999", statusFlag: "cf_status_firefox999" };
+        g.beta = { version: "998", statusFlag: "cf_status_firefox998" };
+        g.release = { version: "997", statusFlag: "cf_status_firefox997" };
+    } else if (!g.beta.date) {
+        Notifications.error(
+            `Failed to find nightly start for ${g.beta.version}, some lists might not work`,
+        );
+        // provide a clearly fake value so lists don't throw exceptions
+        g.beta.date = "2100-01-01";
     }
 
     // biome-ignore-start lint/suspicious/noConsole: info
@@ -116,10 +135,15 @@ async function loadComponents() {
     const cacheData = window.localStorage.getItem("components");
     if (cacheData && cacheID === currentCacheID) {
         g.components = JSON.parse(cacheData);
+        // the cached list is incomplete; keep saying so rather than refetching
+        reportInvalidProducts(
+            JSON.parse(window.localStorage.getItem("componentsInvalid") ?? "[]"),
+        );
         return;
     }
 
     g.components = [];
+    const invalidProducts = [];
     for (const product of g.products) {
         setLoadingStage(`Bugzilla product: ${product}`);
         try {
@@ -132,9 +156,7 @@ async function loadComponents() {
                 },
             );
             if (response.products.length === 0) {
-                // biome-ignore lint/suspicious/noConsole: safe to ignore, but useful for debugging
-                console.error("Invalid product:", product);
-                document.body.classList.add("global-error");
+                invalidProducts.push(product);
                 continue;
             }
             for (const component of response.products[0].components) {
@@ -151,6 +173,7 @@ async function loadComponents() {
                 });
             }
         } catch (error) {
+            // failure to load components is a hard application stop
             document.body.classList.add("global-error");
             await Dialog.alert(
                 `Failed to load Bugzilla components (${product}): ${error.message ?? error}`,
@@ -159,8 +182,16 @@ async function loadComponents() {
         }
     }
 
+    reportInvalidProducts(invalidProducts);
     window.localStorage.setItem("componentsID", currentCacheID);
     window.localStorage.setItem("components", JSON.stringify(g.components));
+    window.localStorage.setItem("componentsInvalid", JSON.stringify(invalidProducts));
+}
+
+function reportInvalidProducts(products) {
+    for (const product of products) {
+        Notifications.error(`Invalid product ${product}`);
+    }
 }
 
 export async function clearComponentsCache() {
