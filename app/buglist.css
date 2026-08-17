@@ -130,9 +130,14 @@
     display: none;
 }
 
-.buglist-header .counter,
-.buglist-header .counter-filtered {
+.buglist-container:not(.no-bugs) .buglist-header .counter,
+.buglist-container:not(.all-filtered) .buglist-header .counter-filtered {
     color: #008080;
+}
+
+.buglist-container.no-bugs .buglist-header .counter,
+.buglist-container.all-filtered .buglist-header .counter-filtered {
+    color: #bbb;
 }
 
 .buglist-header .counter-guidelines {
