@@ -76,7 +76,7 @@
         "bugtable": "./app/bugtable.mjs?128cb6524e5d0568dcd5f4d646cec2b9",
         "bugzilla": "./app/bugzilla.mjs?ba3304456c55b745809bb688fb79d9ce",
         "dialog": "./app/dialog.mjs?8c2b0b6af0aa3d362f724856cba39482",
-        "filters": "./app/filters.mjs?d795f3ee4239cf888a15cf30ec1c78dc",
+        "filters": "./app/filters.mjs?a4eab066d80b035f0f1947f5f1617e95",
         "global": "./app/global.mjs?4b130649f21bcc5baae62e1a8a98c54d",
         "menus": "./app/menus.mjs?5661dda5c36ffbfc94c8708012b16a5f",
         "multiselect": "./app/multiselect.mjs?22345150a7d2dc34ac91c1d39058aa0c",
@@ -209,7 +209,12 @@
     </template>
 
     <div id="buglist-filters" class="hidden">
-      Filter bug lists to those matching any of:
+      Filter bug lists to those matching
+      <select id="filter-op">
+        <option value="or">any</option>
+        <option value="and">all</option>
+      </select>
+      of:
       <div class="filter">
         <input type="checkbox" id="filter-severity">
         <label for="filter-severity">Severity:</label>

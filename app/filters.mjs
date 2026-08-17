@@ -44,6 +44,12 @@ export function initUI() {
         $e.addEventListener("change", (evt) => onFilterChange(evt.target));
     }
 
+    // connect the match-any/match-all selector
+    _("#filter-op").addEventListener("change", () => {
+        saveToHash();
+        applyFiltersToSelectedTab();
+    });
+
     loadFromHash();
 
     // re-apply filters when tab changes
@@ -105,6 +111,7 @@ function onFilterChange($e, updateFiltered = true) {
 // an empty array means it's enabled with nothing selected
 function readFilters() {
     return {
+        op: _("#filter-op").value,
         severity: _("#filter-severity").checked
             ? _("#filter-severity-value").value
             : undefined,
@@ -122,6 +129,7 @@ function readFilters() {
 }
 
 function writeFilters(filters) {
+    _("#filter-op").value = filters.op;
     _("#filter-severity").checked = filters.severity !== undefined;
     _("#filter-severity-value").value = filters.severity ?? [];
     _("#filter-priority").checked = filters.priority !== undefined;
@@ -144,6 +152,10 @@ function writeFilters(filters) {
 // its value; eg. severity S1+S2 with a needinfo becomes ["s12", "n1"]
 function encode(filters) {
     const tokens = [];
+    // matching any filter is the default, so only "all" needs a token
+    if (filters.op === "and") {
+        tokens.push("a");
+    }
     if (filters.severity !== undefined) {
         tokens.push(`s${filters.severity.map((v) => v.slice(1)).join("")}`);
     }
@@ -164,6 +176,7 @@ function encode(filters) {
 
 function decode(tokens) {
     const filters = {
+        op: "or",
         severity: undefined,
         priority: undefined,
         team: undefined,
@@ -173,6 +186,9 @@ function decode(tokens) {
     for (const token of tokens) {
         const value = token.slice(1);
         switch (token[0]) {
+            case "a":
+                filters.op = "and";
+                break;
             case "s":
                 filters.severity = decodeOptions("#filter-severity-value", "S", value);
                 break;
@@ -274,34 +290,28 @@ function applyFiltersToBuglist($buglist) {
     for (const $tr of __($buglist, ".bug-row")) {
         const bug = $tr.bug;
 
-        if (Object.values(filters).every((value) => value === undefined)) {
-            // nothing to match against, so every bug stays visible
-            $tr.classList.remove("hidden");
-            visible[bug.id] = true;
-            continue;
-        }
-
         // bugs have two rows, only need to calc visibility once
         if (!(bug.id in visible)) {
-            visible[bug.id] = false;
-
-            if (filters.severity?.includes(bug.severity)) {
-                visible[bug.id] = true;
+            const matches = [];
+            if (filters.severity !== undefined) {
+                matches.push(filters.severity.includes(bug.severity));
             }
-            if (filters.priority?.includes(bug.priority)) {
-                visible[bug.id] = true;
+            if (filters.priority !== undefined) {
+                matches.push(filters.priority.includes(bug.priority));
             }
-            if (filters.team?.includes(bug.team)) {
-                visible[bug.id] = true;
+            if (filters.team !== undefined) {
+                matches.push(filters.team.includes(bug.team));
             }
             if (filters.needinfo !== undefined) {
-                const hasNi = bug.needinfos.length > 0;
-                visible[bug.id] ||= filters.needinfo === hasNi;
+                matches.push(filters.needinfo === bug.needinfos.length > 0);
             }
             if (filters.regressor !== undefined) {
-                const hasRegressor = bug.regressed_by.length > 0;
-                visible[bug.id] ||= filters.regressor === hasRegressor;
+                matches.push(filters.regressor === bug.regressed_by.length > 0);
             }
+            // no enabled filters means nothing to match against, so every bug stays visible
+            visible[bug.id] =
+                matches.length === 0 ||
+                (filters.op === "and" ? matches.every(Boolean) : matches.some(Boolean));
         }
 
         // apply visibility
