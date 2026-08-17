@@ -38,7 +38,7 @@ export function init($container, usesComponents) {
             "- regression keyword\n" +
             "- status-firefox-" +
             `${releases.beta.version}` +
-            " set to any of affected fix-optional wontfix\n" +
+            " set to affected or fix-optional\n" +
             "- tracking-firefox-" +
             `${releases.release.version}` +
             " set to any of disabled unaffected ---\n" +
@@ -51,7 +51,7 @@ export function init($container, usesComponents) {
             keywords_type: "allwords",
             f1: "cf_status_firefox_beta",
             o1: "anyexact",
-            v1: "affected, fix-optional, wontfix",
+            v1: "affected, fix-optional",
             f2: "cf_status_firefox_release",
             o2: "anyexact",
             v2: "disabled, unaffected, ---",
