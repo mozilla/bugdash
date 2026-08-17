@@ -23,7 +23,7 @@ test:
 	$(biome) $(web-files)
 	$(ruff) check --config .ruff.toml $(py-files)
 	$(ruff) format --config .ruff.toml --check $(py-files)
-	$(zizmor) .github/workflows --strict-collection --pedantic --no-progress
+	$(zizmor) .github/workflows --strict-collection --pedantic --no-progress $(if $(filter 1,$(SANDBOX_RUNTIME)),--offline)
 	./cache-bust check
 
 .PHONY: fix
