@@ -311,8 +311,8 @@ body.show-filters .buglist-container:not(.closed).all-filtered .buglist-empty {
     outline: 1px solid silver;
 }
 
-.buglist-container:not(#stalled) .bug-row.stalled-bug {
-    filter: opacity(0.25);
+.buglist-container:not(#stalled) .bug-row.stalled-bug > td:not(.bug-actions) {
+    opacity: 0.5;
 }
 
 .bug-row .component {
