@@ -1,4 +1,5 @@
 import * as BugList from "buglist";
+import * as Burndown from "buglists/burndown";
 import * as Tracked from "buglists/tracked";
 import * as UpliftCandidates from "buglists/uplift-candidates";
 import { _ } from "util";
@@ -11,4 +12,7 @@ export function initUI() {
 
     $group = BugList.newGroup($content);
     UpliftCandidates.init($group);
+
+    $group = BugList.newGroup($content);
+    Burndown.init($group);
 }
