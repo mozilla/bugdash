@@ -27,8 +27,8 @@ queries.  These are ordinary work.
 ## Framework-level, not per-list
 
 BugDash is a small framework (`buglist`, `filters`, `tabs`, `bugzilla`,
-`menus`, `multiselect`, `urlhash`) plus thin declarative modules under
-`app/buglists/` and `app/tabs/` that use it.  Keep that shape.
+`menus`, `multiselect`, `releases`, `urlhash`) plus thin declarative modules
+under `app/buglists/` and `app/tabs/` that use it.  Keep that shape.
 
 - Generic behaviour belongs in the framework, expressed as a declarative option
   on `BugList.append()` or via the existing document events (`refresh`,

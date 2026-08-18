@@ -1,13 +1,11 @@
 import * as Bugzilla from "bugzilla";
 import * as Dialog from "dialog";
 import * as Notifications from "notifications";
+import * as Releases from "releases";
 import { _, __, hashCode, setLoadingStage } from "util";
 
 const g = {
     appVersion: 1, // bump to force component reloading
-    nightly: undefined,
-    beta: undefined,
-    release: undefined,
     components: undefined,
     account: undefined,
     products: [
@@ -61,69 +59,6 @@ export function getAccount() {
 
 export function setAccount(account) {
     g.account = account;
-}
-
-export function releaseData() {
-    return {
-        nightly: g.nightly,
-        beta: g.beta,
-        release: g.release,
-    };
-}
-
-async function loadVersions() {
-    setLoadingStage("Firefox versions");
-
-    // consumers rely on the versions being consecutive:
-    // nightly == beta + 1 == release + 2
-    try {
-        let response = await fetch(
-            `https://whattrainisitnow.com/api/lando/uplift/train/?${Date.now()}`,
-        );
-        if (response.ok) {
-            const data = await response.json();
-            for (const channel of ["nightly", "beta", "release"]) {
-                g[channel] = {
-                    version: String(data[channel].version),
-                    statusFlag: `cf_status_firefox${data[channel].version}`,
-                };
-            }
-        }
-
-        // the date the current beta version entered nightly
-        if (g.beta) {
-            response = await fetch(
-                `https://whattrainisitnow.com/api/release/schedule/?version=${g.beta.version}&${Date.now()}`,
-            );
-            if (response.ok) {
-                const data = await response.json();
-                g.beta.date = data.nightly_start?.slice(0, 10);
-            }
-        }
-    } catch {
-        // fall through
-    }
-    if (!g.nightly || !g.beta || !g.release) {
-        Notifications.error(
-            "Failed to load Firefox versions, some lists might not work",
-        );
-        // provide clearly fake values so lists don't throw exceptions
-        g.nightly = { version: "999", statusFlag: "cf_status_firefox999" };
-        g.beta = { version: "998", statusFlag: "cf_status_firefox998" };
-        g.release = { version: "997", statusFlag: "cf_status_firefox997" };
-    } else if (!g.beta.date) {
-        Notifications.error(
-            `Failed to find nightly start for ${g.beta.version}, some lists might not work`,
-        );
-        // provide a clearly fake value so lists don't throw exceptions
-        g.beta.date = "2100-01-01";
-    }
-
-    // biome-ignore-start lint/suspicious/noConsole: info
-    console.log("Nightly", g.nightly);
-    console.log("Beta", g.beta);
-    console.log("Release", g.release);
-    // biome-ignore-end lint/suspicious/noConsole: info
 }
 
 async function loadComponents() {
@@ -224,7 +159,7 @@ export async function initData() {
     );
 
     await loadUser();
-    await loadVersions();
+    await Releases.initData();
     await loadComponents();
     setLoadingStage("");
 }

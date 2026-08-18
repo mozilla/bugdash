@@ -1,34 +1,14 @@
 import * as BugList from "buglist";
-import * as Global from "global";
+import * as Releases from "releases";
 
 export function init($container, usesComponents) {
-    const releases = Global.releaseData();
-
-    const versions = [
-        {
-            name: "release",
-            title: "Release",
-            version: releases.release.version,
-        },
-        {
-            name: "beta",
-            title: "Beta",
-            version: releases.beta.version,
-        },
-        {
-            name: "nightly",
-            title: "Nightly",
-            version: releases.nightly.version,
-        },
-    ];
-
-    for (const ver of versions) {
+    for (const chan of Releases.channels()) {
         BugList.append({
-            id: `tracked-${ver.name}-${usesComponents}`,
+            id: `tracked-${chan.name}-${usesComponents}`,
             $container: $container,
-            title: `${ver.version} (${ver.title}) Tracked Bugs`,
+            title: `${chan.version} (${chan.title}) Tracked Bugs`,
             description:
-                `Bugs with tracking-firefox${ver.version} set to +\n` +
+                `Bugs with tracking-firefox${chan.version} set to +\n` +
                 "Bugs are order by creation date, oldest first.",
             query: {
                 classification: [
@@ -39,7 +19,7 @@ export function init($container, usesComponents) {
                     "Server Software",
                 ],
                 resolution: "---",
-                f1: `cf_tracking_firefox${ver.version}`,
+                f1: `cf_tracking_firefox${chan.version}`,
                 o1: "equals",
                 v1: "+",
             },

@@ -6,18 +6,18 @@ function assignedSortKey(bug) {
     return bug.assigned_to === "nobody@mozilla.org" ? 0 : 1;
 }
 
-export function init($container, ver) {
+export function init($container, chan) {
     BugList.append({
-        id: `reo-${ver.name}-new`,
+        id: `reo-${chan.name}-new`,
         $container: $container,
-        title: `${ver.nightly} (${ver.title}) New Bugs`,
+        title: `${chan.version} (${chan.title}) New Bugs`,
         description:
             "Bugs with all of the following:\n" +
             "- regression keyword\n" +
-            `- status-firefox${ver.nightly} set to affected\n` +
-            `- status-firefox${ver.beta} set to any of unaffected ? ---\n` +
+            `- status-firefox${chan.version} set to affected\n` +
+            `- status-firefox${chan.previous} set to any of unaffected ? ---\n` +
             "Bugs with any of the following are ignored:\n" +
-            `- tracking-firefox${ver.nightly} is -\n` +
+            `- tracking-firefox${chan.version} is -\n` +
             "- stalled or intermittent-failure keywords\n" +
             "- within the Testing product\n" +
             "Bugs are order by creation date, oldest first.",
@@ -32,22 +32,22 @@ export function init($container, ver) {
             keywords: "regression",
             keywords_type: "allwords",
             resolution: "---",
-            f1: `cf_status_firefox${ver.nightly}`,
+            f1: `cf_status_firefox${chan.version}`,
             o1: "equals",
             v1: "affected",
             f2: "OP",
             j2: "OR",
-            f3: `cf_status_firefox${ver.beta}`,
+            f3: `cf_status_firefox${chan.previous}`,
             o3: "equals",
             v3: "unaffected",
-            f4: `cf_status_firefox${ver.beta}`,
+            f4: `cf_status_firefox${chan.previous}`,
             o4: "equals",
             v4: "?",
-            f5: `cf_status_firefox${ver.beta}`,
+            f5: `cf_status_firefox${chan.previous}`,
             o5: "equals",
             v5: "---",
             f6: "CP",
-            f8: `cf_tracking_firefox${ver.nightly}`,
+            f8: `cf_tracking_firefox${chan.version}`,
             o8: "notequals",
             v8: "-",
             f9: "product",
@@ -60,16 +60,16 @@ export function init($container, ver) {
     });
 
     BugList.append({
-        id: `reo-${ver.name}-carryover`,
+        id: `reo-${chan.name}-carryover`,
         $container: $container,
-        title: `${ver.nightly} (${ver.title}) Carry Over Bugs`,
+        title: `${chan.version} (${chan.title}) Carry Over Bugs`,
         description:
             "Bugs with all of the following:\n" +
             "- regression keyword\n" +
-            `- status-firefox${ver.nightly} set to affected\n` +
+            `- status-firefox${chan.version} set to affected\n` +
             "Bugs with any of the following are ignored:\n" +
-            `- status-firefox${ver.beta} set to any of unaffected ? ---\n` +
-            `- tracking-firefox${ver.nightly} is -\n` +
+            `- status-firefox${chan.previous} set to any of unaffected ? ---\n` +
+            `- tracking-firefox${chan.version} is -\n` +
             "- stalled or intermittent-failure keywords\n" +
             "- within the Testing product\n" +
             "Bugs are order by unassigned, then by last updated (oldest first)",
@@ -84,7 +84,7 @@ export function init($container, ver) {
             keywords: "regression",
             keywords_type: "allwords",
             resolution: "---",
-            f1: `cf_status_firefox${ver.nightly}`,
+            f1: `cf_status_firefox${chan.version}`,
             o1: "equals",
             v1: "affected",
             n2: "1",
@@ -92,15 +92,15 @@ export function init($container, ver) {
             f2: "OP",
             o3: "equals",
             v3: "unaffected",
-            f3: `cf_status_firefox${ver.beta}`,
-            f4: `cf_status_firefox${ver.beta}`,
+            f3: `cf_status_firefox${chan.previous}`,
+            f4: `cf_status_firefox${chan.previous}`,
             o4: "equals",
             v4: "?",
-            f5: `cf_status_firefox${ver.beta}`,
+            f5: `cf_status_firefox${chan.previous}`,
             o5: "equals",
             v5: "---",
             f6: "CP",
-            f8: `cf_tracking_firefox${ver.nightly}`,
+            f8: `cf_tracking_firefox${chan.version}`,
             o8: "notequals",
             v8: "-",
             f9: "product",
@@ -120,16 +120,16 @@ export function init($container, ver) {
     });
 
     BugList.append({
-        id: `reo-${ver.name}-burndown`,
+        id: `reo-${chan.name}-burndown`,
         $container: $container,
-        title: `${ver.nightly} (${ver.title}) Burndown List`,
+        title: `${chan.version} (${chan.title}) Burndown List`,
         description:
             "Bugs with all of the following:\n" +
-            `- status-firefox${ver.nightly} is affected or optional\n` +
+            `- status-firefox${chan.version} is affected or optional\n` +
             "- any of:\n" +
             "\u00A0\u00A0- crash regression leak topcrash assertion dataloss keywords\n" +
             "\u00A0\u00A0- in a security group\n" +
-            `\u00A0\u00A0- tracking-firefox${ver.nightly} is + ? or blocking\n` +
+            `\u00A0\u00A0- tracking-firefox${chan.version} is + ? or blocking\n` +
             "Bugs with any of the following are ignored:\n" +
             "- within the Testing product\n" +
             "Bugs are order by creation date, oldest first.",
@@ -142,7 +142,7 @@ export function init($container, ver) {
                 "Server Software",
             ],
             resolution: "FIXED",
-            f1: `cf_status_firefox${ver.nightly}`,
+            f1: `cf_status_firefox${chan.version}`,
             o1: "anywords",
             v1: "affected optional",
             j2: "OR",
@@ -153,7 +153,7 @@ export function init($container, ver) {
             f4: "bug_group",
             o4: "substring",
             v4: "sec",
-            f6: `cf_tracking_firefox${ver.nightly}`,
+            f6: `cf_tracking_firefox${chan.version}`,
             o6: "anywordssubstr",
             v6: "+ ? blocking",
             f7: "CP",
