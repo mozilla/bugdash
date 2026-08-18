@@ -135,7 +135,7 @@
     color: #008080;
 }
 
-.buglist-container.no-bugs .buglist-header .counter,
+.buglist-container.no-bugs:not(.error) .buglist-header .counter,
 .buglist-container.all-filtered .buglist-header .counter-filtered {
     color: #bbb;
 }
@@ -176,7 +176,7 @@ body.show-filters .buglist-container:not(.closed).all-filtered .buglist-empty {
     display: none;
 }
 
-.buglist-container.lazy-unloaded.closed .counter-lazy {
+.buglist-container.lazy-unloaded.closed:not(.error) .counter-lazy {
     font-size: small;
     color: #bbb;
 }
